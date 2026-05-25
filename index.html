@@ -288,12 +288,12 @@ function getContainerWidth(){
   return el ? el.clientWidth - 36 : (window.innerWidth - 36);
 }
 
-function calcSizes(){
+function calcSizes(promotedCount){
   var W = getContainerWidth();
   var GAP = 7;
 
-  // Promoted: 3 cols on mobile (≤480), 10 cols on desktop — fill full width, no max cap
-  var promotedCols = W <= 480 ? 3 : 10;
+  // Promoted: ใช้จำนวนสมาชิกจริงเพื่อให้พอดีแถวเดียว (mobile max 3 cols)
+  var promotedCols = W <= 480 ? 3 : (promotedCount || 10);
   var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
   var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
 
@@ -394,7 +394,7 @@ window.draw=function(){
   var c=document.getElementById("mainContainer");
   if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
 
-  var SZ = calcSizes();
+  var SZ = calcSizes(groups.Promoted.length);
   var html="";
   html += renderTierRow(groups.Promoted, 'Promoted', TIER_CONF.Promoted, SZ.promoted, 'row-tier');
   html += renderTierRow(groups.Premium,  'Premium',  TIER_CONF.Premium,  SZ.premium,  'row-tier');
