@@ -22,18 +22,14 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .admin-bar.on{display:flex}
 .toolbar{padding:12px 18px 0;display:flex;gap:8px;flex-wrap:wrap}
 .si{position:relative;flex:1;min-width:180px}
-.si input{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(123,47,247,0.2);border-radius:10px;padding:9px 14px 9px 34px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
+.si input{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(123,47,247,0.2);border-radius:10px;padding:9px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
 .si input:focus{border-color:#7B2FF7}
-.si-ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#7B2FF7;font-size:14px}
 .filters{padding:8px 18px 0;display:flex;gap:6px;flex-wrap:wrap}
 .fb{padding:4px 14px;border-radius:20px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:.6;transition:all .15s}
 .fb.on{opacity:1;transform:scale(1.05)}
 
-/* CONTAINER */
 .container{padding:12px 18px}
 .tier-section{margin-bottom:8px}
-
-/* CARD */
 .card{position:relative;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
 .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -45,26 +41,19 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .tier-tag{position:absolute;top:5px;left:5px;color:#fff;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:500;background:rgba(0,0,0,0.28);z-index:3}
 .card-edit{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.45);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:none;z-index:4}
 
-/* TIER COLORS */
 .promoted-1{background:#7B2FF7}.promoted-2{background:#6A1FE0}
 .vip-1{background:#F5A623}.vip-2{background:#E09620}
 .premium-1{background:#E91E8C}.premium-2{background:#D01578}
 .member-1{background:#C8C0E8}.member-2{background:#B8AEDD}
 
-/* ROW LAYOUTS - responsive */
-.row-promoted{display:flex;gap:8px;align-items:flex-start;width:100%}
-.row-vip{display:flex;gap:7px;flex-wrap:wrap;width:100%}
-.row-premium{display:flex;gap:7px;flex-wrap:wrap;width:100%}
-.row-member{display:flex;gap:6px;flex-wrap:wrap;width:100%}
-.vip-grid{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
-.vip-row{display:flex;gap:7px;width:100%}
-.vip-row .card{flex:1;min-width:0}
-.row-premium .card,.row-member .card{flex:0 0 auto}
+.row-tier{display:flex;gap:7px;flex-wrap:wrap;width:100%}
+.drag-card{cursor:grab}
+.drag-card.dragging{opacity:.35;cursor:grabbing}
+.drag-card.drag-over{outline:2px dashed rgba(255,255,255,0.7);outline-offset:-3px}
 
-/* MODAL */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;align-items:center;justify-content:center;padding:16px}
 .ov.on{display:flex}
-.md{background:#fff;border-radius:18px;width:100%;max-width:400px;max-height:92vh;overflow-y:auto}
+.md{background:#fff;border-radius:18px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto}
 .md-h{padding:16px 20px 12px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
 .md-h h3{font-size:15px;font-weight:700}
 .md-cl{background:none;border:none;font-size:18px;cursor:pointer;color:#bbb}
@@ -119,9 +108,11 @@ textarea{resize:vertical;min-height:54px}
   <div><h1>MMR Members</h1><small id="cntLbl">กำลังโหลด...</small></div>
   <div class="hdr-r">
     <span id="savedBadge" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;font-size:12px;padding:4px 12px;border-radius:20px">✓ บันทึกแล้ว</span>
-    <button class="btn btn-w btn-s" id="btnAdmin" onclick="toggleAdmin()">Admin</button>
+    <a id="btnTranslate" href="#" onclick="openTranslate();return false;" style="background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center">EN</a>
   </div>
 </div>
+
+<button id="btnAdmin" onclick="toggleAdmin()" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;border:none;background:rgba(200,192,232,0.25);color:rgba(180,170,210,0.5);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='rgba(123,47,247,0.15)';this.style.color='rgba(123,47,247,0.6)'" onmouseout="if(!window._adminHover)this.style.background='rgba(200,192,232,0.25)';this.style.color='rgba(180,170,210,0.5)'">🌸</button>
 
 <div class="admin-bar" id="adminBar">
   <button class="btn btn-p btn-s" onclick="openAdd()">+ เพิ่มสมาชิก</button>
@@ -131,7 +122,7 @@ textarea{resize:vertical;min-height:54px}
 </div>
 
 <div class="toolbar">
-  <div class="si"><span class="si-ic">🔍</span><input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw()"></div>
+  <div class="si"><input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw()"></div>
 </div>
 <div class="filters">
   <button class="fb on" style="background:#7B2FF7;color:#fff" onclick="setF('',this)">ทั้งหมด</button>
@@ -145,7 +136,6 @@ textarea{resize:vertical;min-height:54px}
   <div class="empty">⏳ กำลังโหลด...</div>
 </div>
 
-<!-- LOGIN -->
 <div class="ov" id="ovLogin">
   <div class="md" style="max-width:300px">
     <div class="md-h"><h3>Admin Login</h3><button class="md-cl" onclick="closeLogin()">×</button></div>
@@ -158,13 +148,12 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
-<!-- DETAIL -->
 <div class="ov" id="ovDetail" onclick="if(event.target===this)closeDetail()">
   <div class="md">
     <div class="md-h"><h3 id="dTitle">รายละเอียด</h3><button class="md-cl" onclick="closeDetail()">×</button></div>
     <div class="md-b">
       <div style="display:flex;gap:14px;margin-bottom:16px">
-        <div id="dPoster" style="flex-shrink:0;width:80px;height:107px;border-radius:10px;overflow:hidden"></div>
+        <div id="dPoster" style="flex-shrink:0;width:104px;height:139px;border-radius:10px;overflow:hidden"></div>
         <div style="flex:1;min-width:0">
           <div id="dName" style="font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px"></div>
           <span id="dBadge" style="font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px"></span>
@@ -177,6 +166,10 @@ textarea{resize:vertical;min-height:54px}
       <div style="display:flex;gap:10px;margin-bottom:10px" id="dQR"></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="dExtras"></div>
       <div id="dAdminBtns" style="display:none;margin-top:12px">
+        <a id="dFbLink" href="#" target="_blank" rel="noopener" style="display:none;align-items:center;gap:6px;background:#1877F2;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:10px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          ดูโปรไฟล์ Facebook
+        </a>
         <div style="display:flex;gap:8px">
           <button class="btn btn-p" style="flex:1" onclick="editCurrent()">✏️ แก้ไข</button>
           <button class="btn btn-d" style="flex:1" onclick="deleteCurrent()">🗑 ลบ</button>
@@ -186,17 +179,20 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
-<!-- EDIT/ADD -->
 <div class="ov" id="ovEdit" onclick="if(event.target===this)closeEdit()">
   <div class="md">
     <div class="md-h"><h3 id="editTitle">แก้ไขสมาชิก</h3><button class="md-cl" onclick="closeEdit()">×</button></div>
     <div class="md-b">
+      <div id="draftBanner" style="display:none;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.4);border-radius:10px;padding:8px 12px;margin-bottom:12px;gap:8px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:13px;flex:1">📋 กู้คืน draft อัตโนมัติ — บันทึกไว้ <span id="draftAgo"></span></span>
+        <button class="btn btn-s" style="background:rgba(245,166,35,0.2);color:#b45309;border:1px solid rgba(245,166,35,0.4);padding:3px 10px;font-size:11px" onclick="clearDraft();document.getElementById('draftBanner').style.display='none';toast('ล้าง draft แล้ว','ok')">✕ ล้าง</button>
+      </div>
       <div class="fgr full" style="margin-bottom:12px">
         <label>รูปโปรไฟล์ (3:4)</label>
         <div class="pu">
           <div class="pu-ph" id="puPh">📷</div>
           <img id="puImg" class="pu-img" style="display:none">
-          <div style="font-size:12px;color:#7B2FF7;margin-top:4px" id="puHint">คลิกเพื่ออัปโหลดรูป</div>
+          <div style="font-size:12px;color:#7B2FF7;margin-top:4px" id="puHint">คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)</div>
           <input type="file" accept="image/*" onchange="upMain(this)">
         </div>
       </div>
@@ -211,11 +207,13 @@ textarea{resize:vertical;min-height:54px}
       <div class="fg">
         <div class="fgr"><label>ID</label><input type="text" id="fid"></div>
         <div class="fgr"><label>ชื่อ</label><input type="text" id="fnm"></div>
+        <div class="fgr full"><label>ชื่อภาษาอังกฤษ</label><input type="text" id="fne" placeholder="เช่น Rutt Meepon"></div>
         <div class="fgr"><label>อายุ</label><input type="text" id="fag"></div>
         <div class="fgr"><label>จังหวัด</label><input type="text" id="fpv"></div>
         <div class="fgr full"><label>อาชีพ</label><input type="text" id="foc"></div>
         <div class="fgr"><label>WhatsApp</label><input type="tel" id="fwa"></div>
         <div class="fgr"><label>LINE ID</label><input type="text" id="fli"></div>
+        <div class="fgr full"><label>🔗 Facebook URL (เฉพาะแอดมิน)</label><input type="text" id="ffb" placeholder="https://www.facebook.com/..."></div>
         <div class="fgr full">
           <label>ระดับสมาชิก</label>
           <div class="tr-g">
@@ -236,9 +234,8 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
-<!-- CSV -->
 <div class="ov" id="ovCSV" onclick="if(event.target===this)closeCSV()">
-  <div class="md" style="max-width:520px">
+  <div class="md" style="max-width:520px" onclick="event.stopPropagation()">
     <div class="md-h"><h3>นำเข้า Excel / CSV</h3><button class="md-cl" onclick="closeCSV()">×</button></div>
     <div class="md-b">
       <div style="font-size:12px;color:#aaa;margin-bottom:4px">คอลัมน์: id, name, age, province, occupation, whatsapp, lineId, tier, bio</div>
@@ -295,33 +292,26 @@ function calcSizes(){
   var W = getContainerWidth();
   var GAP = 7;
 
-  // Max card widths to prevent oversized cards on desktop
-  var MAX_PROMOTED = 140;
-  var MAX_VIP      = 100;  // VIP: portrait card, ใหญ่กว่า Member
-  var MAX_PREMIUM  = 90;
-  var MAX_MEMBER   = 72;   // Member: เล็กสุด
-
-  // Promoted: more cols on wider screens
-  var promotedCols = W < 300 ? 2 : W < 500 ? 3 : W < 800 ? 4 : W < 1100 ? 5 : 6;
-  var promotedW = Math.min(MAX_PROMOTED, Math.floor((W - GAP*(promotedCols-1)) / promotedCols));
+  // Promoted: 3 cols on mobile (≤480), 10 cols on desktop — fill full width, no max cap
+  var promotedCols = W <= 480 ? 3 : 10;
+  var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
   var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
 
-  // VIP: 3 per row on mobile, more on desktop (portrait card like Premium)
-  var vipCols = W < 300 ? 2 : W < 500 ? 3 : W < 750 ? 4 : W < 1050 ? 5 : 6;
-  var vipW = Math.min(MAX_VIP, Math.floor((W - GAP*(vipCols-1)) / vipCols));
-  var vipH = Math.round(vipW * 1.35); // portrait ratio ~3:4
-
-  // Premium: 4 on mobile, more on desktop
-  var premCols = W < 280 ? 3 : W < 500 ? 4 : W < 800 ? 5 : W < 1100 ? 6 : 7;
-  var premW = Math.min(MAX_PREMIUM, Math.floor((W - GAP*(premCols-1)) / premCols));
+  // Premium: slightly smaller than Promoted
+  var premCols = W <= 480 ? 3 : 11;
+  var premW = Math.floor((W - GAP*(premCols-1)) / premCols);
   var premH = Math.round(premW * TIER_CONF.Premium.ratio);
 
-  // Member: most cols, smallest cards
-  var memCols = W < 280 ? 4 : W < 400 ? 5 : W < 600 ? 6 : W < 900 ? 7 : W < 1200 ? 8 : 9;
-  var memW = Math.min(MAX_MEMBER, Math.floor((W - GAP*(memCols-1)) / memCols));
+  // VIP: smaller than Premium
+  var vipCols = W <= 480 ? 4 : 13;
+  var vipW = Math.floor((W - GAP*(vipCols-1)) / vipCols);
+  var vipH = Math.round(vipW * TIER_CONF.VIP.ratio);
+
+  // Member: smallest
+  var memCols = W <= 480 ? 5 : 16;
+  var memW = Math.floor((W - GAP*(memCols-1)) / memCols);
   var memH = Math.round(memW * TIER_CONF.Member.ratio);
 
-  // Scale font sizes proportionally (base width 62px for member)
   function scaleFont(base, baseW, w){ return Math.max(6, Math.round(base * w / baseW)); }
 
   return {
@@ -343,12 +333,15 @@ var COLORS=["#ddd6fe","#bfdbfe","#bbf7d0","#fde68a","#fecaca","#fbcfe8"];
 function ini(n){return ((n||"").trim().split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2))||"?";}
 
 var all=[], filt="", isAdmin=false, curId=null, eid=null, photo="", extras=["","",""], csvRows=[];
+window.openTranslate=function(){
+  window.open("https://translate.google.com/translate?sl=th&tl=en&u="+encodeURIComponent(location.href),"_blank");
+};
 
 async function load(){
   try{
     var s=await getDocs(query(collection(db,"members"),orderBy("order")));
     all=[];
-    s.forEach(function(d){all.push(d.data());});
+    s.forEach(function(d){var dat=d.data();dat._docId=d.id;all.push(dat);});
   }catch(e){all=[];}
   document.getElementById("cntLbl").textContent=all.length+" สมาชิก";
   draw();
@@ -356,19 +349,30 @@ async function load(){
 
 window.doReload=function(){load();};
 
-function makeCard(m, tc, sz, idx){
+function makeCard(m, tc, sz, idx, draggable){
   var colorClass = idx%2===0 ? tc.c1 : tc.c2;
   var iniClass = tc.dark ? "card-initial dark" : "card-initial";
   var br = sz.h > 100 ? 10 : 8;
-  var wStyle = sz.fluid ? 'flex:1;min-width:0;height:'+sz.h+'px' : 'width:'+sz.w+'px;height:'+sz.h+'px';
-  var html = '<div class="card '+colorClass+'" onclick="openDetail(\''+m.id+'\')" style="'+wStyle+';border-radius:'+br+'px">';
-  if(isAdmin) html += '<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m.id+'\')">✏️</button>';
+  var wStyle = 'width:'+sz.w+'px;height:'+sz.h+'px';
+  var dragAttrs = draggable ? ' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"' : '';
+  var html = '<div class="card '+colorClass+(draggable?' drag-card':'')+'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
+  if(isAdmin) html += '<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
   html += '<div class="tier-tag" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
   if(m.photo) html += '<img src="'+m.photo+'">';
   else html += '<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
   html += '<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
   html += '<div class="card-name" style="font-size:'+sz.fn+'px">'+(m.name||"")+'</div>';
-  if(m.province) html += '<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
+  if(m.nameEn) html += '<div class="card-sub" style="font-size:'+sz.fs+'px;opacity:0.85">'+m.nameEn+'</div>';
+  else if(m.province) html += '<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
+  if(m.id) html += '<div class="card-sub" style="font-size:'+(sz.fs-1)+'px;opacity:0.7">#'+m.id+'</div>';
+  html += '</div></div>';
+  return html;
+}
+
+function renderTierRow(members, tierKey, tc, sz, rowClass){
+  if(!members.length) return '';
+  var html = '<div class="tier-section"><div class="'+rowClass+'" data-tier="'+tierKey+'">';
+  members.forEach(function(m,i){ html += makeCard(m, tc, sz, i, isAdmin); });
   html += '</div></div>';
   return html;
 }
@@ -390,43 +394,15 @@ window.draw=function(){
   var c=document.getElementById("mainContainer");
   if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
 
-  var hasAny = groups.Promoted.length||groups.VIP.length||groups.Premium.length||groups.Member.length;
-  if(!hasAny){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
-
   var SZ = calcSizes();
   var html="";
-
-  // ROW 1: Promoted
-  if(groups.Promoted.length){
-    html+='<div class="tier-section"><div class="row-promoted">';
-    groups.Promoted.forEach(function(m,i){
-      html+=makeCard(m,TIER_CONF.Promoted,SZ.promoted,i);
-    });
-    html+='</div></div>';
-  }
-
-  // ROW 2: VIP (portrait, fixed width like Premium)
-  if(groups.VIP.length){
-    html+='<div class="tier-section"><div class="row-vip">';
-    groups.VIP.forEach(function(m,i){html+=makeCard(m,TIER_CONF.VIP,SZ.vip,i);});
-    html+='</div></div>';
-  }
-
-  // ROW 2: Premium
-  if(groups.Premium.length){
-    html+='<div class="tier-section"><div class="row-premium">';
-    groups.Premium.forEach(function(m,i){html+=makeCard(m,TIER_CONF.Premium,SZ.premium,i);});
-    html+='</div></div>';
-  }
-
-  // ROW 3: Member
-  if(groups.Member.length){
-    html+='<div class="tier-section"><div class="row-member">';
-    groups.Member.forEach(function(m,i){html+=makeCard(m,TIER_CONF.Member,SZ.member,i);});
-    html+='</div></div>';
-  }
+  html += renderTierRow(groups.Promoted, 'Promoted', TIER_CONF.Promoted, SZ.promoted, 'row-tier');
+  html += renderTierRow(groups.Premium,  'Premium',  TIER_CONF.Premium,  SZ.premium,  'row-tier');
+  html += renderTierRow(groups.VIP,      'VIP',      TIER_CONF.VIP,      SZ.vip,      'row-tier');
+  html += renderTierRow(groups.Member,   'Member',   TIER_CONF.Member,   SZ.member,   'row-tier');
 
   c.innerHTML=html;
+  if(isAdmin) bindDrag(c);
 };
 
 window.setF=function(t,btn){
@@ -442,24 +418,25 @@ window.doLogin=function(){
     isAdmin=true;
     document.getElementById("ovLogin").className="ov";
     document.getElementById("adminBar").className="admin-bar on";
-    document.getElementById("btnAdmin").textContent="Admin ✓";
-    document.getElementById("btnAdmin").style.background="rgba(74,222,128,0.2)";
+    document.getElementById("btnAdmin").style.background="rgba(74,222,128,0.15)";
+    document.getElementById("btnAdmin").style.color="rgba(74,222,128,0.9)";
+    document.getElementById("btnAdmin").textContent="✅";
     document.getElementById("pwIn").value="";
     document.getElementById("pwErr").style.display="none";
     draw();
   }else{document.getElementById("pwErr").style.display="block";}
 };
-window.logoutAdmin=function(){isAdmin=false;document.getElementById("adminBar").className="admin-bar";document.getElementById("btnAdmin").textContent="Admin";document.getElementById("btnAdmin").style.background="";draw();};
+window.logoutAdmin=function(){isAdmin=false;document.getElementById("adminBar").className="admin-bar";document.getElementById("btnAdmin").textContent="🌸";document.getElementById("btnAdmin").style.background="rgba(200,192,232,0.25)";document.getElementById("btnAdmin").style.color="rgba(180,170,210,0.5)";draw();};
 window.closeLogin=function(){document.getElementById("ovLogin").className="ov";document.getElementById("pwIn").value="";document.getElementById("pwErr").style.display="none";};
 
-window.openDetail=function(id){
-  var m=all.find(function(x){return x.id===id;}); if(!m) return;
-  curId=id;
+window.openDetail=function(docId){
+  var m=all.find(function(x){return x._docId===docId;}); if(!m) return;
+  curId=docId;
   var cf=TIER_CONF[m.tier]||TIER_CONF.Member;
   document.getElementById("dTitle").textContent=m.name||"รายละเอียด";
   var dp=document.getElementById("dPoster");
   if(m.photo) dp.innerHTML='<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">';
-  else dp.innerHTML='<div style="width:100%;height:100%;background:'+(COLORS[((m.name||"").charCodeAt(0)||0)%COLORS.length])+';display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#333">'+ini(m.name)+'</div>';
+  else dp.innerHTML='<div style="width:100%;height:100%;background:'+(COLORS[((m.name||"").charCodeAt(0)||0)%COLORS.length])+';display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#333">'+ini(m.name)+'</div>';
   document.getElementById("dName").textContent=m.name||"";
   document.getElementById("dBadge").textContent=cf.tag;
   var da=document.getElementById("dAge"); da.textContent=m.age?"🎂 อายุ "+m.age+" ปี":""; da.style.display=m.age?"block":"none";
@@ -470,40 +447,146 @@ window.openDetail=function(id){
   if(m.lineQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
   if(m.waQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
   var ex=document.getElementById("dExtras"); ex.innerHTML="";
-  if(m.extras) m.extras.forEach(function(u){if(u) ex.innerHTML+='<img src="'+u+'" style="width:80px;height:107px;border-radius:8px;object-fit:cover">';});
+  if(m.extras) m.extras.forEach(function(u){if(u) ex.innerHTML+='<img src="'+u+'" style="width:104px;height:139px;border-radius:8px;object-fit:cover">';});
   document.getElementById("dAdminBtns").style.display=isAdmin?"block":"none";
+  var dFb = document.getElementById("dFbLink");
+  if(dFb){
+    if(isAdmin && m.facebook){
+      dFb.href = m.facebook;
+      dFb.style.display = "inline-flex";
+    } else {
+      dFb.style.display = "none";
+    }
+  }
   document.getElementById("ovDetail").className="ov on";
 };
 window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
 
-window.openEdit=function(id){
-  var m=all.find(function(x){return x.id===id;}); if(!m) return;
-  eid=id; photo=m.photo||""; extras=m.extras?[].concat(m.extras):["","",""];
-  document.getElementById("editTitle").textContent="แก้ไข · "+(m.name||id);
-  document.getElementById("btnDelM").style.display="inline-block";
-  document.getElementById("fid").value=m.id||"";
+var DRAFT_KEY = "mmr_draft";
+
+function saveDraft(){
+  var d = {
+    eid: eid,
+    photo: photo,
+    extras: [].concat(extras),
+    id:   document.getElementById("fid").value,
+    name: document.getElementById("fnm").value,
+    nameEn: document.getElementById("fne").value,
+    age:  document.getElementById("fag").value,
+    province: document.getElementById("fpv").value,
+    occupation: document.getElementById("foc").value,
+    whatsapp: document.getElementById("fwa").value,
+    lineId: document.getElementById("fli").value,
+    facebook: document.getElementById("ffb").value,
+    bio:  document.getElementById("fbi").value,
+    tier: window._tier||"Member",
+    ts: Date.now()
+  };
+  try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); }catch(e){}
+}
+
+function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
+
+function loadDraft(){
+  try{ return JSON.parse(localStorage.getItem(DRAFT_KEY)||"null"); }catch(e){ return null; }
+}
+
+function applyDraft(d){
+  eid = d.eid || null;
+  photo = d.photo || "";
+  extras = d.extras || ["","",""];
+  document.getElementById("fid").value = d.id||"";
+  document.getElementById("fnm").value = d.name||"";
+  document.getElementById("fne").value = d.nameEn||"";
+  document.getElementById("fag").value = d.age||"";
+  document.getElementById("fpv").value = d.province||"";
+  document.getElementById("foc").value = d.occupation||"";
+  document.getElementById("fwa").value = d.whatsapp||"";
+  document.getElementById("fli").value = d.lineId||"";
+  document.getElementById("ffb").value = d.facebook||"";
+  document.getElementById("fbi").value = d.bio||"";
+  setTier(d.tier||"Member");
+  if(photo){
+    document.getElementById("puImg").src=photo;
+    document.getElementById("puImg").style.display="block";
+    document.getElementById("puPh").style.display="none";
+    document.getElementById("puHint").textContent="✓ กู้คืนรูปแล้ว (คลิกเพื่อเปลี่ยน)";
+  } else {
+    document.getElementById("puImg").style.display="none";
+    document.getElementById("puPh").style.display="flex";
+    document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
+  }
+  resetX();
+  var banner = document.getElementById("draftBanner");
+  if(banner){
+    var ago = Math.round((Date.now()-d.ts)/60000);
+    document.getElementById("draftAgo").textContent = ago < 1 ? "เมื่อกี้" : ago+" นาทีที่แล้ว";
+    banner.style.display = "flex";
+  }
+}
+
+function bindDraftInputs(){
+  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.addEventListener("input", saveDraft);
+  });
+  document.querySelectorAll(".tr-o").forEach(function(el){
+    el.addEventListener("click", function(){ setTimeout(saveDraft,50); });
+  });
+}
+
+window.openEdit=function(docId){
+  var m=all.find(function(x){return x._docId===docId;}); if(!m) return;
+  var draft = loadDraft();
+  if(draft && draft.eid !== docId){ clearDraft(); }
+  eid=docId; photo=m.photo||""; extras=m.extras?[].concat(m.extras):["","",""];
+  document.getElementById("editTitle").textContent="แก้ไข · "+(m.name||docId);
+  document.getElementById("btnDelM").style.display="inline-block";  document.getElementById("fid").value=m.id||"";
   document.getElementById("fnm").value=m.name||"";
+  document.getElementById("fne").value=m.nameEn||"";
   document.getElementById("fag").value=m.age||"";
   document.getElementById("fpv").value=m.province||"";
   document.getElementById("foc").value=m.occupation||"";
   document.getElementById("fwa").value=m.whatsapp||"";
   document.getElementById("fli").value=m.lineId||"";
+  document.getElementById("ffb").value=m.facebook||"";
   document.getElementById("fbi").value=m.bio||"";
   if(photo){document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="คลิกเพื่อเปลี่ยนรูป";}
-  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลดรูป";}
+  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";}
   resetX(); setTier(m.tier||"Member");
+  var sameDraft = loadDraft();
+  if(sameDraft && sameDraft.eid===docId){
+    applyDraft(sameDraft);
+  } else {
+    var b=document.getElementById("draftBanner"); if(b) b.style.display="none";
+  }
   document.getElementById("ovEdit").className="ov on";
+  bindDraftInputs();
 };
+
 window.openAdd=function(){
-  eid=null;photo="";extras=["","",""];
+  var draft = loadDraft();
+  eid=null; photo=""; extras=["","",""];
   document.getElementById("editTitle").textContent="เพิ่มสมาชิกใหม่";
   document.getElementById("btnDelM").style.display="none";
-  ["fid","fnm","fag","fpv","foc","fwa","fli","fbi"].forEach(function(i){document.getElementById(i).value="";});
-  document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลดรูป";
-  resetX();setTier("Member");
+  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(i){document.getElementById(i).value="";});
+  document.getElementById("puImg").style.display="none";
+  document.getElementById("puPh").style.display="flex";
+  document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
+  resetX(); setTier("Member");
+  var b=document.getElementById("draftBanner"); if(b) b.style.display="none";
+  if(draft && !draft.eid){ applyDraft(draft); }
   document.getElementById("ovEdit").className="ov on";
+  bindDraftInputs();
 };
-window.closeEdit=function(){document.getElementById("ovEdit").className="ov";};
+
+window.closeEdit=function(){
+  var hasData = ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].some(function(i){
+    return (document.getElementById(i).value||"").trim()!=="";
+  }) || photo || extras.some(function(e){return !!e;});
+  if(hasData) saveDraft(); else clearDraft();
+  document.getElementById("ovEdit").className="ov";
+};
 window.editCurrent=function(){closeDetail();if(curId)openEdit(curId);};
 
 window.setTier=function(t){
@@ -513,36 +596,93 @@ window.setTier=function(t){
 window._tier="Member";
 
 async function upCloud(f){var fd=new FormData();fd.append("file",f);fd.append("upload_preset",CP);var r=await fetch("https://api.cloudinary.com/v1_1/"+CL+"/image/upload",{method:"POST",body:fd});return (await r.json()).secure_url;}
-window.upMain=async function(input){var f=input.files[0];if(!f)return;document.getElementById("puHint").textContent="กำลังอัปโหลด...";try{photo=await upCloud(f);document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ";toast("อัปโหลดสำเร็จ","ok");}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
-window.upExtra=async function(input,i){var f=input.files[0];if(!f)return;try{var url=await upCloud(f);extras[i]=url;var sl=document.getElementById("x"+i);sl.innerHTML='<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';toast("รูปที่ "+(i+1)+" สำเร็จ","ok");}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
-window.rmX=function(e,i){e.stopPropagation();extras[i]="";var sl=document.getElementById("x"+i);sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';};
-function resetX(){for(var i=0;i<3;i++){var sl=document.getElementById("x"+i);if(extras[i])sl.innerHTML='<img src="'+extras[i]+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';else sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';}}
+window.upMain=async function(input){var f=input.files[0];if(!f)return;document.getElementById("puHint").textContent="กำลังอัปโหลด...";try{photo=await upCloud(f);document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ (คลิกหรือ Ctrl+V เพื่อเปลี่ยน)";toast("อัปโหลดสำเร็จ","ok");saveDraft();}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
+window.upExtra=async function(input,i){var f=input.files[0];if(!f)return;try{var url=await upCloud(f);extras[i]=url;var sl=document.getElementById("x"+i);sl.innerHTML='<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';sl.addEventListener("click",function(){_pasteTarget=i;});toast("รูปที่ "+(i+1)+" สำเร็จ","ok");saveDraft();}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
+var _pasteTarget = -1;
+
+document.addEventListener("DOMContentLoaded", function(){
+  var pu = document.querySelector(".pu");
+  if(pu) pu.addEventListener("click", function(){ _pasteTarget = -1; });
+  [0,1,2].forEach(function(i){
+    var el = document.getElementById("x"+i);
+    if(el) el.addEventListener("click", function(){ _pasteTarget = i; });
+  });
+});
+
+document.addEventListener("paste", function(e){
+  if(document.getElementById("ovEdit").className.indexOf("on") < 0) return;
+  var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for(var k = 0; k < items.length; k++){
+    if(items[k].type.indexOf("image") >= 0){
+      var file = items[k].getAsFile();
+      if(!file) continue;
+      if(_pasteTarget >= 0){
+        pasteExtra(file, _pasteTarget);
+      } else {
+        pasteMain(file);
+      }
+      return;
+    }
+  }
+});
+
+function pasteMain(file){
+  document.getElementById("puHint").textContent = "กำลังอัปโหลด...";
+  upCloud(file).then(function(url){
+    photo = url;
+    document.getElementById("puImg").src = url;
+    document.getElementById("puImg").style.display = "block";
+    document.getElementById("puPh").style.display = "none";
+    document.getElementById("puHint").textContent = "✓ สำเร็จ (คลิกหรือ Ctrl+V เพื่อเปลี่ยน)";
+    toast("วางรูปโปรไฟล์สำเร็จ", "ok");
+    saveDraft();
+  }).catch(function(){ toast("อัปโหลดไม่สำเร็จ", "er"); });
+}
+
+function pasteExtra(file, i){
+  toast("กำลังอัปโหลดรูปที่ "+(i+1)+"...", "");
+  upCloud(file).then(function(url){
+    extras[i] = url;
+    var sl = document.getElementById("x"+i);
+    sl.innerHTML = '<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';
+    sl.addEventListener("click", function(){ _pasteTarget = i; });
+    toast("วางรูปที่ "+(i+1)+" สำเร็จ", "ok");
+    saveDraft();
+  }).catch(function(){ toast("อัปโหลดไม่สำเร็จ", "er"); });
+}
+
+window.rmX=function(e,i){e.stopPropagation();extras[i]="";var sl=document.getElementById("x"+i);sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';sl.addEventListener("click",function(){_pasteTarget=i;});};
+function resetX(){for(var i=0;i<3;i++){(function(i){var sl=document.getElementById("x"+i);if(extras[i])sl.innerHTML='<img src="'+extras[i]+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';else sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';sl.addEventListener("click",function(){_pasteTarget=i;});})(i);}}
 
 window.saveM=async function(){
-  var id=document.getElementById("fid").value.trim();
-  if(!id){toast("กรุณากรอก ID","er");return;}
-  var data={id:id,name:document.getElementById("fnm").value.trim(),age:document.getElementById("fag").value.trim(),province:document.getElementById("fpv").value.trim(),occupation:document.getElementById("foc").value.trim(),whatsapp:document.getElementById("fwa").value.trim(),lineId:document.getElementById("fli").value.trim(),bio:document.getElementById("fbi").value.trim(),tier:window._tier||"Member",photo:photo,extras:[].concat(extras),lineQr:"",waQr:"",order:eid?(all.find(function(m){return m.id===eid;})||{order:all.length}).order:all.length};
-  try{await setDoc(doc(db,"members",id),data);if(eid){var idx=all.findIndex(function(m){return m.id===eid;});if(idx>=0)all[idx]=data;}else all.push(data);draw();closeEdit();showSaved();toast("บันทึกสำเร็จ","ok");}catch(e){toast("บันทึกไม่สำเร็จ: "+e.message,"er");}
+  var dispId=document.getElementById("fid").value.trim();
+  if(!dispId){toast("กรุณากรอก ID","er");return;}
+  var docKey = eid || (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2));
+  var data={id:dispId,name:document.getElementById("fnm").value.trim(),nameEn:document.getElementById("fne").value.trim(),age:document.getElementById("fag").value.trim(),province:document.getElementById("fpv").value.trim(),occupation:document.getElementById("foc").value.trim(),whatsapp:document.getElementById("fwa").value.trim(),lineId:document.getElementById("fli").value.trim(),facebook:document.getElementById("ffb").value.trim(),bio:document.getElementById("fbi").value.trim(),tier:window._tier||"Member",photo:photo,extras:[].concat(extras),lineQr:"",waQr:"",order:eid?(all.find(function(m){return m._docId===eid;})||{order:all.length}).order:all.length};
+  try{
+    await setDoc(doc(db,"members",docKey),data);
+    data._docId=docKey;
+    if(eid){var idx=all.findIndex(function(m){return m._docId===eid;});if(idx>=0)all[idx]=data;}
+    else all.push(data);
+    draw();closeEdit();clearDraft();showSaved();toast("บันทึกสำเร็จ","ok");
+  }catch(e){toast("บันทึกไม่สำเร็จ: "+e.message,"er");}
 };
 window.deleteCurrent=async function(){
-  var id=curId||eid;if(!id)return;
-  var m=all.find(function(x){return x.id===id;});
-  if(!confirm("ลบ "+(m?m.name:id)+"?"))return;
-  try{await deleteDoc(doc(db,"members",id));all=all.filter(function(x){return x.id!==id;});draw();closeDetail();closeEdit();toast("ลบสำเร็จ","ok");}catch(e){toast("ลบไม่สำเร็จ","er");}
+  var docId=curId||eid; if(!docId)return;
+  var m=all.find(function(x){return x._docId===docId;});
+  if(!confirm("ลบ "+(m?m.name:docId)+"?"))return;
+  try{await deleteDoc(doc(db,"members",docId));all=all.filter(function(x){return x._docId!==docId;});draw();closeDetail();closeEdit();toast("ลบสำเร็จ","ok");}catch(e){toast("ลบไม่สำเร็จ","er");}
 };
 
 window.openCSV=function(){document.getElementById("ovCSV").className="ov on";};
 window.closeCSV=function(){document.getElementById("ovCSV").className="ov";};
 
-// alias map: คอลัมน์ที่อาจมีชื่อต่างกันให้ map มาเป็นชื่อที่เว็บใช้
-var COL_MAP={"nickname":"name","fb_name":"name","fb_url":"","fbname":"name","ชื่อเล่น":"name","ชื่อfb":"name","facebook url":"","facebookurl":""};
+var COL_MAP={"nickname":"name","fb_name":"nameEn","fb_url":"facebook","fbname":"nameEn","ชื่อเล่น":"name","ชื่อfb":"nameEn","facebook url":"facebook","facebookurl":"facebook","facebook":"facebook","nameen":"nameEn","ชื่ออังกฤษ":"nameEn"};
 
 function parseCSVText(text){
-  // normalize line endings
   text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").trim();
   var lines=text.split("\n");
   var i,j;
-  // parse header — handle quoted fields
   function splitLine(line){
     var result=[],cur="",inQ=false;
     for(var k=0;k<line.length;k++){
@@ -564,52 +704,73 @@ function parseCSVText(text){
     var raw={};
     for(j=0;j<headers.length;j++) raw[headers[j]]=(vals[j]||"").replace(/"/g,"").trim();
 
-    // map column names
     var obj={};
     for(var h in raw){
       var mapped=COL_MAP.hasOwnProperty(h)?COL_MAP[h]:h;
-      if(mapped==="")continue; // skip fb_url / facebook url columns for now
+      if(mapped==="")continue;
       if(mapped&&!obj[mapped]) obj[mapped]=raw[h];
       else if(!mapped) obj[h]=raw[h];
     }
-    // also keep fb_url / facebook url as lineId fallback if needed
     if(raw["fb_url"]&&!obj["fb_url"]) obj["fb_url"]=raw["fb_url"];
     if(raw["facebook url"]&&!obj["fb_url"]) obj["fb_url"]=raw["facebook url"];
 
     if(!obj.tier)obj.tier="Member";
-    if(!obj.name)obj.name=raw["nickname"]||raw["fb_name"]||raw["ชื่อเล่น"]||"";
-    if(obj.id||obj.name)csvRows.push(obj);
+    if(!obj.name)obj.name=raw["nickname"]||raw["fb_name"]||raw["ชื่อเล่น"]||raw["name"]||"";
+    var hasAnyValue=Object.keys(obj).some(function(k){return (obj[k]||"").trim()!=="";});
+    if(hasAnyValue)csvRows.push(obj);
   }
   return headers;
 }
 
 window.readCSV=function(input){
   var file=input.files[0];if(!file)return;
-  processCSVFile(file);
+  var r1=new FileReader();
+  r1.onload=function(e){
+    var text=e.target.result;
+    if(text.indexOf("\uFFFD")>=0){
+      var r2=new FileReader();
+      r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};
+      r2.readAsText(file,"TIS-620");
+    } else {
+      window.processCSVFile._parse(text,file.name);
+    }
+  };
+  r1.readAsText(file,"UTF-8");
 };
 
-function processCSVFile(file){
-  if(!file)return;
-  if(!file.name.match(/\.(csv|txt)$/i)){toast("กรุณาใช้ไฟล์ .csv ครับ","er");return;}
-  var reader=new FileReader();
-  reader.onload=function(e){
+window.processCSVFile=function(file){
+  var r=new FileReader();
+  r.onload=function(e){
     var text=e.target.result;
-    var headers=parseCSVText(text);
-    document.getElementById("csvN").textContent="พบ "+csvRows.length+" รายการ";
-    var i,j;
-    var hh="<tr>";for(i=0;i<headers.length;i++)hh+="<th>"+headers[i]+"</th>";hh+="</tr>";
-    var bh="";
-    for(i=0;i<Math.min(csvRows.length,15);i++){bh+="<tr>";for(j=0;j<headers.length;j++)bh+="<td>"+(csvRows[i][headers[j]]||"")+"</td>";bh+="</tr>";}
-    if(csvRows.length>15)bh+='<tr><td colspan="'+headers.length+'" style="text-align:center;color:#aaa">...อีก '+(csvRows.length-15)+' รายการ</td></tr>';
-    document.getElementById("csvH").innerHTML=hh;
-    document.getElementById("csvB").innerHTML=bh;
-    document.getElementById("csvPv").style.display="block";
+    if(text.indexOf("\uFFFD")>=0){
+      var r2=new FileReader();
+      r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};
+      r2.readAsText(file,"TIS-620");
+    } else {
+      window.processCSVFile._parse(text,file.name);
+    }
   };
-  reader.readAsText(file,"UTF-8");
-}
+  r.readAsText(file,"UTF-8");
+};
 
-// Drag & drop support
-document.addEventListener("DOMContentLoaded",function(){
+window.processCSVFile._parse=function(text,filename){
+  if(!filename.match(/\.(csv|txt)$/i)){toast("กรุณาใช้ไฟล์ .csv ครับ","er");return;}
+  var headers=parseCSVText(text);
+  document.getElementById("csvN").textContent="พบ "+csvRows.length+" รายการ";
+  if(csvRows.length===0){
+    toast("พบ 0 รายการ — ลองตรวจสอบชื่อคอลัมน์ใน CSV ครับ","er");
+  }
+  var i,j;
+  var hh="<tr>";for(i=0;i<headers.length;i++)hh+="<th>"+headers[i]+"</th>";hh+="</tr>";
+  var bh="";
+  for(i=0;i<Math.min(csvRows.length,15);i++){bh+="<tr>";for(j=0;j<headers.length;j++)bh+="<td>"+(csvRows[i][headers[j]]||"")+"</td>";bh+="</tr>";}
+  if(csvRows.length>15)bh+='<tr><td colspan="'+headers.length+'" style="text-align:center;color:#aaa">...อีก '+(csvRows.length-15)+' รายการ</td></tr>';
+  document.getElementById("csvH").innerHTML=hh;
+  document.getElementById("csvB").innerHTML=bh;
+  document.getElementById("csvPv").style.display="block";
+};
+
+(function(){
   var drop=document.querySelector(".csv-drop");
   if(!drop)return;
   drop.addEventListener("dragover",function(e){e.preventDefault();drop.style.borderColor="#7B2FF7";});
@@ -617,9 +778,9 @@ document.addEventListener("DOMContentLoaded",function(){
   drop.addEventListener("drop",function(e){
     e.preventDefault();drop.style.borderColor="";
     var file=e.dataTransfer.files[0];
-    if(file)processCSVFile(file);
+    if(file)window.processCSVFile(file);
   });
-});
+})();
 window.clearCSV=function(){csvRows=[];document.getElementById("csvPv").style.display="none";document.getElementById("csvLog").style.display="none";};
 window.pushCSV=async function(){
   if(!csvRows.length)return;
@@ -627,9 +788,10 @@ window.pushCSV=async function(){
   var ok=0,fl=0,base=all.length;
   for(var i=0;i<csvRows.length;i++){
     var r=csvRows[i];
-    var id=r.id||String(base+i+1).padStart(3,"0");
-    var data={id:id,name:r.name||r.nickname||r.fb_name||"",age:r.age||"",province:r.province||"",occupation:r.occupation||"",whatsapp:r.whatsapp||"",lineId:r.lineId||"",tier:r.tier||"Member",bio:r.bio||"",order:typeof r.order!=="undefined"?Number(r.order):base+i,photo:"",extras:["","",""],lineQr:"",waQr:""};
-    try{await setDoc(doc(db,"members",id),data);ok++;var sp=document.createElement("span");sp.textContent="ok ["+id+"] "+r.name+"\n";logEl.appendChild(sp);}
+    var dispId=r.id||String(base+i+1).padStart(3,"0");
+    var docKey=crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2)+i;
+    var data={id:dispId,name:r.name||"",nameEn:r.nameEn||"",age:r.age||"",province:r.province||"",occupation:r.occupation||"",whatsapp:r.whatsapp||"",lineId:r.lineId||"",facebook:r.facebook||r.fb_url||"",tier:r.tier||"Member",bio:r.bio||"",order:typeof r.order!=="undefined"?Number(r.order):base+i,photo:"",extras:["","",""],lineQr:"",waQr:""};
+    try{await setDoc(doc(db,"members",docKey),data);ok++;var sp=document.createElement("span");sp.textContent="ok ["+dispId+"] "+r.name+"\n";logEl.appendChild(sp);}
     catch(e){fl++;var sp=document.createElement("span");sp.className="er";sp.textContent="fail: "+e.message+"\n";logEl.appendChild(sp);}
     logEl.scrollTop=logEl.scrollHeight;
   }
@@ -637,6 +799,64 @@ window.pushCSV=async function(){
   toast("นำเข้าสำเร็จ "+ok+" คน","ok");
   await load();
 };
+
+function bindDrag(container){
+  var dragSrc = null;
+
+  container.querySelectorAll('.drag-card').forEach(function(card){
+    card.addEventListener('dragstart', function(e){
+      dragSrc = card;
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', card.dataset.docid);
+    });
+    card.addEventListener('dragend', function(){
+      card.classList.remove('dragging');
+      container.querySelectorAll('.drag-over').forEach(function(el){ el.classList.remove('drag-over'); });
+    });
+    card.addEventListener('dragover', function(e){
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if(card !== dragSrc) card.classList.add('drag-over');
+    });
+    card.addEventListener('dragleave', function(){
+      card.classList.remove('drag-over');
+    });
+    card.addEventListener('drop', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      card.classList.remove('drag-over');
+      if(!dragSrc || dragSrc === card) return;
+      if(dragSrc.dataset.tier !== card.dataset.tier) return;
+
+      var tier = dragSrc.dataset.tier;
+      var srcId = dragSrc.dataset.docid;
+      var dstId = card.dataset.docid;
+
+      var tierMembers = all.filter(function(m){ return (m.tier||"Member") === tier; });
+      var srcIdx = tierMembers.findIndex(function(m){ return m._docId === srcId; });
+      var dstIdx = tierMembers.findIndex(function(m){ return m._docId === dstId; });
+      if(srcIdx < 0 || dstIdx < 0) return;
+
+      var moved = tierMembers.splice(srcIdx, 1)[0];
+      tierMembers.splice(dstIdx, 0, moved);
+
+      var base = all.filter(function(m){ return (m.tier||"Member") !== tier; })
+                    .reduce(function(mn,m){ return Math.min(mn, typeof m.order==='number'?m.order:999); }, 0);
+
+      tierMembers.forEach(function(m, i){
+        var newOrder = base + i;
+        m.order = newOrder;
+        setDoc(doc(db,"members",m._docId), Object.assign({},m,{order:newOrder}))
+          .catch(function(e){ console.error('order save fail',e); });
+      });
+
+      all.sort(function(a,b){ return (a.order||0)-(b.order||0); });
+      draw();
+      showSaved();
+    });
+  });
+}
 
 function showSaved(){var el=document.getElementById("savedBadge");el.style.display="inline-block";setTimeout(function(){el.style.display="none";},2000);}
 window.toast=function(msg,type){var el=document.getElementById("toast");el.textContent=msg;el.className="toast on"+(type?" "+type:"");setTimeout(function(){el.className="toast";},3000);};
