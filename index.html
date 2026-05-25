@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MMR Member Directory</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;padding-bottom:48px}
+.hdr{background:linear-gradient(to right,#7B2FF7,#6A1FE0);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.hdr h1{color:#fff;font-size:18px;font-weight:700}
+.hdr small{color:rgba(255,255,255,0.75);font-size:12px;display:block}
+.hdr-r{display:flex;gap:8px;align-items:center}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500}
+.btn-w{background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3)}
+.btn-p{background:#7B2FF7;color:#fff}
+.btn-g{background:#f1f5f9;color:#555}
+.btn-d{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
+.btn-s{padding:5px 12px;font-size:12px}
+.admin-bar{background:rgba(123,47,247,0.08);border-bottom:1px solid rgba(123,47,247,0.15);padding:8px 18px;display:none;gap:8px;align-items:center;flex-wrap:wrap}
+.admin-bar.on{display:flex}
+.toolbar{padding:12px 18px 0;display:flex;gap:8px;flex-wrap:wrap}
+.si{position:relative;flex:1;min-width:180px}
+.si input{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(123,47,247,0.2);border-radius:10px;padding:9px 14px 9px 34px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
+.si input:focus{border-color:#7B2FF7}
+.si-ic{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#7B2FF7;font-size:14px}
+.filters{padding:8px 18px 0;display:flex;gap:6px;flex-wrap:wrap}
+.fb{padding:4px 14px;border-radius:20px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:.6;transition:all .15s}
+.fb.on{opacity:1;transform:scale(1.05)}
+
+/* CONTAINER */
+.container{padding:12px 18px}
+.tier-section{margin-bottom:8px}
+
+/* CARD */
+.card{position:relative;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card-initial{font-weight:700;color:rgba(255,255,255,0.2);position:relative;z-index:1}
+.card-initial.dark{color:rgba(0,0,0,0.12)}
+.overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.62));z-index:2}
+.card-name{font-weight:500;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-sub{color:rgba(255,255,255,0.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tier-tag{position:absolute;top:5px;left:5px;color:#fff;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:500;background:rgba(0,0,0,0.28);z-index:3}
+.card-edit{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.45);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:none;z-index:4}
+
+/* TIER COLORS */
+.promoted-1{background:#7B2FF7}.promoted-2{background:#6A1FE0}
+.vip-1{background:#F5A623}.vip-2{background:#E09620}
+.premium-1{background:#E91E8C}.premium-2{background:#D01578}
+.member-1{background:#C8C0E8}.member-2{background:#B8AEDD}
+
+/* ROW LAYOUTS - responsive */
+.row-promoted{display:flex;gap:8px;align-items:flex-start;width:100%}
+.row-vip{display:flex;gap:7px;flex-wrap:wrap;width:100%}
+.row-premium{display:flex;gap:7px;flex-wrap:wrap;width:100%}
+.row-member{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.vip-grid{display:flex;flex-direction:column;gap:7px;flex:1;min-width:0}
+.vip-row{display:flex;gap:7px;width:100%}
+.vip-row .card{flex:1;min-width:0}
+.row-premium .card,.row-member .card{flex:0 0 auto}
+
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;align-items:center;justify-content:center;padding:16px}
+.ov.on{display:flex}
+.md{background:#fff;border-radius:18px;width:100%;max-width:400px;max-height:92vh;overflow-y:auto}
+.md-h{padding:16px 20px 12px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center}
+.md-h h3{font-size:15px;font-weight:700}
+.md-cl{background:none;border:none;font-size:18px;cursor:pointer;color:#bbb}
+.md-b{padding:16px 20px}
+.md-f{padding:12px 20px;border-top:1px solid #f0f0f0;display:flex;gap:8px;justify-content:flex-end}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgr{display:flex;flex-direction:column;gap:4px}
+.fgr.full{grid-column:1/-1}
+label{font-size:12px;color:#888;font-weight:500}
+input[type=text],input[type=tel],input[type=password],textarea{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
+input:focus,textarea:focus{border-color:#7B2FF7}
+textarea{resize:vertical;min-height:54px}
+.pu{border:2px dashed #d8b4fe;border-radius:10px;padding:12px;text-align:center;cursor:pointer;position:relative}
+.pu:hover{border-color:#7B2FF7}
+.pu-img{width:72px;height:96px;border-radius:8px;object-fit:cover;margin:0 auto 6px;display:block;border:2px solid #7B2FF7}
+.pu-ph{width:72px;height:96px;border-radius:8px;background:#f3f0fa;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:28px}
+.pu input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.xg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.xs{border:2px dashed #d8b4fe;border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden}
+.xs:hover{border-color:#7B2FF7}
+.xs img{width:100%;height:100%;object-fit:cover}
+.xs input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.xs-rm{position:absolute;top:3px;right:3px;background:rgba(0,0,0,0.55);border:none;border-radius:50%;width:18px;height:18px;color:#fff;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2}
+.xs:hover .xs-rm{display:flex}
+.tr-g{display:flex;gap:6px;flex-wrap:wrap}
+.tr-o{padding:4px 12px;border-radius:20px;border:1px solid #e2e8f0;cursor:pointer;font-size:12px;font-weight:600;background:#f8fafc;color:#888}
+.tr-Promoted{background:rgba(123,47,247,0.1);color:#7B2FF7;border-color:#7B2FF7}
+.tr-VIP{background:rgba(245,166,35,0.1);color:#b45309;border-color:#F5A623}
+.tr-Premium{background:rgba(233,30,140,0.1);color:#E91E8C;border-color:#E91E8C}
+.tr-Member{background:rgba(200,192,232,0.3);color:#6d5fad;border-color:#C8C0E8}
+.qr-box{flex:1;background:#f3f0fa;border-radius:10px;padding:8px;text-align:center}
+.qr-box img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block}
+.csv-drop{border:2px dashed #d8b4fe;border-radius:10px;padding:20px;text-align:center;cursor:pointer;position:relative}
+.csv-drop:hover{border-color:#7B2FF7}
+.csv-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.csv-tw{overflow-x:auto;border-radius:8px;border:1px solid #f0f0f0;max-height:180px;overflow-y:auto;margin-top:10px}
+.csv-tw table{width:100%;border-collapse:collapse;font-size:11px}
+.csv-tw th,.csv-tw td{padding:5px 8px;border-bottom:1px solid #f0e8ff;text-align:left}
+.csv-tw th{background:#f3f0fa;color:#7B2FF7;font-weight:600}
+.log{background:#1a1a2e;border-radius:8px;padding:12px;height:180px;overflow-y:auto;font-size:11px;font-family:monospace;color:#4ade80;white-space:pre-wrap;margin-top:10px}
+.log .er{color:#f87171}
+.toast{position:fixed;bottom:20px;right:20px;background:#1a1a2e;border-radius:8px;padding:10px 16px;font-size:13px;color:#fff;z-index:999;transform:translateY(70px);opacity:0;transition:all .3s}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.ok{border-left:3px solid #4ade80}
+.toast.er{border-left:3px solid #f87171}
+.empty{text-align:center;padding:48px;color:#7B2FF7;opacity:.4}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div><h1>MMR Members</h1><small id="cntLbl">กำลังโหลด...</small></div>
+  <div class="hdr-r">
+    <span id="savedBadge" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;font-size:12px;padding:4px 12px;border-radius:20px">✓ บันทึกแล้ว</span>
+    <button class="btn btn-w btn-s" id="btnAdmin" onclick="toggleAdmin()">Admin</button>
+  </div>
+</div>
+
+<div class="admin-bar" id="adminBar">
+  <button class="btn btn-p btn-s" onclick="openAdd()">+ เพิ่มสมาชิก</button>
+  <button class="btn btn-s" style="background:rgba(123,47,247,0.1);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2)" onclick="openCSV()">📊 นำเข้า Excel/CSV</button>
+  <button class="btn btn-s" style="background:rgba(233,30,140,0.1);color:#E91E8C;border:1px solid rgba(233,30,140,0.2)" onclick="doReload()">🔄 รีเฟรช</button>
+  <button class="btn btn-g btn-s" style="margin-left:auto" onclick="logoutAdmin()">ออก</button>
+</div>
+
+<div class="toolbar">
+  <div class="si"><span class="si-ic">🔍</span><input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw()"></div>
+</div>
+<div class="filters">
+  <button class="fb on" style="background:#7B2FF7;color:#fff" onclick="setF('',this)">ทั้งหมด</button>
+  <button class="fb" style="background:rgba(123,47,247,0.15);color:#7B2FF7" onclick="setF('Promoted',this)">Promoted</button>
+  <button class="fb" style="background:rgba(245,166,35,0.15);color:#b45309" onclick="setF('VIP',this)">VIP</button>
+  <button class="fb" style="background:rgba(233,30,140,0.15);color:#E91E8C" onclick="setF('Premium',this)">Premium</button>
+  <button class="fb" style="background:rgba(200,192,232,0.3);color:#6d5fad" onclick="setF('Member',this)">Member</button>
+</div>
+
+<div class="container" id="mainContainer">
+  <div class="empty">⏳ กำลังโหลด...</div>
+</div>
+
+<!-- LOGIN -->
+<div class="ov" id="ovLogin">
+  <div class="md" style="max-width:300px">
+    <div class="md-h"><h3>Admin Login</h3><button class="md-cl" onclick="closeLogin()">×</button></div>
+    <div class="md-b">
+      <div style="color:#aaa;font-size:12px;margin-bottom:12px">เฉพาะผู้ดูแลระบบเท่านั้น</div>
+      <div class="fgr" style="margin-bottom:10px"><label>รหัสผ่าน</label><input type="password" id="pwIn" onkeydown="if(event.key==='Enter')doLogin()" placeholder="รหัสผ่าน"></div>
+      <div id="pwErr" style="color:#f87171;font-size:12px;margin-bottom:8px;display:none">รหัสผ่านไม่ถูกต้อง</div>
+      <button class="btn btn-p" style="width:100%" onclick="doLogin()">เข้าสู่ระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="ov" id="ovDetail" onclick="if(event.target===this)closeDetail()">
+  <div class="md">
+    <div class="md-h"><h3 id="dTitle">รายละเอียด</h3><button class="md-cl" onclick="closeDetail()">×</button></div>
+    <div class="md-b">
+      <div style="display:flex;gap:14px;margin-bottom:16px">
+        <div id="dPoster" style="flex-shrink:0;width:80px;height:107px;border-radius:10px;overflow:hidden"></div>
+        <div style="flex:1;min-width:0">
+          <div id="dName" style="font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px"></div>
+          <span id="dBadge" style="font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px"></span>
+          <div id="dAge" style="color:#666;font-size:12px;margin-bottom:4px"></div>
+          <div id="dProv" style="color:#666;font-size:12px;margin-bottom:4px"></div>
+          <div id="dOcc" style="color:#666;font-size:12px"></div>
+        </div>
+      </div>
+      <div id="dBio" style="color:#333;font-size:13px;line-height:1.6;background:#f3f0fa;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none"></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px" id="dQR"></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="dExtras"></div>
+      <div id="dAdminBtns" style="display:none;margin-top:12px">
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-p" style="flex:1" onclick="editCurrent()">✏️ แก้ไข</button>
+          <button class="btn btn-d" style="flex:1" onclick="deleteCurrent()">🗑 ลบ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT/ADD -->
+<div class="ov" id="ovEdit" onclick="if(event.target===this)closeEdit()">
+  <div class="md">
+    <div class="md-h"><h3 id="editTitle">แก้ไขสมาชิก</h3><button class="md-cl" onclick="closeEdit()">×</button></div>
+    <div class="md-b">
+      <div class="fgr full" style="margin-bottom:12px">
+        <label>รูปโปรไฟล์ (3:4)</label>
+        <div class="pu">
+          <div class="pu-ph" id="puPh">📷</div>
+          <img id="puImg" class="pu-img" style="display:none">
+          <div style="font-size:12px;color:#7B2FF7;margin-top:4px" id="puHint">คลิกเพื่ออัปโหลดรูป</div>
+          <input type="file" accept="image/*" onchange="upMain(this)">
+        </div>
+      </div>
+      <div class="fgr full" style="margin-bottom:12px">
+        <label>รูปเพิ่มเติม (3 รูป)</label>
+        <div class="xg">
+          <div class="xs" id="x0"><span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป 1</span><input type="file" accept="image/*" onchange="upExtra(this,0)"><button class="xs-rm" onclick="rmX(event,0)">×</button></div>
+          <div class="xs" id="x1"><span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป 2</span><input type="file" accept="image/*" onchange="upExtra(this,1)"><button class="xs-rm" onclick="rmX(event,1)">×</button></div>
+          <div class="xs" id="x2"><span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป 3</span><input type="file" accept="image/*" onchange="upExtra(this,2)"><button class="xs-rm" onclick="rmX(event,2)">×</button></div>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fgr"><label>ID</label><input type="text" id="fid"></div>
+        <div class="fgr"><label>ชื่อ</label><input type="text" id="fnm"></div>
+        <div class="fgr"><label>อายุ</label><input type="text" id="fag"></div>
+        <div class="fgr"><label>จังหวัด</label><input type="text" id="fpv"></div>
+        <div class="fgr full"><label>อาชีพ</label><input type="text" id="foc"></div>
+        <div class="fgr"><label>WhatsApp</label><input type="tel" id="fwa"></div>
+        <div class="fgr"><label>LINE ID</label><input type="text" id="fli"></div>
+        <div class="fgr full">
+          <label>ระดับสมาชิก</label>
+          <div class="tr-g">
+            <div class="tr-o" onclick="setTier('Promoted')">Promoted</div>
+            <div class="tr-o" onclick="setTier('VIP')">VIP</div>
+            <div class="tr-o" onclick="setTier('Premium')">Premium</div>
+            <div class="tr-o" onclick="setTier('Member')">Member</div>
+          </div>
+        </div>
+        <div class="fgr full"><label>Bio</label><textarea id="fbi" rows="2"></textarea></div>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-d btn-s" id="btnDelM" onclick="deleteCurrent()" style="margin-right:auto;display:none">ลบ</button>
+      <button class="btn btn-g" onclick="closeEdit()">ยกเลิก</button>
+      <button class="btn btn-p" onclick="saveM()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- CSV -->
+<div class="ov" id="ovCSV" onclick="if(event.target===this)closeCSV()">
+  <div class="md" style="max-width:520px">
+    <div class="md-h"><h3>นำเข้า Excel / CSV</h3><button class="md-cl" onclick="closeCSV()">×</button></div>
+    <div class="md-b">
+      <div style="font-size:12px;color:#aaa;margin-bottom:4px">คอลัมน์: id, name, age, province, occupation, whatsapp, lineId, tier, bio</div>
+      <div style="font-size:12px;color:#7B2FF7;margin-bottom:10px">💡 บันทึก Excel เป็น .csv ก่อนนำเข้า</div>
+      <div class="csv-drop">
+        <div style="font-size:28px">📂</div>
+        <div style="margin-top:6px;font-size:13px;color:#666">ลากไฟล์ CSV มาวาง หรือคลิกเลือก</div>
+        <input type="file" accept=".csv,.txt" onchange="readCSV(this)">
+      </div>
+      <div id="csvPv" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+          <span id="csvN" style="font-size:13px;font-weight:600;color:#333"></span>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-g btn-s" onclick="clearCSV()">ล้าง</button>
+            <button class="btn btn-p btn-s" onclick="pushCSV()">นำเข้า Firebase</button>
+          </div>
+        </div>
+        <div class="csv-tw"><table><thead id="csvH"></thead><tbody id="csvB"></tbody></table></div>
+      </div>
+      <div class="log" id="csvLog" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getFirestore,doc,setDoc,collection,getDocs,deleteDoc,orderBy,query} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const CL="dwaoxzaza", CP="kmgtl0tf", APW="mmr2024";
+const db=getFirestore(initializeApp({
+  apiKey:"AIzaSyBYYHNIgF1p4GeBh1itjmIggJMSVN__yj0",
+  authDomain:"rmr-a7109.firebaseapp.com",
+  projectId:"rmr-a7109",
+  storageBucket:"rmr-a7109.firebasestorage.app",
+  messagingSenderId:"54024673391",
+  appId:"1:54024673391:web:c0648356d8f0e8e8bf559a"
+}));
+
+var TIER_CONF = {
+  Promoted:{tag:"Promoted",  c1:"promoted-1",c2:"promoted-2", ratio:147/110,fi:42,fn:11,fs:9,fp:8,fo:7},
+  VIP:     {tag:"VIP",       c1:"vip-1",     c2:"vip-2",      ratio:70/90,  fi:26,fn:10,fs:8,fp:7,fo:5,dark:true},
+  Premium: {tag:"Premium",   c1:"premium-1", c2:"premium-2",  ratio:100/75, fi:24,fn:10,fs:8,fp:5,fo:4},
+  Member:  {tag:"Member",    c1:"member-1",  c2:"member-2",   ratio:83/62,  fi:18,fn:9, fs:7,fp:4,fo:3}
+};
+
+function getContainerWidth(){
+  var el=document.getElementById("mainContainer");
+  return el ? el.clientWidth - 36 : (window.innerWidth - 36);
+}
+
+function calcSizes(){
+  var W = getContainerWidth();
+  var GAP = 7;
+
+  // Max card widths to prevent oversized cards on desktop
+  var MAX_PROMOTED = 140;
+  var MAX_VIP      = 100;  // VIP: portrait card, ใหญ่กว่า Member
+  var MAX_PREMIUM  = 90;
+  var MAX_MEMBER   = 72;   // Member: เล็กสุด
+
+  // Promoted: more cols on wider screens
+  var promotedCols = W < 300 ? 2 : W < 500 ? 3 : W < 800 ? 4 : W < 1100 ? 5 : 6;
+  var promotedW = Math.min(MAX_PROMOTED, Math.floor((W - GAP*(promotedCols-1)) / promotedCols));
+  var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
+
+  // VIP: 3 per row on mobile, more on desktop (portrait card like Premium)
+  var vipCols = W < 300 ? 2 : W < 500 ? 3 : W < 750 ? 4 : W < 1050 ? 5 : 6;
+  var vipW = Math.min(MAX_VIP, Math.floor((W - GAP*(vipCols-1)) / vipCols));
+  var vipH = Math.round(vipW * 1.35); // portrait ratio ~3:4
+
+  // Premium: 4 on mobile, more on desktop
+  var premCols = W < 280 ? 3 : W < 500 ? 4 : W < 800 ? 5 : W < 1100 ? 6 : 7;
+  var premW = Math.min(MAX_PREMIUM, Math.floor((W - GAP*(premCols-1)) / premCols));
+  var premH = Math.round(premW * TIER_CONF.Premium.ratio);
+
+  // Member: most cols, smallest cards
+  var memCols = W < 280 ? 4 : W < 400 ? 5 : W < 600 ? 6 : W < 900 ? 7 : W < 1200 ? 8 : 9;
+  var memW = Math.min(MAX_MEMBER, Math.floor((W - GAP*(memCols-1)) / memCols));
+  var memH = Math.round(memW * TIER_CONF.Member.ratio);
+
+  // Scale font sizes proportionally (base width 62px for member)
+  function scaleFont(base, baseW, w){ return Math.max(6, Math.round(base * w / baseW)); }
+
+  return {
+    promoted: {w:promotedW, h:promotedH, cols:promotedCols,
+      fi:scaleFont(42,110,promotedW), fn:scaleFont(11,110,promotedW), fs:scaleFont(9,110,promotedW),
+      fp:scaleFont(8,110,promotedW), fo:scaleFont(7,110,promotedW)},
+    vip:      {w:vipW, h:vipH, cols:vipCols,
+      fi:scaleFont(26,90,vipW), fn:scaleFont(10,90,vipW), fs:scaleFont(8,90,vipW),
+      fp:scaleFont(7,90,vipW), fo:scaleFont(5,90,vipW)},
+    premium:  {w:premW, h:premH, cols:premCols,
+      fi:scaleFont(24,75,premW), fn:scaleFont(10,75,premW), fs:scaleFont(8,75,premW),
+      fp:scaleFont(5,75,premW), fo:scaleFont(4,75,premW)},
+    member:   {w:memW, h:memH, cols:memCols,
+      fi:scaleFont(18,62,memW), fn:scaleFont(9,62,memW), fs:scaleFont(7,62,memW),
+      fp:scaleFont(4,62,memW), fo:scaleFont(3,62,memW)}
+  };
+}
+var COLORS=["#ddd6fe","#bfdbfe","#bbf7d0","#fde68a","#fecaca","#fbcfe8"];
+function ini(n){return ((n||"").trim().split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2))||"?";}
+
+var all=[], filt="", isAdmin=false, curId=null, eid=null, photo="", extras=["","",""], csvRows=[];
+
+async function load(){
+  try{
+    var s=await getDocs(query(collection(db,"members"),orderBy("order")));
+    all=[];
+    s.forEach(function(d){all.push(d.data());});
+  }catch(e){all=[];}
+  document.getElementById("cntLbl").textContent=all.length+" สมาชิก";
+  draw();
+}
+
+window.doReload=function(){load();};
+
+function makeCard(m, tc, sz, idx){
+  var colorClass = idx%2===0 ? tc.c1 : tc.c2;
+  var iniClass = tc.dark ? "card-initial dark" : "card-initial";
+  var br = sz.h > 100 ? 10 : 8;
+  var wStyle = sz.fluid ? 'flex:1;min-width:0;height:'+sz.h+'px' : 'width:'+sz.w+'px;height:'+sz.h+'px';
+  var html = '<div class="card '+colorClass+'" onclick="openDetail(\''+m.id+'\')" style="'+wStyle+';border-radius:'+br+'px">';
+  if(isAdmin) html += '<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m.id+'\')">✏️</button>';
+  html += '<div class="tier-tag" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
+  if(m.photo) html += '<img src="'+m.photo+'">';
+  else html += '<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
+  html += '<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
+  html += '<div class="card-name" style="font-size:'+sz.fn+'px">'+(m.name||"")+'</div>';
+  if(m.province) html += '<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
+  html += '</div></div>';
+  return html;
+}
+
+window.draw=function(){
+  var q=(document.getElementById("sq").value||"").toLowerCase();
+  var list=all.filter(function(m){
+    var ok=!q||[m.name,m.province,m.occupation,m.bio].some(function(v){return (v||"").toLowerCase().indexOf(q)>=0;});
+    return ok&&(!filt||m.tier===filt);
+  });
+
+  var groups={Promoted:[],VIP:[],Premium:[],Member:[]};
+  list.forEach(function(m){
+    var t=m.tier||"Member";
+    if(groups[t]) groups[t].push(m);
+    else groups.Member.push(m);
+  });
+
+  var c=document.getElementById("mainContainer");
+  if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
+
+  var hasAny = groups.Promoted.length||groups.VIP.length||groups.Premium.length||groups.Member.length;
+  if(!hasAny){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
+
+  var SZ = calcSizes();
+  var html="";
+
+  // ROW 1: Promoted
+  if(groups.Promoted.length){
+    html+='<div class="tier-section"><div class="row-promoted">';
+    groups.Promoted.forEach(function(m,i){
+      html+=makeCard(m,TIER_CONF.Promoted,SZ.promoted,i);
+    });
+    html+='</div></div>';
+  }
+
+  // ROW 2: VIP (portrait, fixed width like Premium)
+  if(groups.VIP.length){
+    html+='<div class="tier-section"><div class="row-vip">';
+    groups.VIP.forEach(function(m,i){html+=makeCard(m,TIER_CONF.VIP,SZ.vip,i);});
+    html+='</div></div>';
+  }
+
+  // ROW 2: Premium
+  if(groups.Premium.length){
+    html+='<div class="tier-section"><div class="row-premium">';
+    groups.Premium.forEach(function(m,i){html+=makeCard(m,TIER_CONF.Premium,SZ.premium,i);});
+    html+='</div></div>';
+  }
+
+  // ROW 3: Member
+  if(groups.Member.length){
+    html+='<div class="tier-section"><div class="row-member">';
+    groups.Member.forEach(function(m,i){html+=makeCard(m,TIER_CONF.Member,SZ.member,i);});
+    html+='</div></div>';
+  }
+
+  c.innerHTML=html;
+};
+
+window.setF=function(t,btn){
+  filt=t;
+  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on");b.style.opacity=".6";});
+  btn.classList.add("on");btn.style.opacity="1";
+  draw();
+};
+
+window.toggleAdmin=function(){if(isAdmin){logoutAdmin();return;}document.getElementById("ovLogin").className="ov on";setTimeout(function(){document.getElementById("pwIn").focus();},100);};
+window.doLogin=function(){
+  if(document.getElementById("pwIn").value===APW){
+    isAdmin=true;
+    document.getElementById("ovLogin").className="ov";
+    document.getElementById("adminBar").className="admin-bar on";
+    document.getElementById("btnAdmin").textContent="Admin ✓";
+    document.getElementById("btnAdmin").style.background="rgba(74,222,128,0.2)";
+    document.getElementById("pwIn").value="";
+    document.getElementById("pwErr").style.display="none";
+    draw();
+  }else{document.getElementById("pwErr").style.display="block";}
+};
+window.logoutAdmin=function(){isAdmin=false;document.getElementById("adminBar").className="admin-bar";document.getElementById("btnAdmin").textContent="Admin";document.getElementById("btnAdmin").style.background="";draw();};
+window.closeLogin=function(){document.getElementById("ovLogin").className="ov";document.getElementById("pwIn").value="";document.getElementById("pwErr").style.display="none";};
+
+window.openDetail=function(id){
+  var m=all.find(function(x){return x.id===id;}); if(!m) return;
+  curId=id;
+  var cf=TIER_CONF[m.tier]||TIER_CONF.Member;
+  document.getElementById("dTitle").textContent=m.name||"รายละเอียด";
+  var dp=document.getElementById("dPoster");
+  if(m.photo) dp.innerHTML='<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">';
+  else dp.innerHTML='<div style="width:100%;height:100%;background:'+(COLORS[((m.name||"").charCodeAt(0)||0)%COLORS.length])+';display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#333">'+ini(m.name)+'</div>';
+  document.getElementById("dName").textContent=m.name||"";
+  document.getElementById("dBadge").textContent=cf.tag;
+  var da=document.getElementById("dAge"); da.textContent=m.age?"🎂 อายุ "+m.age+" ปี":""; da.style.display=m.age?"block":"none";
+  var dpr=document.getElementById("dProv"); dpr.textContent=m.province?"📍 "+m.province:""; dpr.style.display=m.province?"block":"none";
+  var dc=document.getElementById("dOcc"); dc.textContent=m.occupation?"💼 "+m.occupation:""; dc.style.display=m.occupation?"block":"none";
+  var db2=document.getElementById("dBio"); if(m.bio){db2.textContent=m.bio;db2.style.display="block";}else db2.style.display="none";
+  var qr=document.getElementById("dQR"); qr.innerHTML="";
+  if(m.lineQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
+  if(m.waQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
+  var ex=document.getElementById("dExtras"); ex.innerHTML="";
+  if(m.extras) m.extras.forEach(function(u){if(u) ex.innerHTML+='<img src="'+u+'" style="width:80px;height:107px;border-radius:8px;object-fit:cover">';});
+  document.getElementById("dAdminBtns").style.display=isAdmin?"block":"none";
+  document.getElementById("ovDetail").className="ov on";
+};
+window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
+
+window.openEdit=function(id){
+  var m=all.find(function(x){return x.id===id;}); if(!m) return;
+  eid=id; photo=m.photo||""; extras=m.extras?[].concat(m.extras):["","",""];
+  document.getElementById("editTitle").textContent="แก้ไข · "+(m.name||id);
+  document.getElementById("btnDelM").style.display="inline-block";
+  document.getElementById("fid").value=m.id||"";
+  document.getElementById("fnm").value=m.name||"";
+  document.getElementById("fag").value=m.age||"";
+  document.getElementById("fpv").value=m.province||"";
+  document.getElementById("foc").value=m.occupation||"";
+  document.getElementById("fwa").value=m.whatsapp||"";
+  document.getElementById("fli").value=m.lineId||"";
+  document.getElementById("fbi").value=m.bio||"";
+  if(photo){document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="คลิกเพื่อเปลี่ยนรูป";}
+  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลดรูป";}
+  resetX(); setTier(m.tier||"Member");
+  document.getElementById("ovEdit").className="ov on";
+};
+window.openAdd=function(){
+  eid=null;photo="";extras=["","",""];
+  document.getElementById("editTitle").textContent="เพิ่มสมาชิกใหม่";
+  document.getElementById("btnDelM").style.display="none";
+  ["fid","fnm","fag","fpv","foc","fwa","fli","fbi"].forEach(function(i){document.getElementById(i).value="";});
+  document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลดรูป";
+  resetX();setTier("Member");
+  document.getElementById("ovEdit").className="ov on";
+};
+window.closeEdit=function(){document.getElementById("ovEdit").className="ov";};
+window.editCurrent=function(){closeDetail();if(curId)openEdit(curId);};
+
+window.setTier=function(t){
+  window._tier=t;
+  document.querySelectorAll(".tr-o").forEach(function(el){el.className="tr-o"+(el.textContent.trim()===t?" tr-"+t:"");});
+};
+window._tier="Member";
+
+async function upCloud(f){var fd=new FormData();fd.append("file",f);fd.append("upload_preset",CP);var r=await fetch("https://api.cloudinary.com/v1_1/"+CL+"/image/upload",{method:"POST",body:fd});return (await r.json()).secure_url;}
+window.upMain=async function(input){var f=input.files[0];if(!f)return;document.getElementById("puHint").textContent="กำลังอัปโหลด...";try{photo=await upCloud(f);document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ";toast("อัปโหลดสำเร็จ","ok");}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
+window.upExtra=async function(input,i){var f=input.files[0];if(!f)return;try{var url=await upCloud(f);extras[i]=url;var sl=document.getElementById("x"+i);sl.innerHTML='<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';toast("รูปที่ "+(i+1)+" สำเร็จ","ok");}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
+window.rmX=function(e,i){e.stopPropagation();extras[i]="";var sl=document.getElementById("x"+i);sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';};
+function resetX(){for(var i=0;i<3;i++){var sl=document.getElementById("x"+i);if(extras[i])sl.innerHTML='<img src="'+extras[i]+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';else sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';}}
+
+window.saveM=async function(){
+  var id=document.getElementById("fid").value.trim();
+  if(!id){toast("กรุณากรอก ID","er");return;}
+  var data={id:id,name:document.getElementById("fnm").value.trim(),age:document.getElementById("fag").value.trim(),province:document.getElementById("fpv").value.trim(),occupation:document.getElementById("foc").value.trim(),whatsapp:document.getElementById("fwa").value.trim(),lineId:document.getElementById("fli").value.trim(),bio:document.getElementById("fbi").value.trim(),tier:window._tier||"Member",photo:photo,extras:[].concat(extras),lineQr:"",waQr:"",order:eid?(all.find(function(m){return m.id===eid;})||{order:all.length}).order:all.length};
+  try{await setDoc(doc(db,"members",id),data);if(eid){var idx=all.findIndex(function(m){return m.id===eid;});if(idx>=0)all[idx]=data;}else all.push(data);draw();closeEdit();showSaved();toast("บันทึกสำเร็จ","ok");}catch(e){toast("บันทึกไม่สำเร็จ: "+e.message,"er");}
+};
+window.deleteCurrent=async function(){
+  var id=curId||eid;if(!id)return;
+  var m=all.find(function(x){return x.id===id;});
+  if(!confirm("ลบ "+(m?m.name:id)+"?"))return;
+  try{await deleteDoc(doc(db,"members",id));all=all.filter(function(x){return x.id!==id;});draw();closeDetail();closeEdit();toast("ลบสำเร็จ","ok");}catch(e){toast("ลบไม่สำเร็จ","er");}
+};
+
+window.openCSV=function(){document.getElementById("ovCSV").className="ov on";};
+window.closeCSV=function(){document.getElementById("ovCSV").className="ov";};
+
+// alias map: คอลัมน์ที่อาจมีชื่อต่างกันให้ map มาเป็นชื่อที่เว็บใช้
+var COL_MAP={"nickname":"name","fb_name":"name","fb_url":"","fbname":"name","ชื่อเล่น":"name","ชื่อfb":"name","facebook url":"","facebookurl":""};
+
+function parseCSVText(text){
+  // normalize line endings
+  text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").trim();
+  var lines=text.split("\n");
+  var i,j;
+  // parse header — handle quoted fields
+  function splitLine(line){
+    var result=[],cur="",inQ=false;
+    for(var k=0;k<line.length;k++){
+      var ch=line[k];
+      if(ch==='"'){inQ=!inQ;}
+      else if(ch===','&&!inQ){result.push(cur.trim());cur="";}
+      else{cur+=ch;}
+    }
+    result.push(cur.trim());
+    return result;
+  }
+  var headers=splitLine(lines[0]);
+  for(i=0;i<headers.length;i++) headers[i]=headers[i].replace(/"/g,"").trim().toLowerCase();
+
+  csvRows=[];
+  for(i=1;i<lines.length;i++){
+    if(!lines[i].trim())continue;
+    var vals=splitLine(lines[i]);
+    var raw={};
+    for(j=0;j<headers.length;j++) raw[headers[j]]=(vals[j]||"").replace(/"/g,"").trim();
+
+    // map column names
+    var obj={};
+    for(var h in raw){
+      var mapped=COL_MAP.hasOwnProperty(h)?COL_MAP[h]:h;
+      if(mapped==="")continue; // skip fb_url / facebook url columns for now
+      if(mapped&&!obj[mapped]) obj[mapped]=raw[h];
+      else if(!mapped) obj[h]=raw[h];
+    }
+    // also keep fb_url / facebook url as lineId fallback if needed
+    if(raw["fb_url"]&&!obj["fb_url"]) obj["fb_url"]=raw["fb_url"];
+    if(raw["facebook url"]&&!obj["fb_url"]) obj["fb_url"]=raw["facebook url"];
+
+    if(!obj.tier)obj.tier="Member";
+    if(!obj.name)obj.name=raw["nickname"]||raw["fb_name"]||raw["ชื่อเล่น"]||"";
+    if(obj.id||obj.name)csvRows.push(obj);
+  }
+  return headers;
+}
+
+window.readCSV=function(input){
+  var file=input.files[0];if(!file)return;
+  processCSVFile(file);
+};
+
+function processCSVFile(file){
+  if(!file)return;
+  if(!file.name.match(/\.(csv|txt)$/i)){toast("กรุณาใช้ไฟล์ .csv ครับ","er");return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var text=e.target.result;
+    var headers=parseCSVText(text);
+    document.getElementById("csvN").textContent="พบ "+csvRows.length+" รายการ";
+    var i,j;
+    var hh="<tr>";for(i=0;i<headers.length;i++)hh+="<th>"+headers[i]+"</th>";hh+="</tr>";
+    var bh="";
+    for(i=0;i<Math.min(csvRows.length,15);i++){bh+="<tr>";for(j=0;j<headers.length;j++)bh+="<td>"+(csvRows[i][headers[j]]||"")+"</td>";bh+="</tr>";}
+    if(csvRows.length>15)bh+='<tr><td colspan="'+headers.length+'" style="text-align:center;color:#aaa">...อีก '+(csvRows.length-15)+' รายการ</td></tr>';
+    document.getElementById("csvH").innerHTML=hh;
+    document.getElementById("csvB").innerHTML=bh;
+    document.getElementById("csvPv").style.display="block";
+  };
+  reader.readAsText(file,"UTF-8");
+}
+
+// Drag & drop support
+document.addEventListener("DOMContentLoaded",function(){
+  var drop=document.querySelector(".csv-drop");
+  if(!drop)return;
+  drop.addEventListener("dragover",function(e){e.preventDefault();drop.style.borderColor="#7B2FF7";});
+  drop.addEventListener("dragleave",function(){drop.style.borderColor="";});
+  drop.addEventListener("drop",function(e){
+    e.preventDefault();drop.style.borderColor="";
+    var file=e.dataTransfer.files[0];
+    if(file)processCSVFile(file);
+  });
+});
+window.clearCSV=function(){csvRows=[];document.getElementById("csvPv").style.display="none";document.getElementById("csvLog").style.display="none";};
+window.pushCSV=async function(){
+  if(!csvRows.length)return;
+  var logEl=document.getElementById("csvLog");logEl.style.display="block";logEl.textContent="";
+  var ok=0,fl=0,base=all.length;
+  for(var i=0;i<csvRows.length;i++){
+    var r=csvRows[i];
+    var id=r.id||String(base+i+1).padStart(3,"0");
+    var data={id:id,name:r.name||r.nickname||r.fb_name||"",age:r.age||"",province:r.province||"",occupation:r.occupation||"",whatsapp:r.whatsapp||"",lineId:r.lineId||"",tier:r.tier||"Member",bio:r.bio||"",order:typeof r.order!=="undefined"?Number(r.order):base+i,photo:"",extras:["","",""],lineQr:"",waQr:""};
+    try{await setDoc(doc(db,"members",id),data);ok++;var sp=document.createElement("span");sp.textContent="ok ["+id+"] "+r.name+"\n";logEl.appendChild(sp);}
+    catch(e){fl++;var sp=document.createElement("span");sp.className="er";sp.textContent="fail: "+e.message+"\n";logEl.appendChild(sp);}
+    logEl.scrollTop=logEl.scrollHeight;
+  }
+  var sp=document.createElement("span");sp.textContent="\nสำเร็จ "+ok+" คน, ล้มเหลว "+fl+" คน";logEl.appendChild(sp);
+  toast("นำเข้าสำเร็จ "+ok+" คน","ok");
+  await load();
+};
+
+function showSaved(){var el=document.getElementById("savedBadge");el.style.display="inline-block";setTimeout(function(){el.style.display="none";},2000);}
+window.toast=function(msg,type){var el=document.getElementById("toast");el.textContent=msg;el.className="toast on"+(type?" "+type:"");setTimeout(function(){el.className="toast";},3000);};
+
+var _resizeTimer;
+window.addEventListener('resize', function(){
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(function(){ if(all.length) draw(); }, 150);
+});
+
+load();
+</script>
+</body>
+</html>
