@@ -291,9 +291,22 @@ function getContainerWidth(){
 function calcSizes(promotedCount){
   var W = getContainerWidth();
   var GAP = 7;
+  var MIN_PROMOTED_W = 100; // ความกว้างขั้นต่ำต่อการ์ด promoted
 
-  // Promoted: ใช้จำนวนสมาชิกจริงเพื่อให้พอดีแถวเดียว (mobile max 3 cols)
-  var promotedCols = W <= 480 ? 3 : (promotedCount || 10);
+  // คำนวณ cols ที่พอดีกับหน้าจอโดยไม่ให้การ์ดเล็กเกินไป
+  var maxCols = Math.floor((W + GAP) / (MIN_PROMOTED_W + GAP));
+  var n = promotedCount || 10;
+  var promotedCols;
+  if(W <= 480){
+    promotedCols = 3;
+  } else {
+    // หา cols ที่หาร n ได้ลงตัว หรือใกล้เคียง
+    promotedCols = maxCols;
+    // ลองหา divisor ที่ใกล้ maxCols มากที่สุดที่หาร n ลงตัว
+    for(var d = maxCols; d >= 1; d--){
+      if(n % d === 0){ promotedCols = d; break; }
+    }
+  }
   var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
   var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
 
