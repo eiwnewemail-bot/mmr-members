@@ -288,25 +288,13 @@ function getContainerWidth(){
   return el ? el.clientWidth - 36 : (window.innerWidth - 36);
 }
 
-function calcSizes(promotedCount){
+function calcSizes(promotedCount, isSearching){
   var W = getContainerWidth();
   var GAP = 7;
   var MIN_PROMOTED_W = 100; // ความกว้างขั้นต่ำต่อการ์ด promoted
 
   // คำนวณ cols ที่พอดีกับหน้าจอโดยไม่ให้การ์ดเล็กเกินไป
-  var maxCols = Math.floor((W + GAP) / (MIN_PROMOTED_W + GAP));
-  var n = promotedCount || 10;
-  var promotedCols;
-  if(W <= 480){
-    promotedCols = 3;
-  } else {
-    // หา cols ที่หาร n ได้ลงตัว หรือใกล้เคียง
-    promotedCols = maxCols;
-    // ลองหา divisor ที่ใกล้ maxCols มากที่สุดที่หาร n ลงตัว
-    for(var d = maxCols; d >= 1; d--){
-      if(n % d === 0){ promotedCols = d; break; }
-    }
-  }
+  var promotedCols = W <= 480 ? 3 : 10;
   var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
   var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
 
@@ -314,6 +302,9 @@ function calcSizes(promotedCount){
   var premCols = W <= 480 ? 3 : 11;
   var premW = Math.floor((W - GAP*(premCols-1)) / premCols);
   var premH = Math.round(premW * TIER_CONF.Premium.ratio);
+
+  // ตอนค้นหา ให้ Promoted ใช้ขนาดเท่า Premium
+  if(isSearching){ promotedW = premW; promotedH = premH; }
 
   // VIP: smaller than Premium
   var vipCols = W <= 480 ? 4 : 13;
@@ -407,7 +398,7 @@ window.draw=function(){
   var c=document.getElementById("mainContainer");
   if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
 
-  var SZ = calcSizes(groups.Promoted.length);
+  var SZ = calcSizes(groups.Promoted.length, !!q);
   var html="";
   html += renderTierRow(groups.Promoted, 'Promoted', TIER_CONF.Promoted, SZ.promoted, 'row-tier');
   html += renderTierRow(groups.Premium,  'Premium',  TIER_CONF.Premium,  SZ.premium,  'row-tier');
