@@ -32,6 +32,7 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .tier-section{margin-bottom:8px}
 .card{position:relative;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
 .card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
+.card.promoted-1:hover,.card.promoted-2:hover{box-shadow:0 8px 24px rgba(255,200,0,0.55),0 0 10px 3px rgba(255,180,0,0.35)}
 .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .card-initial{font-weight:700;color:rgba(255,255,255,0.2);position:relative;z-index:1}
 .card-initial.dark{color:rgba(0,0,0,0.12)}
@@ -39,9 +40,11 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .card-name{font-weight:500;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card-sub{color:rgba(255,255,255,0.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tier-tag{position:absolute;top:5px;left:5px;color:#fff;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:500;background:rgba(0,0,0,0.28);z-index:3}
+.tier-tag-promoted{background:linear-gradient(135deg,#FFD700,#FFA500)!important;color:#fff!important;font-weight:700!important;box-shadow:0 1px 6px rgba(255,200,0,0.55);text-shadow:0 1px 2px rgba(0,0,0,0.35)}
 .card-edit{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.45);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:none;z-index:4}
 
 .promoted-1{background:#7B2FF7}.promoted-2{background:#6A1FE0}
+.card.promoted-1,.card.promoted-2{box-shadow:0 0 18px 4px rgba(255,210,0,0.45),0 0 6px 1px rgba(255,180,0,0.3)}
 .vip-1{background:#F5A623}.vip-2{background:#E09620}
 .premium-1{background:#E91E8C}.premium-2{background:#D01578}
 .member-1{background:#C8C0E8}.member-2{background:#B8AEDD}
@@ -288,23 +291,32 @@ function getContainerWidth(){
   return el ? el.clientWidth - 36 : (window.innerWidth - 36);
 }
 
-function calcSizes(promotedCount, isSearching){
+function calcSizes(promotedCount){
   var W = getContainerWidth();
   var GAP = 7;
   var MIN_PROMOTED_W = 100; // ความกว้างขั้นต่ำต่อการ์ด promoted
 
   // คำนวณ cols ที่พอดีกับหน้าจอโดยไม่ให้การ์ดเล็กเกินไป
-  var promotedCols = W <= 480 ? 3 : 10;
+  var maxCols = Math.floor((W + GAP) / (MIN_PROMOTED_W + GAP));
+  var n = promotedCount || 10;
+  var promotedCols;
+  if(W <= 480){
+    promotedCols = 3;
+  } else {
+    // หา cols ที่หาร n ได้ลงตัว หรือใกล้เคียง
+    promotedCols = maxCols;
+    // ลองหา divisor ที่ใกล้ maxCols มากที่สุดที่หาร n ลงตัว
+    for(var d = maxCols; d >= 1; d--){
+      if(n % d === 0){ promotedCols = d; break; }
+    }
+  }
   var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
   var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
 
   // Premium: slightly smaller than Promoted
-  var premCols = W <= 480 ? 3 : 11;
+  var premCols = W <= 480 ? 4 : 11;
   var premW = Math.floor((W - GAP*(premCols-1)) / premCols);
   var premH = Math.round(premW * TIER_CONF.Premium.ratio);
-
-  // ตอนค้นหา ให้ Promoted ใช้ขนาดเท่า Premium
-  if(isSearching){ promotedW = premW; promotedH = premH; }
 
   // VIP: smaller than Premium
   var vipCols = W <= 480 ? 4 : 13;
@@ -361,7 +373,8 @@ function makeCard(m, tc, sz, idx, draggable){
   var dragAttrs = draggable ? ' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"' : '';
   var html = '<div class="card '+colorClass+(draggable?' drag-card':'')+'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
   if(isAdmin) html += '<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
-  html += '<div class="tier-tag" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
+  var tagExtra = (m.tier === 'Promoted') ? ' tier-tag-promoted' : '';
+  html += '<div class="tier-tag'+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
   if(m.photo) html += '<img src="'+m.photo+'">';
   else html += '<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
   html += '<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
@@ -398,7 +411,7 @@ window.draw=function(){
   var c=document.getElementById("mainContainer");
   if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
 
-  var SZ = calcSizes(groups.Promoted.length, !!q);
+  var SZ = calcSizes(groups.Promoted.length);
   var html="";
   html += renderTierRow(groups.Promoted, 'Promoted', TIER_CONF.Promoted, SZ.promoted, 'row-tier');
   html += renderTierRow(groups.Premium,  'Premium',  TIER_CONF.Premium,  SZ.premium,  'row-tier');
