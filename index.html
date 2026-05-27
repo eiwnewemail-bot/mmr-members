@@ -551,8 +551,7 @@ window.submitMemberPw = async function(){
 window.resetMemberPw = async function(docId){
   var m = all.find(function(x){ return x._docId === docId; });
   if(!m) return;
-  if(!confirm('Reset รหัสผ่านของ '+(m.name||docId)+'?
-สมาชิกจะต้องตั้งใหม่เมื่อเข้าสู่ระบบครั้งต่อไป')) return;
+  if(!confirm('Reset รหัสผ่านของ '+(m.name||docId)+'?\nสมาชิกจะต้องตั้งใหม่เมื่อเข้าสู่ระบบครั้งต่อไป')) return;
   try{
     var saveData = Object.assign({}, m); delete saveData._docId; delete saveData.pwHash;
     await setDoc(doc(db,'members',docId), saveData);
