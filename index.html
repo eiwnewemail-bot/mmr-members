@@ -491,6 +491,7 @@ async function checkEditToken(){
   if(!m){ toast('ลิงก์ไม่ถูกต้อง','er'); return; }
   document.getElementById('btnAdmin').style.display = 'none';
   document.getElementById('btnMemberLogin').style.display = 'none';
+  if(!m.pwHash){
     // ยังไม่เคยตั้งรหัส - ให้ตั้งใหม่
     showMemberPwModal('set', m);
   } else {
