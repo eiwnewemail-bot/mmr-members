@@ -123,6 +123,7 @@ textarea{resize:vertical;min-height:54px}
   <div><h1>MMR Members</h1><small id="cntLbl">กำลังโหลด...</small></div>
   <div class="hdr-r">
     <span id="savedBadge" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;font-size:12px;padding:4px 12px;border-radius:20px">✓ บันทึกแล้ว</span>
+    <button id="btnMemberLogin" onclick="openMemberLogin()" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px">🔑 เข้าสู่ระบบ</button>
     <a id="btnTranslate" href="#" onclick="openTranslate();return false;" style="background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center">EN</a>
   </div>
 </div>
@@ -408,6 +409,19 @@ window.copyEditUrl = async function(docId){
   }).catch(function(){ prompt('Copy URL:', url); });
 };
 
+window.openMemberLogin = function(){
+  // ถ้ามี token ใน URL แสดงผลทันที
+  if(selfEditMember){ openSelfEdit(); return; }
+  // ให้กรอก URL token
+  var url = prompt('วาง URL ส่วนตัวเองที่ได้รับจาก Admin:');
+  if(!url) return;
+  try{
+    var token = new URL(url.trim()).searchParams.get('edit');
+    if(!token){ toast('ไม่พบ token ใน URL','er'); return; }
+    location.href = location.origin + location.pathname + '?edit=' + token;
+  } catch(e){ toast('รูปแบบ URL ไม่ถูกต้อง','er'); }
+};
+
 window.openSelfEdit = function(){
   if(!selfEditMember) return;
   var m = selfEditMember;
@@ -476,7 +490,7 @@ async function checkEditToken(){
   var m = all.find(function(x){ return x.editToken === token; });
   if(!m){ toast('ลิงก์ไม่ถูกต้อง','er'); return; }
   document.getElementById('btnAdmin').style.display = 'none';
-  if(!m.pwHash){
+  document.getElementById('btnMemberLogin').style.display = 'none';
     // ยังไม่เคยตั้งรหัส - ให้ตั้งใหม่
     showMemberPwModal('set', m);
   } else {
