@@ -41,7 +41,6 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .tier-tag{position:absolute;top:5px;left:5px;color:#fff;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:500;background:rgba(0,0,0,0.28);z-index:3}
 .tier-tag-promoted{background:linear-gradient(135deg,#FFD700,#FFA500)!important;color:#fff!important;font-weight:700!important;box-shadow:0 1px 6px rgba(255,200,0,0.55);text-shadow:0 1px 2px rgba(0,0,0,0.35)}
 .card-edit{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.45);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:none;z-index:4}
-.card-copy-url{position:absolute;bottom:5px;right:5px;background:rgba(123,47,247,0.85);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:9px;cursor:pointer;display:none;z-index:4}
 .self-edit-banner{background:linear-gradient(135deg,#7B2FF7,#6A1FE0);color:#fff;padding:10px 18px;font-size:13px;display:flex;align-items:center;gap:10px}
 .self-edit-banner span{flex:1}
 .self-edit-name{font-weight:700}
@@ -134,6 +133,41 @@ textarea{resize:vertical;min-height:54px}
 .toast.ok{border-left:3px solid #4ade80}
 .toast.er{border-left:3px solid #f87171}
 .empty{text-align:center;padding:48px;color:#7B2FF7;opacity:.4}
+
+/* === Header extras === */
+.badge-saved{display:none;background:rgba(74,222,128,0.2);color:#4ade80;font-size:12px;padding:4px 12px;border-radius:20px}
+.btn-hdr{background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.hdr-profile{display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:5px 12px;cursor:pointer}
+.hdr-profile-label{font-size:10px;color:rgba(255,255,255,0.65);margin-bottom:2px;line-height:1}
+.hdr-profile-name{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
+.hdr-profile-id{font-size:11px;color:rgba(255,255,255,0.65);line-height:1.2}
+/* === Detail modal === */
+.detail-meta{color:#666;font-size:12px;margin-bottom:4px}
+.detail-name{font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px}
+.detail-badge{font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px}
+.detail-bio{color:#333;font-size:13px;line-height:1.6;background:#f3f0fa;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none}
+/* === Contact request banner === */
+.req-banner{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:8px 12px;margin-bottom:10px}
+.req-banner-title{font-size:12px;font-weight:600;color:#dc2626;margin-bottom:6px}
+.req-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:4px 0;border-top:1px solid rgba(239,68,68,0.1)}
+.req-resolve-btn{background:#ef4444;color:#fff;border:none;border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Sarabun',sans-serif}
+/* === Upload hint === */
+.pu-hint{font-size:12px;color:#7B2FF7;margin-top:4px}
+/* === Draft banner === */
+.draft-banner{display:none;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.4);border-radius:10px;padding:8px 12px;margin-bottom:12px;gap:8px;align-items:center;flex-wrap:wrap}
+.draft-clear-btn{background:rgba(245,166,35,0.2);color:#b45309;border:1px solid rgba(245,166,35,0.4);padding:3px 10px;font-size:11px}
+/* === Admin bar buttons === */
+.btn-csv{background:rgba(123,47,247,0.1);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2)}
+.btn-reload{background:rgba(233,30,140,0.1);color:#E91E8C;border:1px solid rgba(233,30,140,0.2)}
+/* === Filter buttons === */
+.fb-all{background:#7B2FF7;color:#fff}
+.fb-promoted{background:rgba(123,47,247,0.15);color:#7B2FF7}
+.fb-vip{background:rgba(245,166,35,0.15);color:#b45309}
+.fb-premium{background:rgba(233,30,140,0.15);color:#E91E8C}
+.fb-member{background:rgba(200,192,232,0.3);color:#6d5fad}
+/* === Admin button (FAB) === */
+.btn-admin-fab{position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;border:none;background:rgba(200,192,232,0.25);color:rgba(180,170,210,0.5);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.btn-admin-fab:hover{background:rgba(123,47,247,0.15);color:rgba(123,47,247,0.6)}
 </style>
 </head>
 <body>
@@ -141,23 +175,23 @@ textarea{resize:vertical;min-height:54px}
 <div class="hdr">
   <div><h1>MMR Members</h1><small id="cntLbl">กำลังโหลด...</small></div>
   <div class="hdr-r">
-    <span id="savedBadge" style="display:none;background:rgba(74,222,128,0.2);color:#4ade80;font-size:12px;padding:4px 12px;border-radius:20px">✓ บันทึกแล้ว</span>
-    <button id="btnMemberLogin" onclick="openMemberLogin()" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px">🔑 เข้าสู่ระบบ</button>
-    <div id="hdrProfileBox" style="display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:5px 12px;cursor:pointer" onclick="openSelfEdit()">
-      <div style="font-size:10px;color:rgba(255,255,255,0.65);margin-bottom:2px;line-height:1">โปรไฟล์ของฉัน</div>
+    <span id="savedBadge" class="badge-saved">✓ บันทึกแล้ว</span>
+    <button id="btnMemberLogin" class="btn-hdr" onclick="openMemberLogin()">🔑 เข้าสู่ระบบ</button>
+    <div id="hdrProfileBox" class="hdr-profile" onclick="openSelfEdit()">
+      <div class="hdr-profile-label">โปรไฟล์ของฉัน</div>
       <div style="display:flex;align-items:center;gap:5px">
         <span style="font-size:12px">👤</span>
         <div>
-          <div id="hdrProfileName" style="font-size:13px;font-weight:700;color:#fff;line-height:1.2"></div>
-          <div id="hdrProfileId" style="font-size:11px;color:rgba(255,255,255,0.65);line-height:1.2"></div>
+          <div id="hdrProfileName" class="hdr-profile-name"></div>
+          <div id="hdrProfileId" class="hdr-profile-id"></div>
         </div>
       </div>
     </div>
-    <a id="btnTranslate" href="#" onclick="openTranslate();return false;" style="background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);padding:6px 14px;border-radius:8px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center">EN</a>
+    <a id="btnTranslate" href="#" class="btn-hdr" style="text-decoration:none" onclick="openTranslate();return false;">EN</a>
   </div>
 </div>
 
-<button id="btnAdmin" onclick="toggleAdmin()" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;border:none;background:rgba(200,192,232,0.25);color:rgba(180,170,210,0.5);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='rgba(123,47,247,0.15)';this.style.color='rgba(123,47,247,0.6)'" onmouseout="if(!window._adminHover)this.style.background='rgba(200,192,232,0.25)';this.style.color='rgba(180,170,210,0.5)'">🌸</button>
+<button id="btnAdmin" class="btn-admin-fab" onclick="toggleAdmin()">🌸</button>
 
 <div id="selfEditBanner" class="self-edit-banner" style="display:none">
   <span>✏️ คุณกำลังดูข้อมูลของ <span id="selfEditName" class="self-edit-name"></span></span>
@@ -166,8 +200,8 @@ textarea{resize:vertical;min-height:54px}
 
 <div class="admin-bar" id="adminBar">
   <button class="btn btn-p btn-s" onclick="openAdd()">+ เพิ่มสมาชิก</button>
-  <button class="btn btn-s" style="background:rgba(123,47,247,0.1);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2)" onclick="openCSV()">📊 นำเข้า Excel/CSV</button>
-  <button class="btn btn-s" style="background:rgba(233,30,140,0.1);color:#E91E8C;border:1px solid rgba(233,30,140,0.2)" onclick="doReload()">🔄 รีเฟรช</button>
+  <button class="btn btn-s btn-csv" onclick="openCSV()">📊 นำเข้า Excel/CSV</button>
+  <button class="btn btn-s btn-reload" onclick="doReload()">🔄 รีเฟรช</button>
   <button class="btn btn-g btn-s" style="margin-left:auto" onclick="logoutAdmin()">ออก</button>
 </div>
 
@@ -175,11 +209,11 @@ textarea{resize:vertical;min-height:54px}
   <div class="si"><input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw()"></div>
 </div>
 <div class="filters">
-  <button class="fb on" style="background:#7B2FF7;color:#fff" onclick="setF('',this)">ทั้งหมด</button>
-  <button class="fb" style="background:rgba(123,47,247,0.15);color:#7B2FF7" onclick="setF('Promoted',this)">Promoted</button>
-  <button class="fb" style="background:rgba(245,166,35,0.15);color:#b45309" onclick="setF('VIP',this)">VIP</button>
-  <button class="fb" style="background:rgba(233,30,140,0.15);color:#E91E8C" onclick="setF('Premium',this)">Premium</button>
-  <button class="fb" style="background:rgba(200,192,232,0.3);color:#6d5fad" onclick="setF('Member',this)">Member</button>
+  <button class="fb fb-all on" onclick="setF('',this)">ทั้งหมด</button>
+  <button class="fb fb-promoted" onclick="setF('Promoted',this)">Promoted</button>
+  <button class="fb fb-vip" onclick="setF('VIP',this)">VIP</button>
+  <button class="fb fb-premium" onclick="setF('Premium',this)">Premium</button>
+  <button class="fb fb-member" onclick="setF('Member',this)">Member</button>
 </div>
 
 <div class="container" id="mainContainer">
@@ -202,7 +236,7 @@ textarea{resize:vertical;min-height:54px}
       <div id="mlErr" style="color:#f87171;font-size:12px;margin-bottom:8px;display:none"></div>
       <button class="btn btn-p" style="width:100%" onclick="submitMemberLogin()" id="mlBtn">เข้าสู่ระบบ</button>
       <div style="text-align:center;margin-top:10px">
-        <button onclick="showMlHelp()" style="background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif">เบอร์ไม่ตรง? ติดต่อ Admin</button>
+        <button onclick="requestContact()" style="background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif;line-height:1.5">นี่คือโปรไฟล์ของคุณใช่ไหม?<br><span style="color:#7B2FF7;text-decoration:underline">แจ้งแอดมินเพื่อรับรหัสที่นี่</span></button>
       </div>
     </div>
   </div>
@@ -229,16 +263,17 @@ textarea{resize:vertical;min-height:54px}
       <div style="display:flex;gap:14px;margin-bottom:16px">
         <div id="dPoster" style="flex-shrink:0;width:104px;height:139px;border-radius:10px;overflow:hidden"></div>
         <div style="flex:1;min-width:0">
-          <div id="dName" style="font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px"></div>
-          <span id="dBadge" style="font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px"></span>
-          <div id="dAge" style="color:#666;font-size:12px;margin-bottom:4px"></div>
-          <div id="dProv" style="color:#666;font-size:12px;margin-bottom:4px"></div>
-          <div id="dOcc" style="color:#666;font-size:12px"></div>
+          <div id="dName" class="detail-name"></div>
+          <span id="dBadge" class="detail-badge"></span>
+          <div id="dAge" class="detail-meta"></div>
+          <div id="dProv" class="detail-meta"></div>
+          <div id="dOcc" class="detail-meta"></div>
         </div>
       </div>
-      <div id="dBio" style="color:#333;font-size:13px;line-height:1.6;background:#f3f0fa;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none"></div>
+      <div id="dBio" class="detail-bio"></div>
       <div style="display:flex;gap:10px;margin-bottom:10px" id="dQR"></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="dExtras"></div>
+      <div id="dReqBanner" style="display:none"></div>
       <div id="dAdminBtns" style="display:none;margin-top:12px">
         <a id="dFbLink" href="#" target="_blank" rel="noopener" style="display:none;align-items:center;gap:6px;background:#1877F2;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:10px">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -260,16 +295,16 @@ textarea{resize:vertical;min-height:54px}
   <div class="md">
     <div class="md-h"><h3 id="editTitle">แก้ไขสมาชิก</h3><button class="md-cl" onclick="closeEdit()">×</button></div>
     <div class="md-b">
-      <div id="draftBanner" style="display:none;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.4);border-radius:10px;padding:8px 12px;margin-bottom:12px;gap:8px;align-items:center;flex-wrap:wrap">
+      <div id="draftBanner" class="draft-banner">
         <span style="font-size:13px;flex:1">📋 กู้คืน draft อัตโนมัติ — บันทึกไว้ <span id="draftAgo"></span></span>
-        <button class="btn btn-s" style="background:rgba(245,166,35,0.2);color:#b45309;border:1px solid rgba(245,166,35,0.4);padding:3px 10px;font-size:11px" onclick="clearDraft();document.getElementById('draftBanner').style.display='none';toast('ล้าง draft แล้ว','ok')">✕ ล้าง</button>
+        <button class="btn btn-s draft-clear-btn" onclick="clearDraft();document.getElementById('draftBanner').style.display='none';toast('ล้าง draft แล้ว','ok')">✕ ล้าง</button>
       </div>
       <div class="fgr full" style="margin-bottom:12px">
         <label>รูปโปรไฟล์ (3:4)</label>
         <div class="pu">
           <div class="pu-ph" id="puPh">📷</div>
           <img id="puImg" class="pu-img" style="display:none">
-          <div style="font-size:12px;color:#7B2FF7;margin-top:4px" id="puHint">คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)</div>
+          <div class="pu-hint" id="puHint">คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)</div>
           <input type="file" accept="image/*" onchange="upMain(this)">
         </div>
       </div>
@@ -340,7 +375,7 @@ textarea{resize:vertical;min-height:54px}
       </div>
     </div>
     <div class="md-f">
-      <button class="btn btn-d btn-s" id="btnDelM" onclick="deleteCurrent()" style="margin-right:auto;display:none">ลบ</button>
+      <button class="btn btn-d btn-s" id="btnDelM" onclick="deleteCurrent()" style="margin-right:auto;display:none">🗑 ลบ</button>
       <button class="btn btn-g" onclick="closeEdit()">ยกเลิก</button>
       <button class="btn btn-p" onclick="saveM()">💾 บันทึก</button>
     </div>
@@ -378,7 +413,7 @@ textarea{resize:vertical;min-height:54px}
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {getFirestore,doc,setDoc,collection,getDocs,deleteDoc,orderBy,query} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {getFirestore,doc,setDoc,collection,getDocs,deleteDoc,orderBy,query,addDoc,updateDoc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const CL="dwaoxzaza", CP="kmgtl0tf", APW="mmr2024";
 const db=getFirestore(initializeApp({
@@ -423,6 +458,7 @@ var COLORS=["#ddd6fe","#bfdbfe","#bbf7d0","#fde68a","#fecaca","#fbcfe8"];
 function ini(n){return((n||"").trim().split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2))||"?";}
 
 var all=[], filt="", isAdmin=false, curId=null, eid=null, photo="", extras=["","",""], csvRows=[];
+var contactRequests=[];
 
 // ===========================
 // UTILITY
@@ -481,8 +517,39 @@ window.submitMemberLogin=async function(){
   toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
 };
 
-window.showMlHelp=function(){
-  toast('กรุณาติดต่อ Admin เพื่อตรวจสอบเบอร์โทรที่ลงทะเบียน','');
+window.requestContact=async function(){
+  var raw=document.getElementById('mlPhone').value.trim();
+  if(!raw){toast('กรอกเบอร์โทรของคุณก่อนนะคะ','er');return;}
+  var phone=normalizePhone(raw);
+  if(phone.length<9){toast('เบอร์โทรไม่ถูกต้อง','er');return;}
+  // Find matching member by whatsapp or any stored phone (best-effort)
+  var matched=all.find(function(x){return normalizePhone(x.whatsapp||'')===phone;});
+  var reqData={phone:phone,memberDocId:matched?matched._docId:'',memberName:matched?matched.name||'':'',ts:Date.now(),resolved:false};
+  try{
+    await addDoc(collection(db,'contact_requests'),reqData);
+    toast('ส่งคำขอแล้ว! แอดมินจะติดต่อกลับเร็วๆนี้ ✅','ok');
+    document.getElementById('ovMemberLogin').className='ov';
+    await loadContactRequests();
+    draw();
+  }catch(e){toast('เกิดข้อผิดพลาด กรุณาลองใหม่','er');}
+};
+
+async function loadContactRequests(){
+  try{
+    var s=await getDocs(query(collection(db,'contact_requests'),orderBy('ts')));
+    contactRequests=[];
+    s.forEach(function(d){var dat=d.data();dat._reqId=d.id;contactRequests.push(dat);});
+  }catch(e){contactRequests=[];}
+}
+
+window.resolveRequest=async function(reqId){
+  try{
+    await updateDoc(doc(db,'contact_requests',reqId),{resolved:true});
+    var r=contactRequests.find(function(x){return x._reqId===reqId;});
+    if(r)r.resolved=true;
+    draw();
+    toast('ทำเครื่องหมายเรียบร้อยแล้ว','ok');
+  }catch(e){toast('เกิดข้อผิดพลาด','er');}
 };
 
 function showSelfEditBanner(m){
@@ -491,7 +558,7 @@ function showSelfEditBanner(m){
   // Update header profile box
   document.getElementById('hdrProfileName').textContent=m.name||'';
   document.getElementById('hdrProfileId').textContent=m.id?'#'+m.id:'';
-  document.getElementById('hdrProfileBox').style.display='block';
+  document.getElementById('hdrProfileBox').style.display='flex';
   // Hide login button
   document.getElementById('btnMemberLogin').style.display='none';
 }
@@ -628,8 +695,6 @@ window.adminResetPw=async function(){
   }catch(e){toast('เกิดข้อผิดพลาด','er');}
 };
 
-// Legacy compatibility
-window.copyEditUrl=function(){toast('ระบบใหม่ใช้เบอร์โทรแทน URL ครับ','');};
 window.resetMemberPw=async function(docId){
   var oldEid=eid;eid=docId;
   await adminResetPw();
@@ -644,6 +709,7 @@ async function load(){
     var s=await getDocs(query(collection(db,"members"),orderBy("order")));
     all=[];s.forEach(function(d){var dat=d.data();dat._docId=d.id;all.push(dat);});
   }catch(e){all=[];}
+  await loadContactRequests();
   document.getElementById("cntLbl").textContent=all.length+" สมาชิก";
   draw();
 }
@@ -656,6 +722,8 @@ function makeCard(m,tc,sz,idx,draggable){
   var wStyle='width:'+sz.w+'px;height:'+sz.h+'px';
   var dragAttrs=draggable?' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"':'';
   var pwDot=isAdmin?(m.pwHash?'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:#4ade80;z-index:4;border:1px solid rgba(0,0,0,0.2)" title="มีเบอร์โทรแล้ว"></span>':'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);z-index:4;border:1px solid rgba(255,255,255,0.3)" title="ยังไม่มีเบอร์โทร"></span>'):'';
+  var hasReq=isAdmin&&contactRequests.some(function(r){return !r.resolved&&r.memberDocId===m._docId;});
+  var reqDot=hasReq?'<span style="position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#ef4444;z-index:5;border:1.5px solid #fff;box-shadow:0 0 0 3px rgba(239,68,68,0.3)" title="มีคำขอติดต่อรอดำเนินการ"></span>':'';
   var html='<div class="card '+colorClass+(draggable?' drag-card':'') +'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
   if(isAdmin){
     html+='<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
@@ -669,7 +737,7 @@ function makeCard(m,tc,sz,idx,draggable){
   if(m.nameEn)html+='<div class="card-sub" style="font-size:'+sz.fs+'px;opacity:0.85">'+m.nameEn+'</div>';
   else if(m.province)html+='<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
   if(m.id)html+='<div class="card-sub" style="font-size:'+(sz.fs-1)+'px;opacity:0.7">#'+m.id+'</div>';
-  html+='</div>'+pwDot+'</div>';
+  html+='</div>'+pwDot+reqDot+'</div>';
   return html;
 }
 
@@ -710,15 +778,20 @@ window.doLogin=function(){
     isAdmin=true;
     document.getElementById("ovLogin").className="ov";
     document.getElementById("adminBar").className="admin-bar on";
-    document.getElementById("btnAdmin").style.background="rgba(74,222,128,0.15)";
-    document.getElementById("btnAdmin").style.color="rgba(74,222,128,0.9)";
-    document.getElementById("btnAdmin").textContent="✅";
+    var fab=document.getElementById("btnAdmin");
+    fab.style.background="rgba(74,222,128,0.15)";fab.style.color="rgba(74,222,128,0.9)";fab.textContent="✅";
     document.getElementById("pwIn").value="";
     document.getElementById("pwErr").style.display="none";
     draw();
   }else{document.getElementById("pwErr").style.display="block";}
 };
-window.logoutAdmin=function(){isAdmin=false;document.getElementById("adminBar").className="admin-bar";document.getElementById("btnAdmin").textContent="🌸";document.getElementById("btnAdmin").style.background="rgba(200,192,232,0.25)";document.getElementById("btnAdmin").style.color="rgba(180,170,210,0.5)";draw();};
+window.logoutAdmin=function(){
+  isAdmin=false;
+  document.getElementById('adminBar').className='admin-bar';
+  var fab=document.getElementById('btnAdmin');
+  fab.textContent='🌸';fab.style.background='';fab.style.color='';
+  draw();
+};
 window.closeLogin=function(){document.getElementById("ovLogin").className="ov";document.getElementById("pwIn").value="";document.getElementById("pwErr").style.display="none";};
 
 window.openDetail=function(docId){
@@ -763,6 +836,27 @@ window.openDetail=function(docId){
     pwSt.innerHTML='';
     pwSt.style.display='none';
   }
+  // Contact request alert for admin
+  var reqBanner=document.getElementById("dReqBanner");
+  if(isAdmin){
+    var pending=contactRequests.filter(function(r){return !r.resolved&&r.memberDocId===docId;});
+    if(pending.length){
+      var rhtml='<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:8px 12px;margin-bottom:10px">';
+      rhtml+='<div style="font-size:12px;font-weight:600;color:#dc2626;margin-bottom:6px">🔴 คำขอรับรหัส ('+pending.length+' รายการ)</div>';
+      pending.forEach(function(r){
+        var dt=new Date(r.ts).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'});
+        rhtml+='<div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:4px 0;border-top:1px solid rgba(239,68,68,0.1)">';
+        rhtml+='<span style="color:#333">📞 '+r.phone+'<span style="color:#999;margin-left:6px">'+dt+'</span></span>';
+        rhtml+='<button onclick="resolveRequest(''+r._reqId+'')" style="background:#ef4444;color:#fff;border:none;border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Sarabun',sans-serif">✓ ดำเนินการแล้ว</button>';
+        rhtml+='</div>';
+      });
+      rhtml+='</div>';
+      reqBanner.innerHTML=rhtml;
+      reqBanner.style.display='block';
+    }else{
+      reqBanner.innerHTML='';reqBanner.style.display='none';
+    }
+  }else{reqBanner.innerHTML='';reqBanner.style.display='none';}
   document.getElementById("ovDetail").className="ov on";
 };
 window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
@@ -954,7 +1048,7 @@ function bindDrag(container){
   });
 }
 
-function showSaved(){var el=document.getElementById("savedBadge");el.style.display="inline-block";setTimeout(function(){el.style.display="none";},2000);}
+function showSaved(){var el=document.getElementById("savedBadge");el.style.display="inline-block";setTimeout(function(){el.style.display="";},2000);}
 window.toast=function(msg,type){var el=document.getElementById("toast");el.textContent=msg;el.className="toast on"+(type?" "+type:"");setTimeout(function(){el.className="toast";},3000);};
 
 var _resizeTimer;
