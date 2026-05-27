@@ -27,7 +27,6 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .filters{padding:8px 18px 0;display:flex;gap:6px;flex-wrap:wrap}
 .fb{padding:4px 14px;border-radius:20px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:.6;transition:all .15s}
 .fb.on{opacity:1;transform:scale(1.05)}
-
 .container{padding:12px 18px}
 .tier-section{margin-bottom:8px}
 .card{position:relative;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s}
@@ -46,6 +45,8 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .self-edit-banner{background:linear-gradient(135deg,#7B2FF7,#6A1FE0);color:#fff;padding:10px 18px;font-size:13px;display:flex;align-items:center;gap:10px}
 .self-edit-banner span{flex:1}
 .self-edit-name{font-weight:700}
+
+/* === Password Modal Styles === */
 .pw-modal{background:#fff;border-radius:18px;width:100%;max-width:360px;padding:28px 24px;box-shadow:0 8px 40px rgba(0,0,0,0.18)}
 .pw-modal h2{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
 .pw-modal p{font-size:13px;color:#888;margin-bottom:18px;line-height:1.5}
@@ -55,17 +56,35 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .pw-btn{width:100%;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#7B2FF7,#6A1FE0);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
 .pw-btn:hover{opacity:0.92}
 
+/* === Admin Set-Password Section in Edit Modal === */
+.pw-section{background:#f3f0fa;border-radius:12px;padding:14px 16px;margin-top:4px}
+.pw-section-title{font-size:13px;font-weight:600;color:#7B2FF7;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pw-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:3px 10px;border-radius:20px;font-weight:500;margin-bottom:10px}
+.pw-status.has{background:rgba(74,222,128,0.15);color:#16a34a;border:1px solid rgba(74,222,128,0.3)}
+.pw-status.none{background:rgba(239,68,68,0.1);color:#dc2626;border:1px solid rgba(239,68,68,0.2)}
+.pw-admin-input{display:flex;gap:8px;margin-top:6px}
+.pw-admin-input input{flex:1;background:#fff;border:1px solid #d8b4fe;border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
+.pw-admin-input input:focus{border-color:#7B2FF7}
+.pw-admin-input button{background:#7B2FF7;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sarabun',sans-serif;white-space:nowrap}
+.pw-admin-input button:hover{opacity:0.88}
+.pw-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.pw-action-btn{padding:6px 14px;border-radius:8px;border:1px solid;font-size:12px;font-weight:500;cursor:pointer;font-family:'Sarabun',sans-serif;transition:all .15s}
+.pw-action-btn.reset{background:rgba(239,68,68,0.08);color:#dc2626;border-color:rgba(239,68,68,0.25)}
+.pw-action-btn.reset:hover{background:rgba(239,68,68,0.15)}
+.pw-action-btn.copy{background:rgba(123,47,247,0.08);color:#7B2FF7;border-color:rgba(123,47,247,0.25)}
+.pw-action-btn.copy:hover{background:rgba(123,47,247,0.15)}
+.pw-action-btn.gen{background:rgba(16,163,74,0.08);color:#16a34a;border-color:rgba(16,163,74,0.25)}
+.pw-action-btn.gen:hover{background:rgba(16,163,74,0.15)}
+
 .promoted-1{background:#7B2FF7}.promoted-2{background:#6A1FE0}
 .card.promoted-1,.card.promoted-2{box-shadow:0 0 18px 4px rgba(255,210,0,0.45),0 0 6px 1px rgba(255,180,0,0.3)}
 .vip-1{background:#F5A623}.vip-2{background:#E09620}
 .premium-1{background:#E91E8C}.premium-2{background:#D01578}
 .member-1{background:#C8C0E8}.member-2{background:#B8AEDD}
-
 .row-tier{display:flex;gap:7px;flex-wrap:wrap;width:100%}
 .drag-card{cursor:grab}
 .drag-card.dragging{opacity:.35;cursor:grabbing}
 .drag-card.drag-over{outline:2px dashed rgba(255,255,255,0.7);outline-offset:-3px}
-
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;align-items:center;justify-content:center;padding:16px}
 .ov.on{display:flex}
 .md{background:#fff;border-radius:18px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto}
@@ -130,7 +149,11 @@ textarea{resize:vertical;min-height:54px}
 
 <button id="btnAdmin" onclick="toggleAdmin()" style="position:fixed;bottom:20px;right:20px;z-index:200;width:40px;height:40px;border-radius:50%;border:none;background:rgba(200,192,232,0.25);color:rgba(180,170,210,0.5);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" onmouseover="this.style.background='rgba(123,47,247,0.15)';this.style.color='rgba(123,47,247,0.6)'" onmouseout="if(!window._adminHover)this.style.background='rgba(200,192,232,0.25)';this.style.color='rgba(180,170,210,0.5)'">🌸</button>
 
-<div id="selfEditBanner" class="self-edit-banner" style="display:none"><span>✏️ คุณกำลังดูข้อมูลของ <span id="selfEditName" class="self-edit-name"></span></span><button class="btn btn-w btn-s" onclick="openSelfEdit()">แก้ไขข้อมูลของฉัน</button></div>
+<div id="selfEditBanner" class="self-edit-banner" style="display:none">
+  <span>✏️ คุณกำลังดูข้อมูลของ <span id="selfEditName" class="self-edit-name"></span></span>
+  <button class="btn btn-w btn-s" onclick="openSelfEdit()">แก้ไขข้อมูลของฉัน</button>
+</div>
+
 <div class="admin-bar" id="adminBar">
   <button class="btn btn-p btn-s" onclick="openAdd()">+ เพิ่มสมาชิก</button>
   <button class="btn btn-s" style="background:rgba(123,47,247,0.1);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2)" onclick="openCSV()">📊 นำเข้า Excel/CSV</button>
@@ -153,16 +176,27 @@ textarea{resize:vertical;min-height:54px}
   <div class="empty">⏳ กำลังโหลด...</div>
 </div>
 
+<!-- Member Password Modal (for members accessing via URL) -->
 <div class="ov" id="ovMemberPw" style="background:rgba(0,0,0,0.7)">
   <div class="pw-modal">
-    <div style="font-size:32px;text-align:center;margin-bottom:12px">🔐</div>
+    <div style="font-size:32px;text-align:center;margin-bottom:12px" id="pwMIcon">🔐</div>
     <h2 id="pwMTitle" style="text-align:center">ตั้งรหัสผ่าน</h2>
     <p id="pwMDesc" style="text-align:center">ตั้งรหัสผ่านสำหรับการเข้าใช้งานครั้งต่อๆ ไป</p>
-    <input class="pw-input" type="password" id="memberPwIn" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter')submitMemberPw()">
-    <div id="pwMErr" class="pw-err"></div>
+    <div style="position:relative">
+      <input class="pw-input" type="password" id="memberPwIn" placeholder="รหัสผ่าน (อย่างน้อย 4 ตัว)" onkeydown="if(event.key==='Enter')submitMemberPw()">
+      <button onclick="togglePwVis('memberPwIn',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:16px;padding:2px 4px">👁</button>
+    </div>
+    <div id="pwMConfirmWrap" style="display:none;position:relative;margin-top:6px">
+      <input class="pw-input" type="password" id="memberPwConfirm" placeholder="ยืนยันรหัสผ่านอีกครั้ง" onkeydown="if(event.key==='Enter')submitMemberPw()" style="margin-bottom:0">
+      <button onclick="togglePwVis('memberPwConfirm',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:16px;padding:2px 4px">👁</button>
+    </div>
+    <div id="pwMErr" class="pw-err" style="margin-top:8px"></div>
     <button class="pw-btn" onclick="submitMemberPw()" id="pwMBtn">ยืนยัน</button>
+    <button id="pwMForgotBtn" onclick="showForgotPw()" style="display:none;width:100%;margin-top:8px;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif">ลืมรหัสผ่าน? ติดต่อ Admin</button>
   </div>
 </div>
+
+<!-- Admin Login -->
 <div class="ov" id="ovLogin">
   <div class="md" style="max-width:300px">
     <div class="md-h"><h3>Admin Login</h3><button class="md-cl" onclick="closeLogin()">×</button></div>
@@ -175,6 +209,7 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
+<!-- Detail Modal -->
 <div class="ov" id="ovDetail" onclick="if(event.target===this)closeDetail()">
   <div class="md">
     <div class="md-h"><h3 id="dTitle">รายละเอียด</h3><button class="md-cl" onclick="closeDetail()">×</button></div>
@@ -197,9 +232,8 @@ textarea{resize:vertical;min-height:54px}
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           ดูโปรไฟล์ Facebook
         </a>
-        <div style="display:flex;gap:8px;margin-bottom:8px">
-          <button class="btn btn-g btn-s" style="flex:1;font-size:12px" onclick="resetMemberPw(curId)">🔑 Reset รหัส</button>
-        </div>
+        <!-- Password status in detail view -->
+        <div id="dPwStatus" style="margin-bottom:10px;padding:8px 12px;border-radius:8px;font-size:12px;display:flex;align-items:center;justify-content:space-between"></div>
         <div style="display:flex;gap:8px">
           <button class="btn btn-p" style="flex:1" onclick="editCurrent()">✏️ แก้ไข</button>
           <button class="btn btn-d" style="flex:1" onclick="deleteCurrent()">🗑 ลบ</button>
@@ -209,6 +243,7 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
+<!-- Edit Modal -->
 <div class="ov" id="ovEdit" onclick="if(event.target===this)closeEdit()">
   <div class="md">
     <div class="md-h"><h3 id="editTitle">แก้ไขสมาชิก</h3><button class="md-cl" onclick="closeEdit()">×</button></div>
@@ -254,6 +289,38 @@ textarea{resize:vertical;min-height:54px}
           </div>
         </div>
         <div class="fgr full"><label>Bio</label><textarea id="fbi" rows="2"></textarea></div>
+
+        <!-- ===== PASSWORD MANAGEMENT SECTION (Admin only) ===== -->
+        <div class="fgr full" id="pwAdminSection" style="display:none">
+          <div class="pw-section">
+            <div class="pw-section-title">🔑 จัดการรหัสผ่านสมาชิก</div>
+            
+            <!-- Status -->
+            <div id="adminPwStatusBadge" class="pw-status none">❌ ยังไม่มีรหัสผ่าน</div>
+            
+            <!-- Set password by admin -->
+            <div style="font-size:12px;color:#666;margin-bottom:6px">ตั้งรหัสผ่านให้สมาชิก:</div>
+            <div class="pw-admin-input">
+              <div style="position:relative;flex:1">
+                <input type="password" id="adminPwNew" placeholder="รหัสผ่านใหม่ (อย่างน้อย 4 ตัว)" style="width:100%;padding-right:36px">
+                <button onclick="togglePwVis('adminPwNew',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:14px">👁</button>
+              </div>
+              <button onclick="adminSetPw()">ตั้งรหัส</button>
+            </div>
+
+            <!-- Actions -->
+            <div class="pw-actions">
+              <button class="pw-action-btn copy" onclick="adminCopyUrl()">🔗 Copy URL ส่งสมาชิก</button>
+              <button class="pw-action-btn gen" onclick="adminGenUrl()">✨ สร้าง URL ใหม่</button>
+              <button class="pw-action-btn reset" id="adminPwResetBtn" onclick="adminResetPw()">🗑 ลบรหัสผ่าน</button>
+            </div>
+
+            <div id="adminPwNote" style="font-size:11px;color:#aaa;margin-top:8px;line-height:1.5">
+              URL ส่วนตัวใช้สำหรับให้สมาชิกเข้าแก้ไขข้อมูลตัวเอง ส่งได้ 1 ครั้งและใช้ได้ตลอด
+            </div>
+          </div>
+        </div>
+        <!-- ===== END PASSWORD SECTION ===== -->
       </div>
     </div>
     <div class="md-f">
@@ -264,6 +331,7 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
+<!-- CSV Import Modal -->
 <div class="ov" id="ovCSV" onclick="if(event.target===this)closeCSV()">
   <div class="md" style="max-width:520px" onclick="event.stopPropagation()">
     <div class="md-h"><h3>นำเข้า Excel / CSV</h3><button class="md-cl" onclick="closeCSV()">×</button></div>
@@ -307,356 +375,395 @@ const db=getFirestore(initializeApp({
 }));
 
 var TIER_CONF = {
-  Promoted:{tag:"Promoted",  c1:"promoted-1",c2:"promoted-2", ratio:147/110,fi:42,fn:11,fs:9,fp:8,fo:7},
-  VIP:     {tag:"VIP",       c1:"vip-1",     c2:"vip-2",      ratio:70/90,  fi:26,fn:10,fs:8,fp:7,fo:5,dark:true},
-  Premium: {tag:"Premium",   c1:"premium-1", c2:"premium-2",  ratio:100/75, fi:24,fn:10,fs:8,fp:5,fo:4},
-  Member:  {tag:"Member",    c1:"member-1",  c2:"member-2",   ratio:83/62,  fi:18,fn:9, fs:7,fp:4,fo:3}
+  Promoted:{tag:"Promoted",c1:"promoted-1",c2:"promoted-2",ratio:147/110,fi:42,fn:11,fs:9,fp:8,fo:7},
+  VIP:     {tag:"VIP",     c1:"vip-1",     c2:"vip-2",     ratio:70/90,  fi:26,fn:10,fs:8,fp:7,fo:5,dark:true},
+  Premium: {tag:"Premium", c1:"premium-1", c2:"premium-2", ratio:100/75, fi:24,fn:10,fs:8,fp:5,fo:4},
+  Member:  {tag:"Member",  c1:"member-1",  c2:"member-2",  ratio:83/62,  fi:18,fn:9, fs:7,fp:4,fo:3}
 };
 
 function getContainerWidth(){
   var el=document.getElementById("mainContainer");
   return el ? el.clientWidth - 36 : (window.innerWidth - 36);
 }
-
 function calcSizes(promotedCount){
-  var W = getContainerWidth();
-  var GAP = 7;
-  var MIN_PROMOTED_W = 100; // ความกว้างขั้นต่ำต่อการ์ด promoted
-
-  // คำนวณ cols ที่พอดีกับหน้าจอโดยไม่ให้การ์ดเล็กเกินไป
-  var maxCols = Math.floor((W + GAP) / (MIN_PROMOTED_W + GAP));
-  var n = promotedCount || 10;
-  var promotedCols;
-  if(W <= 480){
-    promotedCols = 3;
-  } else {
-    // หา cols ที่หาร n ได้ลงตัว หรือใกล้เคียง
-    promotedCols = maxCols;
-    // ลองหา divisor ที่ใกล้ maxCols มากที่สุดที่หาร n ลงตัว
-    for(var d = maxCols; d >= 1; d--){
-      if(n % d === 0){ promotedCols = d; break; }
-    }
-  }
-  var promotedW = Math.floor((W - GAP*(promotedCols-1)) / promotedCols);
-  var promotedH = Math.round(promotedW * TIER_CONF.Promoted.ratio);
-
-  // Premium: slightly smaller than Promoted
-  var premCols = W <= 480 ? 4 : 11;
-  var premW = Math.floor((W - GAP*(premCols-1)) / premCols);
-  var premH = Math.round(premW * TIER_CONF.Premium.ratio);
-
-  // VIP: smaller than Premium
-  var vipCols = W <= 480 ? 4 : 13;
-  var vipW = Math.floor((W - GAP*(vipCols-1)) / vipCols);
-  var vipH = Math.round(vipW * TIER_CONF.VIP.ratio);
-
-  // Member: smallest
-  var memCols = W <= 480 ? 5 : 16;
-  var memW = Math.floor((W - GAP*(memCols-1)) / memCols);
-  var memH = Math.round(memW * TIER_CONF.Member.ratio);
-
-  function scaleFont(base, baseW, w){ return Math.max(6, Math.round(base * w / baseW)); }
-
+  var W=getContainerWidth(),GAP=7,MIN_PROMOTED_W=100;
+  var maxCols=Math.floor((W+GAP)/(MIN_PROMOTED_W+GAP));
+  var n=promotedCount||10,promotedCols;
+  if(W<=480){promotedCols=3;}else{promotedCols=maxCols;for(var d=maxCols;d>=1;d--){if(n%d===0){promotedCols=d;break;}}}
+  var promotedW=Math.floor((W-GAP*(promotedCols-1))/promotedCols);
+  var promotedH=Math.round(promotedW*TIER_CONF.Promoted.ratio);
+  var premCols=W<=480?4:11, premW=Math.floor((W-GAP*(premCols-1))/premCols), premH=Math.round(premW*TIER_CONF.Premium.ratio);
+  var vipCols=W<=480?4:13,  vipW=Math.floor((W-GAP*(vipCols-1))/vipCols),   vipH=Math.round(vipW*TIER_CONF.VIP.ratio);
+  var memCols=W<=480?5:16,  memW=Math.floor((W-GAP*(memCols-1))/memCols),   memH=Math.round(memW*TIER_CONF.Member.ratio);
+  function scaleFont(base,baseW,w){return Math.max(6,Math.round(base*w/baseW));}
   return {
-    promoted: {w:promotedW, h:promotedH, cols:promotedCols,
-      fi:scaleFont(42,110,promotedW), fn:scaleFont(11,110,promotedW), fs:scaleFont(9,110,promotedW),
-      fp:scaleFont(8,110,promotedW), fo:scaleFont(7,110,promotedW)},
-    vip:      {w:vipW, h:vipH, cols:vipCols,
-      fi:scaleFont(26,90,vipW), fn:scaleFont(10,90,vipW), fs:scaleFont(8,90,vipW),
-      fp:scaleFont(7,90,vipW), fo:scaleFont(5,90,vipW)},
-    premium:  {w:premW, h:premH, cols:premCols,
-      fi:scaleFont(24,75,premW), fn:scaleFont(10,75,premW), fs:scaleFont(8,75,premW),
-      fp:scaleFont(5,75,premW), fo:scaleFont(4,75,premW)},
-    member:   {w:memW, h:memH, cols:memCols,
-      fi:scaleFont(18,62,memW), fn:scaleFont(9,62,memW), fs:scaleFont(7,62,memW),
-      fp:scaleFont(4,62,memW), fo:scaleFont(3,62,memW)}
+    promoted:{w:promotedW,h:promotedH,cols:promotedCols,fi:scaleFont(42,110,promotedW),fn:scaleFont(11,110,promotedW),fs:scaleFont(9,110,promotedW),fp:scaleFont(8,110,promotedW),fo:scaleFont(7,110,promotedW)},
+    vip:     {w:vipW,h:vipH,cols:vipCols,fi:scaleFont(26,90,vipW),fn:scaleFont(10,90,vipW),fs:scaleFont(8,90,vipW),fp:scaleFont(7,90,vipW),fo:scaleFont(5,90,vipW)},
+    premium: {w:premW,h:premH,cols:premCols,fi:scaleFont(24,75,premW),fn:scaleFont(10,75,premW),fs:scaleFont(8,75,premW),fp:scaleFont(5,75,premW),fo:scaleFont(4,75,premW)},
+    member:  {w:memW,h:memH,cols:memCols,fi:scaleFont(18,62,memW),fn:scaleFont(9,62,memW),fs:scaleFont(7,62,memW),fp:scaleFont(4,62,memW),fo:scaleFont(3,62,memW)}
   };
 }
 var COLORS=["#ddd6fe","#bfdbfe","#bbf7d0","#fde68a","#fecaca","#fbcfe8"];
-function ini(n){return ((n||"").trim().split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2))||"?";}
+function ini(n){return((n||"").trim().split(" ").map(function(w){return w[0]||"";}).join("").toUpperCase().slice(0,2))||"?";}
 
 var all=[], filt="", isAdmin=false, curId=null, eid=null, photo="", extras=["","",""], csvRows=[];
-window.openTranslate=function(){
-  window.open("https://translate.google.com/translate?sl=th&tl=en&u="+encodeURIComponent(location.href),"_blank");
-};
 
-
-// === Member self-edit URL system ===
-var selfEditMember = null;
-
-function genToken(){
-  var arr = new Uint8Array(18);
-  crypto.getRandomValues(arr);
-  return Array.from(arr).map(function(b){return b.toString(36).padStart(2,'0');}).join('').slice(0,24);
-}
-
-window.copyEditUrl = async function(docId){
-  var m = all.find(function(x){ return x._docId === docId; });
-  if(!m) return;
-  var token = m.editToken;
-  if(!token){
-    token = genToken();
-    try{
-      var saveData = Object.assign({}, m); delete saveData._docId; saveData.editToken = token;
-      await setDoc(doc(db,'members',docId), saveData);
-      var idx = all.findIndex(function(x){ return x._docId === docId; });
-      if(idx >= 0) all[idx].editToken = token;
-    } catch(e){ toast('สร้าง URL ไม่สำเร็จ','er'); return; }
-  }
-  var url = location.origin + location.pathname + '?edit=' + token;
-  navigator.clipboard.writeText(url).then(function(){
-    toast('Copy URL ของ '+(m.name||docId)+' แล้ว!','ok');
-  }).catch(function(){ prompt('Copy URL:', url); });
-};
-
-window.openMemberLogin = function(){
-  // ถ้ามี token ใน URL แสดงผลทันที
-  if(selfEditMember){ openSelfEdit(); return; }
-  // ให้กรอก URL token
-  var url = prompt('วาง URL ส่วนตัวเองที่ได้รับจาก Admin:');
-  if(!url) return;
-  try{
-    var token = new URL(url.trim()).searchParams.get('edit');
-    if(!token){ toast('ไม่พบ token ใน URL','er'); return; }
-    location.href = location.origin + location.pathname + '?edit=' + token;
-  } catch(e){ toast('รูปแบบ URL ไม่ถูกต้อง','er'); }
-};
-
-window.openSelfEdit = function(){
-  if(!selfEditMember) return;
-  var m = selfEditMember;
-  eid = m._docId; photo = m.photo||''; extras = m.extras ? [].concat(m.extras) : ['','',''];
-  document.getElementById('editTitle').textContent = 'แก้ไขข้อมูลของฉัน';
-  document.getElementById('btnDelM').style.display = 'none';
-  document.getElementById('fid').value = m.id||'';
-  document.getElementById('fnm').value = m.name||'';
-  document.getElementById('fne').value = m.nameEn||'';
-  document.getElementById('fag').value = m.age||'';
-  document.getElementById('fpv').value = m.province||'';
-  document.getElementById('foc').value = m.occupation||'';
-  document.getElementById('fwa').value = m.whatsapp||'';
-  document.getElementById('fli').value = m.lineId||'';
-  document.getElementById('ffb').value = m.facebook||'';
-  document.getElementById('fbi').value = m.bio||'';
-  if(photo){ document.getElementById('puImg').src=photo; document.getElementById('puImg').style.display='block'; document.getElementById('puPh').style.display='none'; document.getElementById('puHint').textContent='คลิกเพื่อเปลี่ยนรูป';
-  } else { document.getElementById('puImg').style.display='none'; document.getElementById('puPh').style.display='flex'; document.getElementById('puHint').textContent='คลิกเพื่ออัปโหลด'; }
-  resetX();
-  setTier(m.tier||'Member');
-  document.querySelectorAll('.tr-o').forEach(function(el){ el.style.pointerEvents='none'; el.style.opacity='0.5'; });
-  document.getElementById('ovEdit').className = 'ov on';
-  bindDraftInputs();
-  window._selfEditMode = true;
-};
-
-window.saveSelfEdit = async function(){
-  if(!selfEditMember) return;
-  var m = selfEditMember;
-  var docId = m._docId;
-  var saveData = Object.assign({}, m);
-  delete saveData._docId;
-  saveData.name = document.getElementById('fnm').value.trim();
-  saveData.nameEn = document.getElementById('fne').value.trim();
-  saveData.age = document.getElementById('fag').value.trim();
-  saveData.province = document.getElementById('fpv').value.trim();
-  saveData.occupation = document.getElementById('foc').value.trim();
-  saveData.whatsapp = document.getElementById('fwa').value.trim();
-  saveData.lineId = document.getElementById('fli').value.trim();
-  saveData.facebook = document.getElementById('ffb').value.trim();
-  saveData.bio = document.getElementById('fbi').value.trim();
-  saveData.photo = photo;
-  saveData.extras = [].concat(extras);
-  try{
-    await setDoc(doc(db,'members',docId), saveData);
-    saveData._docId = docId;
-    var idx = all.findIndex(function(x){ return x._docId === docId; });
-    if(idx >= 0) all[idx] = saveData;
-    selfEditMember = saveData;
-    draw(); closeEdit();
-    window._selfEditMode = false;
-    document.querySelectorAll('.tr-o').forEach(function(el){ el.style.pointerEvents=''; el.style.opacity=''; });
-    toast('บันทึกสำเร็จ','ok');
-  } catch(e){ toast('บันทึกไม่สำเร็จ: '+e.message,'er'); }
-};
-
+// ===========================
+// UTILITY
+// ===========================
 async function sha256(str){
-  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
 }
+function genToken(){
+  var arr=new Uint8Array(18);crypto.getRandomValues(arr);
+  return Array.from(arr).map(function(b){return b.toString(36).padStart(2,'0');}).join('').slice(0,24);
+}
+window.togglePwVis=function(inputId,btn){
+  var inp=document.getElementById(inputId);
+  if(!inp)return;
+  inp.type = inp.type==='password' ? 'text' : 'password';
+  btn.textContent = inp.type==='password' ? '👁' : '🙈';
+};
+window.openTranslate=function(){window.open("https://translate.google.com/translate?sl=th&tl=en&u="+encodeURIComponent(location.href),"_blank");};
+
+// ===========================
+// MEMBER SELF-EDIT (via URL token)
+// ===========================
+var selfEditMember = null;
+
+window.openMemberLogin=function(){
+  if(selfEditMember){openSelfEdit();return;}
+  var url=prompt('วาง URL ส่วนตัวที่ได้รับจาก Admin:');
+  if(!url)return;
+  try{
+    var token=new URL(url.trim()).searchParams.get('edit');
+    if(!token){toast('ไม่พบ token ใน URL','er');return;}
+    location.href=location.origin+location.pathname+'?edit='+token;
+  }catch(e){toast('รูปแบบ URL ไม่ถูกต้อง','er');}
+};
 
 async function checkEditToken(){
-  var params = new URLSearchParams(location.search);
-  var token = params.get('edit');
-  if(!token) return;
-  var m = all.find(function(x){ return x.editToken === token; });
-  if(!m){ toast('ลิงก์ไม่ถูกต้อง','er'); return; }
-  document.getElementById('btnAdmin').style.display = 'none';
-  document.getElementById('btnMemberLogin').style.display = 'none';
+  var params=new URLSearchParams(location.search);
+  var token=params.get('edit');
+  if(!token)return;
+  var m=all.find(function(x){return x.editToken===token;});
+  if(!m){toast('ลิงก์ไม่ถูกต้องหรือหมดอายุ','er');return;}
+  document.getElementById('btnAdmin').style.display='none';
+  document.getElementById('btnMemberLogin').style.display='none';
   if(!m.pwHash){
-    // ยังไม่เคยตั้งรหัส - ให้ตั้งใหม่
-    showMemberPwModal('set', m);
-  } else {
-    // มีรหัสแล้ว - ให้ยืนยัน
-    showMemberPwModal('verify', m);
+    showMemberPwModal('set',m);
+  }else{
+    showMemberPwModal('verify',m);
   }
 }
 
-function showMemberPwModal(mode, m){
-  var title = document.getElementById('pwMTitle');
-  var desc  = document.getElementById('pwMDesc');
-  var btn   = document.getElementById('pwMBtn');
-  var err   = document.getElementById('pwMErr');
-  err.style.display = 'none'; err.textContent = '';
-  document.getElementById('memberPwIn').value = '';
-  if(mode === 'set'){
-    title.textContent = 'ตั้งรหัสผ่าน';
-    desc.textContent  = 'ระบุรหัสผ่านที่ต้องการใช้เข้าสู่ระบบ (จำไว้ด้วยนะครับ)';
-    btn.textContent   = 'ตั้งระหัสผ่าน';
-  } else {
-    title.textContent = 'ยืนยันตัวตน';
-    desc.textContent  = 'กรอกรหัสผ่านเพื่อเข้าทำการแก้ไขข้อมูล';
-    btn.textContent   = 'เข้าสู่ระบบ';
+function showMemberPwModal(mode,m){
+  var title=document.getElementById('pwMTitle');
+  var desc=document.getElementById('pwMDesc');
+  var btn=document.getElementById('pwMBtn');
+  var err=document.getElementById('pwMErr');
+  var confirmWrap=document.getElementById('pwMConfirmWrap');
+  var forgotBtn=document.getElementById('pwMForgotBtn');
+  err.style.display='none';err.textContent='';
+  document.getElementById('memberPwIn').value='';
+  document.getElementById('memberPwConfirm').value='';
+  if(mode==='set'){
+    document.getElementById('pwMIcon').textContent='🆕';
+    title.textContent='ตั้งรหัสผ่าน';
+    desc.textContent='ตั้งรหัสผ่านส่วนตัวของคุณ เพื่อใช้ครั้งต่อไป';
+    btn.textContent='ตั้งรหัสผ่าน';
+    confirmWrap.style.display='block';
+    forgotBtn.style.display='none';
+  }else{
+    document.getElementById('pwMIcon').textContent='🔐';
+    title.textContent='ยืนยันตัวตน';
+    desc.textContent='สวัสดี '+(m.name||'')+' 👋\nกรอกรหัสผ่านเพื่อเข้าแก้ไขข้อมูล';
+    btn.textContent='เข้าสู่ระบบ';
+    confirmWrap.style.display='none';
+    forgotBtn.style.display='block';
   }
-  document.getElementById('ovMemberPw').style.display = 'flex';
-  document.getElementById('ovMemberPw').className = 'ov on';
-  document.getElementById('memberPwIn').focus();
-  window._pwMode = mode;
-  window._pwMember = m;
+  document.getElementById('ovMemberPw').className='ov on';
+  setTimeout(function(){document.getElementById('memberPwIn').focus();},100);
+  window._pwMode=mode;
+  window._pwMember=m;
 }
 
-window.submitMemberPw = async function(){
-  var pw = document.getElementById('memberPwIn').value;
-  var err = document.getElementById('pwMErr');
+window.submitMemberPw=async function(){
+  var pw=document.getElementById('memberPwIn').value;
+  var err=document.getElementById('pwMErr');
   err.style.display='none';
-  if(!pw || pw.length < 4){
-    err.textContent = 'กรุณากรอกระหัสผ่านอย่างน้อย 4 ตัวขึ้นไป';
-    err.style.display='block'; return;
+  if(!pw||pw.length<4){
+    err.textContent='รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร';
+    err.style.display='block';return;
   }
-  var hash = await sha256(pw);
-  var m = window._pwMember;
-  if(window._pwMode === 'set'){
-    // สั่ง hash ลง Firestore
+  var m=window._pwMember;
+  if(window._pwMode==='set'){
+    var pw2=document.getElementById('memberPwConfirm').value;
+    if(pw!==pw2){err.textContent='รหัสผ่านไม่ตรงกัน กรุณาลองใหม่';err.style.display='block';return;}
+    var hash=await sha256(pw);
     try{
-      var saveData = Object.assign({}, m); delete saveData._docId; saveData.pwHash = hash;
-      await setDoc(doc(db,'members',m._docId), saveData);
-      var idx = all.findIndex(function(x){ return x._docId === m._docId; });
-      if(idx >= 0){ all[idx].pwHash = hash; m.pwHash = hash; }
-      selfEditMember = all[idx] || m;
-      document.getElementById('ovMemberPw').className = 'ov';
-      document.getElementById('selfEditName').textContent = m.name || m.id || '';
-      document.getElementById('selfEditBanner').style.display = 'flex';
-      toast('ตั้งระหัสสำเร็จ! จำไว้ด้วยนะครับ','ok');
-    } catch(e){ err.textContent='สำเร็จไม่สำเร็จ: '+e.message; err.style.display='block'; }
-  } else {
-    // ตรวจ hash
-    if(hash !== m.pwHash){
-      err.textContent = 'รหัสผ่านไม่ถูกต้อง';
+      var saveData=Object.assign({},m);delete saveData._docId;saveData.pwHash=hash;
+      await setDoc(doc(db,'members',m._docId),saveData);
+      var idx=all.findIndex(function(x){return x._docId===m._docId;});
+      if(idx>=0){all[idx].pwHash=hash;m.pwHash=hash;}
+      selfEditMember=all[idx]||m;
+      document.getElementById('ovMemberPw').className='ov';
+      showSelfEditBanner(m);
+      toast('ตั้งรหัสผ่านสำเร็จ! ยินดีต้อนรับ '+( m.name||''),'ok');
+    }catch(e){err.textContent='เกิดข้อผิดพลาด: '+e.message;err.style.display='block';}
+  }else{
+    var hash=await sha256(pw);
+    if(hash!==m.pwHash){
+      err.textContent='รหัสผ่านไม่ถูกต้อง';
       err.style.display='block';
       document.getElementById('memberPwIn').value='';
       document.getElementById('memberPwIn').focus();
       return;
     }
-    selfEditMember = m;
-    document.getElementById('ovMemberPw').className = 'ov';
-    document.getElementById('selfEditName').textContent = m.name || m.id || '';
-    document.getElementById('selfEditBanner').style.display = 'flex';
-    toast('ยินดีต้อนรับ! '+( m.name||''),'ok');
+    selfEditMember=m;
+    document.getElementById('ovMemberPw').className='ov';
+    showSelfEditBanner(m);
+    toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
   }
 };
 
-window.resetMemberPw = async function(docId){
-  var m = all.find(function(x){ return x._docId === docId; });
-  if(!m) return;
-  if(!confirm('Reset รหัสผ่านของ '+(m.name||docId)+'?\nสมาชิกจะต้องตั้งใหม่เมื่อเข้าสู่ระบบครั้งต่อไป')) return;
-  try{
-    var saveData = Object.assign({}, m); delete saveData._docId; delete saveData.pwHash;
-    await setDoc(doc(db,'members',docId), saveData);
-    var idx = all.findIndex(function(x){ return x._docId === docId; });
-    if(idx >= 0) delete all[idx].pwHash;
-    toast('Reset สำเร็จ - '+(m.name||'')+ ' ต้องตั้งใหม่','ok');
-  } catch(e){ toast('Reset ไม่สำเร็จ','er'); }
+window.showForgotPw=function(){
+  toast('กรุณาติดต่อ Admin เพื่อ Reset รหัสผ่าน','');
 };
-// === end Member self-edit ===
 
+function showSelfEditBanner(m){
+  document.getElementById('selfEditName').textContent=m.name||m.id||'';
+  document.getElementById('selfEditBanner').style.display='flex';
+}
+
+window.openSelfEdit=function(){
+  if(!selfEditMember)return;
+  var m=selfEditMember;
+  eid=m._docId;photo=m.photo||'';extras=m.extras?[].concat(m.extras):['','',''];
+  document.getElementById('editTitle').textContent='แก้ไขข้อมูลของฉัน';
+  document.getElementById('btnDelM').style.display='none';
+  document.getElementById('pwAdminSection').style.display='none';
+  fillEditForm(m);
+  document.querySelectorAll('.tr-o').forEach(function(el){el.style.pointerEvents='none';el.style.opacity='0.5';});
+  document.getElementById('ovEdit').className='ov on';
+  bindDraftInputs();
+  window._selfEditMode=true;
+};
+
+window.saveSelfEdit=async function(){
+  if(!selfEditMember)return;
+  var m=selfEditMember;
+  var docId=m._docId;
+  var saveData=Object.assign({},m);delete saveData._docId;
+  saveData.name=document.getElementById('fnm').value.trim();
+  saveData.nameEn=document.getElementById('fne').value.trim();
+  saveData.age=document.getElementById('fag').value.trim();
+  saveData.province=document.getElementById('fpv').value.trim();
+  saveData.occupation=document.getElementById('foc').value.trim();
+  saveData.whatsapp=document.getElementById('fwa').value.trim();
+  saveData.lineId=document.getElementById('fli').value.trim();
+  saveData.bio=document.getElementById('fbi').value.trim();
+  saveData.photo=photo;
+  saveData.extras=[].concat(extras);
+  // Note: facebook and tier are NOT editable by member
+  try{
+    await setDoc(doc(db,'members',docId),saveData);
+    saveData._docId=docId;
+    var idx=all.findIndex(function(x){return x._docId===docId;});
+    if(idx>=0)all[idx]=saveData;
+    selfEditMember=saveData;
+    draw();closeEdit();
+    window._selfEditMode=false;
+    document.querySelectorAll('.tr-o').forEach(function(el){el.style.pointerEvents='';el.style.opacity='';});
+    toast('บันทึกสำเร็จ','ok');
+  }catch(e){toast('บันทึกไม่สำเร็จ: '+e.message,'er');}
+};
+
+// ===========================
+// ADMIN PASSWORD MANAGEMENT
+// ===========================
+
+// Called when admin opens edit modal for a member
+function refreshAdminPwSection(m){
+  var section=document.getElementById('pwAdminSection');
+  var badge=document.getElementById('adminPwStatusBadge');
+  var resetBtn=document.getElementById('adminPwResetBtn');
+  var note=document.getElementById('adminPwNote');
+  section.style.display='block';
+  document.getElementById('adminPwNew').value='';
+  if(m.pwHash){
+    badge.className='pw-status has';
+    badge.textContent='✅ มีรหัสผ่านแล้ว';
+    resetBtn.style.display='inline-flex';
+  }else{
+    badge.className='pw-status none';
+    badge.textContent='❌ ยังไม่มีรหัสผ่าน';
+    resetBtn.style.display='none';
+  }
+  if(m.editToken){
+    note.textContent='มี URL ส่วนตัวแล้ว (คลิก "Copy URL" เพื่อส่งให้สมาชิก)';
+  }else{
+    note.textContent='คลิก "สร้าง URL ใหม่" แล้วส่งให้สมาชิก เพื่อให้เข้าแก้ไขข้อมูลได้';
+  }
+}
+
+// Admin sets password directly for member
+window.adminSetPw=async function(){
+  var pw=document.getElementById('adminPwNew').value;
+  if(!pw||pw.length<4){toast('รหัสผ่านต้องมีอย่างน้อย 4 ตัว','er');return;}
+  if(!eid){toast('ยังไม่ได้เลือกสมาชิก','er');return;}
+  var m=all.find(function(x){return x._docId===eid;});
+  if(!m)return;
+  var hash=await sha256(pw);
+  var saveData=Object.assign({},m);delete saveData._docId;saveData.pwHash=hash;
+  // auto-generate token if not exists
+  if(!saveData.editToken)saveData.editToken=genToken();
+  try{
+    await setDoc(doc(db,'members',eid),saveData);
+    var idx=all.findIndex(function(x){return x._docId===eid;});
+    if(idx>=0){all[idx].pwHash=hash;all[idx].editToken=saveData.editToken;}
+    document.getElementById('adminPwNew').value='';
+    refreshAdminPwSection(all[idx]);
+    toast('ตั้งรหัสผ่านให้ '+(m.name||eid)+' สำเร็จ','ok');
+  }catch(e){toast('บันทึกไม่สำเร็จ: '+e.message,'er');}
+};
+
+// Admin resets (deletes) password
+window.adminResetPw=async function(){
+  if(!eid)return;
+  var m=all.find(function(x){return x._docId===eid;});
+  if(!m)return;
+  if(!confirm('ลบรหัสผ่านของ '+(m.name||eid)+'?\nสมาชิกจะต้องตั้งรหัสใหม่เมื่อเข้า URL อีกครั้ง'))return;
+  var saveData=Object.assign({},m);delete saveData._docId;delete saveData.pwHash;
+  try{
+    await setDoc(doc(db,'members',eid),saveData);
+    var idx=all.findIndex(function(x){return x._docId===eid;});
+    if(idx>=0)delete all[idx].pwHash;
+    refreshAdminPwSection(all[idx]||saveData);
+    toast('ลบรหัสผ่านสำเร็จ - '+(m.name||'')+'จะต้องตั้งใหม่','ok');
+  }catch(e){toast('เกิดข้อผิดพลาด','er');}
+};
+
+// Admin copies URL to clipboard
+window.adminCopyUrl=async function(){
+  if(!eid)return;
+  var m=all.find(function(x){return x._docId===eid;});
+  if(!m)return;
+  var token=m.editToken;
+  if(!token){
+    // Auto-generate if none
+    token=genToken();
+    var saveData=Object.assign({},m);delete saveData._docId;saveData.editToken=token;
+    try{
+      await setDoc(doc(db,'members',eid),saveData);
+      var idx=all.findIndex(function(x){return x._docId===eid;});
+      if(idx>=0)all[idx].editToken=token;
+      refreshAdminPwSection(all[idx]);
+    }catch(e){toast('สร้าง URL ไม่สำเร็จ','er');return;}
+  }
+  var url=location.origin+location.pathname+'?edit='+token;
+  navigator.clipboard.writeText(url).then(function(){
+    toast('Copy URL ของ '+(m.name||eid)+' แล้ว! 🔗','ok');
+  }).catch(function(){prompt('Copy URL:',url);});
+};
+
+// Admin generates a brand-new token (invalidates old URL)
+window.adminGenUrl=async function(){
+  if(!eid)return;
+  var m=all.find(function(x){return x._docId===eid;});
+  if(!m)return;
+  if(m.editToken&&!confirm('สร้าง URL ใหม่จะทำให้ URL เดิมใช้ไม่ได้\nยืนยัน?'))return;
+  var token=genToken();
+  var saveData=Object.assign({},m);delete saveData._docId;saveData.editToken=token;
+  try{
+    await setDoc(doc(db,'members',eid),saveData);
+    var idx=all.findIndex(function(x){return x._docId===eid;});
+    if(idx>=0)all[idx].editToken=token;
+    var url=location.origin+location.pathname+'?edit='+token;
+    refreshAdminPwSection(all[idx]);
+    navigator.clipboard.writeText(url).then(function(){
+      toast('สร้าง URL ใหม่และ Copy แล้ว! 🔗','ok');
+    }).catch(function(){prompt('URL ใหม่:',url);});
+  }catch(e){toast('เกิดข้อผิดพลาด','er');}
+};
+
+// Legacy - still usable from detail view
+window.copyEditUrl=window.adminCopyUrl;
+window.resetMemberPw=async function(docId){
+  var oldEid=eid;eid=docId;
+  await adminResetPw();
+  eid=oldEid;
+};
+
+// ===========================
+// DATA & RENDER
+// ===========================
 async function load(){
   try{
     var s=await getDocs(query(collection(db,"members"),orderBy("order")));
-    all=[];
-    s.forEach(function(d){var dat=d.data();dat._docId=d.id;all.push(dat);});
+    all=[];s.forEach(function(d){var dat=d.data();dat._docId=d.id;all.push(dat);});
   }catch(e){all=[];}
   document.getElementById("cntLbl").textContent=all.length+" สมาชิก";
   draw();
 }
-
 window.doReload=function(){load();};
 
-function makeCard(m, tc, sz, idx, draggable){
-  var colorClass = idx%2===0 ? tc.c1 : tc.c2;
-  var iniClass = tc.dark ? "card-initial dark" : "card-initial";
-  var br = sz.h > 100 ? 10 : 8;
-  var wStyle = 'width:'+sz.w+'px;height:'+sz.h+'px';
-  var dragAttrs = draggable ? ' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"' : '';
-  var html = '<div class="card '+colorClass+(draggable?' drag-card':'')+'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
+function makeCard(m,tc,sz,idx,draggable){
+  var colorClass=idx%2===0?tc.c1:tc.c2;
+  var iniClass=tc.dark?"card-initial dark":"card-initial";
+  var br=sz.h>100?10:8;
+  var wStyle='width:'+sz.w+'px;height:'+sz.h+'px';
+  var dragAttrs=draggable?' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"':'';
+  var pwDot=isAdmin?(m.pwHash?'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:#4ade80;z-index:4;border:1px solid rgba(0,0,0,0.2)" title="มีรหัสผ่าน"></span>':'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);z-index:4;border:1px solid rgba(255,255,255,0.3)" title="ยังไม่มีรหัสผ่าน"></span>'):'';
+  var html='<div class="card '+colorClass+(draggable?' drag-card':'') +'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
   if(isAdmin){
-    html += '<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
-    html += '<button class="card-copy-url" style="display:block" onclick="event.stopPropagation();copyEditUrl(\''+m._docId+'\')">🔗 URL</button>';
+    html+='<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
+    html+='<button class="card-copy-url" style="display:block" onclick="event.stopPropagation();copyEditUrl(\''+m._docId+'\')">🔗 URL</button>';
   }
-  var tagExtra = (m.tier === 'Promoted') ? ' tier-tag-promoted' : '';
-  html += '<div class="tier-tag'+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
-  if(m.photo) html += '<img src="'+m.photo+'">';
-  else html += '<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
-  html += '<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
-  html += '<div class="card-name" style="font-size:'+sz.fn+'px">'+(m.name||"")+'</div>';
-  if(m.nameEn) html += '<div class="card-sub" style="font-size:'+sz.fs+'px;opacity:0.85">'+m.nameEn+'</div>';
-  else if(m.province) html += '<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
-  if(m.id) html += '<div class="card-sub" style="font-size:'+(sz.fs-1)+'px;opacity:0.7">#'+m.id+'</div>';
-  html += '</div></div>';
+  var tagExtra=(m.tier==='Promoted')?' tier-tag-promoted':'';
+  html+='<div class="tier-tag'+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
+  if(m.photo)html+='<img src="'+m.photo+'">';
+  else html+='<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
+  html+='<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
+  html+='<div class="card-name" style="font-size:'+sz.fn+'px">'+(m.name||'')+'</div>';
+  if(m.nameEn)html+='<div class="card-sub" style="font-size:'+sz.fs+'px;opacity:0.85">'+m.nameEn+'</div>';
+  else if(m.province)html+='<div class="card-sub" style="font-size:'+sz.fs+'px">'+m.province+'</div>';
+  if(m.id)html+='<div class="card-sub" style="font-size:'+(sz.fs-1)+'px;opacity:0.7">#'+m.id+'</div>';
+  html+='</div>'+pwDot+'</div>';
   return html;
 }
 
-function renderTierRow(members, tierKey, tc, sz, rowClass){
-  if(!members.length) return '';
-  var html = '<div class="tier-section"><div class="'+rowClass+'" data-tier="'+tierKey+'">';
-  members.forEach(function(m,i){ html += makeCard(m, tc, sz, i, isAdmin); });
-  html += '</div></div>';
+function renderTierRow(members,tierKey,tc,sz,rowClass){
+  if(!members.length)return'';
+  var html='<div class="tier-section"><div class="'+rowClass+'" data-tier="'+tierKey+'">';
+  members.forEach(function(m,i){html+=makeCard(m,tc,sz,i,isAdmin);});
+  html+='</div></div>';
   return html;
 }
 
 window.draw=function(){
   var q=(document.getElementById("sq").value||"").toLowerCase();
   var list=all.filter(function(m){
-    var ok=!q||[m.name,m.province,m.occupation,m.bio].some(function(v){return (v||"").toLowerCase().indexOf(q)>=0;});
+    var ok=!q||[m.name,m.province,m.occupation,m.bio].some(function(v){return(v||"").toLowerCase().indexOf(q)>=0;});
     return ok&&(!filt||m.tier===filt);
   });
-
   var groups={Promoted:[],VIP:[],Premium:[],Member:[]};
-  list.forEach(function(m){
-    var t=m.tier||"Member";
-    if(groups[t]) groups[t].push(m);
-    else groups.Member.push(m);
-  });
-
+  list.forEach(function(m){var t=m.tier||"Member";if(groups[t])groups[t].push(m);else groups.Member.push(m);});
   var c=document.getElementById("mainContainer");
   if(!list.length){c.innerHTML='<div class="empty">ไม่พบสมาชิก</div>';return;}
-
-  var SZ = calcSizes(groups.Promoted.length);
-  // เมื่อมีการค้นหา ให้ Promoted ใช้ขนาด premium เพื่อไม่ให้การ์ดใหญ่เกินไป
-  var promotedSZ = q ? SZ.premium : SZ.promoted;
+  var SZ=calcSizes(groups.Promoted.length);
+  var promotedSZ=q?SZ.premium:SZ.promoted;
   var html="";
-  html += renderTierRow(groups.Promoted, 'Promoted', TIER_CONF.Promoted, promotedSZ, 'row-tier');
-  html += renderTierRow(groups.Premium,  'Premium',  TIER_CONF.Premium,  SZ.premium,  'row-tier');
-  html += renderTierRow(groups.VIP,      'VIP',      TIER_CONF.VIP,      SZ.vip,      'row-tier');
-  html += renderTierRow(groups.Member,   'Member',   TIER_CONF.Member,   SZ.member,   'row-tier');
-
+  html+=renderTierRow(groups.Promoted,'Promoted',TIER_CONF.Promoted,promotedSZ,'row-tier');
+  html+=renderTierRow(groups.Premium, 'Premium', TIER_CONF.Premium, SZ.premium,  'row-tier');
+  html+=renderTierRow(groups.VIP,     'VIP',     TIER_CONF.VIP,     SZ.vip,      'row-tier');
+  html+=renderTierRow(groups.Member,  'Member',  TIER_CONF.Member,  SZ.member,   'row-tier');
   c.innerHTML=html;
-  if(isAdmin) bindDrag(c);
+  if(isAdmin)bindDrag(c);
 };
 
-window.setF=function(t,btn){
-  filt=t;
-  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on");b.style.opacity=".6";});
-  btn.classList.add("on");btn.style.opacity="1";
-  draw();
-};
+window.setF=function(t,btn){filt=t;document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on");b.style.opacity=".6";});btn.classList.add("on");btn.style.opacity="1";draw();};
 
 window.toggleAdmin=function(){if(isAdmin){logoutAdmin();return;}document.getElementById("ovLogin").className="ov on";setTimeout(function(){document.getElementById("pwIn").focus();},100);};
 window.doLogin=function(){
@@ -676,235 +783,159 @@ window.logoutAdmin=function(){isAdmin=false;document.getElementById("adminBar").
 window.closeLogin=function(){document.getElementById("ovLogin").className="ov";document.getElementById("pwIn").value="";document.getElementById("pwErr").style.display="none";};
 
 window.openDetail=function(docId){
-  var m=all.find(function(x){return x._docId===docId;}); if(!m) return;
+  var m=all.find(function(x){return x._docId===docId;}); if(!m)return;
   curId=docId;
   var cf=TIER_CONF[m.tier]||TIER_CONF.Member;
   document.getElementById("dTitle").textContent=m.name||"รายละเอียด";
   var dp=document.getElementById("dPoster");
-  if(m.photo) dp.innerHTML='<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">';
+  if(m.photo)dp.innerHTML='<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">';
   else dp.innerHTML='<div style="width:100%;height:100%;background:'+(COLORS[((m.name||"").charCodeAt(0)||0)%COLORS.length])+';display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#333">'+ini(m.name)+'</div>';
   document.getElementById("dName").textContent=m.name||"";
   document.getElementById("dBadge").textContent=cf.tag;
-  var da=document.getElementById("dAge"); da.textContent=m.age?"🎂 อายุ "+m.age+" ปี":""; da.style.display=m.age?"block":"none";
-  var dpr=document.getElementById("dProv"); dpr.textContent=m.province?"📍 "+m.province:""; dpr.style.display=m.province?"block":"none";
-  var dc=document.getElementById("dOcc"); dc.textContent=m.occupation?"💼 "+m.occupation:""; dc.style.display=m.occupation?"block":"none";
-  var db2=document.getElementById("dBio"); if(m.bio){db2.textContent=m.bio;db2.style.display="block";}else db2.style.display="none";
-  var qr=document.getElementById("dQR"); qr.innerHTML="";
-  if(m.lineQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
-  if(m.waQr) qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
-  var ex=document.getElementById("dExtras"); ex.innerHTML="";
-  if(m.extras) m.extras.forEach(function(u){if(u) ex.innerHTML+='<img src="'+u+'" style="width:104px;height:139px;border-radius:8px;object-fit:cover">';});
+  var da=document.getElementById("dAge");da.textContent=m.age?"🎂 อายุ "+m.age+" ปี":"";da.style.display=m.age?"block":"none";
+  var dpr=document.getElementById("dProv");dpr.textContent=m.province?"📍 "+m.province:"";dpr.style.display=m.province?"block":"none";
+  var dc=document.getElementById("dOcc");dc.textContent=m.occupation?"💼 "+m.occupation:"";dc.style.display=m.occupation?"block":"none";
+  var db2=document.getElementById("dBio");if(m.bio){db2.textContent=m.bio;db2.style.display="block";}else db2.style.display="none";
+  var qr=document.getElementById("dQR");qr.innerHTML="";
+  if(m.lineQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
+  if(m.waQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
+  var ex=document.getElementById("dExtras");ex.innerHTML="";
+  if(m.extras)m.extras.forEach(function(u){if(u)ex.innerHTML+='<img src="'+u+'" style="width:104px;height:139px;border-radius:8px;object-fit:cover">';});
   document.getElementById("dAdminBtns").style.display=isAdmin?"block":"none";
-  var dFb = document.getElementById("dFbLink");
-  if(dFb){
-    if(isAdmin && m.facebook){
-      dFb.href = m.facebook;
-      dFb.style.display = "inline-flex";
-    } else {
-      dFb.style.display = "none";
+  var dFb=document.getElementById("dFbLink");
+  if(dFb){if(isAdmin&&m.facebook){dFb.href=m.facebook;dFb.style.display="inline-flex";}else{dFb.style.display="none";}}
+  // Password status in detail
+  var pwSt=document.getElementById("dPwStatus");
+  if(isAdmin){
+    if(m.pwHash){
+      pwSt.innerHTML='<span style="color:#16a34a">✅ มีรหัสผ่านแล้ว</span><button onclick="resetMemberPw(\''+docId+'\')" style="background:none;border:none;color:#dc2626;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif">🗑 ลบรหัส</button>';
+    }else{
+      pwSt.innerHTML='<span style="color:#dc2626">❌ ยังไม่มีรหัสผ่าน</span><button onclick="closeDetail();openEdit(\''+docId+'\')" style="background:none;border:none;color:#7B2FF7;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif">+ ตั้งรหัส</button>';
     }
+    pwSt.style.background=m.pwHash?'rgba(74,222,128,0.08)':'rgba(239,68,68,0.06)';
+    pwSt.style.border='1px solid '+(m.pwHash?'rgba(74,222,128,0.2)':'rgba(239,68,68,0.15)');
+  }else{
+    pwSt.innerHTML='';
+    pwSt.style.display='none';
   }
   document.getElementById("ovDetail").className="ov on";
 };
 window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
 
-var DRAFT_KEY = "mmr_draft";
+// Fill edit form helper
+function fillEditForm(m){
+  document.getElementById("fid").value=m.id||'';
+  document.getElementById("fnm").value=m.name||'';
+  document.getElementById("fne").value=m.nameEn||'';
+  document.getElementById("fag").value=m.age||'';
+  document.getElementById("fpv").value=m.province||'';
+  document.getElementById("foc").value=m.occupation||'';
+  document.getElementById("fwa").value=m.whatsapp||'';
+  document.getElementById("fli").value=m.lineId||'';
+  document.getElementById("ffb").value=m.facebook||'';
+  document.getElementById("fbi").value=m.bio||'';
+  if(photo){document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="คลิกเพื่อเปลี่ยนรูป";}
+  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";}
+  resetX();setTier(m.tier||'Member');
+}
 
+// Draft system
+var DRAFT_KEY="mmr_draft";
 function saveDraft(){
-  var d = {
-    eid: eid,
-    photo: photo,
-    extras: [].concat(extras),
-    id:   document.getElementById("fid").value,
-    name: document.getElementById("fnm").value,
-    nameEn: document.getElementById("fne").value,
-    age:  document.getElementById("fag").value,
-    province: document.getElementById("fpv").value,
-    occupation: document.getElementById("foc").value,
-    whatsapp: document.getElementById("fwa").value,
-    lineId: document.getElementById("fli").value,
-    facebook: document.getElementById("ffb").value,
-    bio:  document.getElementById("fbi").value,
-    tier: window._tier||"Member",
-    ts: Date.now()
-  };
-  try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); }catch(e){}
+  var d={eid:eid,photo:photo,extras:[].concat(extras),id:document.getElementById("fid").value,name:document.getElementById("fnm").value,nameEn:document.getElementById("fne").value,age:document.getElementById("fag").value,province:document.getElementById("fpv").value,occupation:document.getElementById("foc").value,whatsapp:document.getElementById("fwa").value,lineId:document.getElementById("fli").value,facebook:document.getElementById("ffb").value,bio:document.getElementById("fbi").value,tier:window._tier||"Member",ts:Date.now()};
+  try{localStorage.setItem(DRAFT_KEY,JSON.stringify(d));}catch(e){}
 }
-
-function clearDraft(){ try{ localStorage.removeItem(DRAFT_KEY); }catch(e){} }
-
-function loadDraft(){
-  try{ return JSON.parse(localStorage.getItem(DRAFT_KEY)||"null"); }catch(e){ return null; }
-}
-
+function clearDraft(){try{localStorage.removeItem(DRAFT_KEY);}catch(e){}}
+function loadDraft(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"null");}catch(e){return null;}}
 function applyDraft(d){
-  eid = d.eid || null;
-  photo = d.photo || "";
-  extras = d.extras || ["","",""];
-  document.getElementById("fid").value = d.id||"";
-  document.getElementById("fnm").value = d.name||"";
-  document.getElementById("fne").value = d.nameEn||"";
-  document.getElementById("fag").value = d.age||"";
-  document.getElementById("fpv").value = d.province||"";
-  document.getElementById("foc").value = d.occupation||"";
-  document.getElementById("fwa").value = d.whatsapp||"";
-  document.getElementById("fli").value = d.lineId||"";
-  document.getElementById("ffb").value = d.facebook||"";
-  document.getElementById("fbi").value = d.bio||"";
-  setTier(d.tier||"Member");
-  if(photo){
-    document.getElementById("puImg").src=photo;
-    document.getElementById("puImg").style.display="block";
-    document.getElementById("puPh").style.display="none";
-    document.getElementById("puHint").textContent="✓ กู้คืนรูปแล้ว (คลิกเพื่อเปลี่ยน)";
-  } else {
-    document.getElementById("puImg").style.display="none";
-    document.getElementById("puPh").style.display="flex";
-    document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
-  }
+  eid=d.eid||null;photo=d.photo||'';extras=d.extras||['','',''];
+  document.getElementById("fid").value=d.id||'';document.getElementById("fnm").value=d.name||'';document.getElementById("fne").value=d.nameEn||'';document.getElementById("fag").value=d.age||'';document.getElementById("fpv").value=d.province||'';document.getElementById("foc").value=d.occupation||'';document.getElementById("fwa").value=d.whatsapp||'';document.getElementById("fli").value=d.lineId||'';document.getElementById("ffb").value=d.facebook||'';document.getElementById("fbi").value=d.bio||'';setTier(d.tier||'Member');
+  if(photo){document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ กู้คืนรูปแล้ว";}
+  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด";}
   resetX();
-  var banner = document.getElementById("draftBanner");
-  if(banner){
-    var ago = Math.round((Date.now()-d.ts)/60000);
-    document.getElementById("draftAgo").textContent = ago < 1 ? "เมื่อกี้" : ago+" นาทีที่แล้ว";
-    banner.style.display = "flex";
-  }
+  var banner=document.getElementById("draftBanner");
+  if(banner){var ago=Math.round((Date.now()-d.ts)/60000);document.getElementById("draftAgo").textContent=ago<1?"เมื่อกี้":ago+" นาทีที่แล้ว";banner.style.display="flex";}
 }
-
 function bindDraftInputs(){
-  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) el.addEventListener("input", saveDraft);
-  });
-  document.querySelectorAll(".tr-o").forEach(function(el){
-    el.addEventListener("click", function(){ setTimeout(saveDraft,50); });
-  });
+  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("input",saveDraft);});
+  document.querySelectorAll(".tr-o").forEach(function(el){el.addEventListener("click",function(){setTimeout(saveDraft,50);});});
 }
 
 window.openEdit=function(docId){
-  var m=all.find(function(x){return x._docId===docId;}); if(!m) return;
-  var draft = loadDraft();
-  if(draft && draft.eid !== docId){ clearDraft(); }
-  eid=docId; photo=m.photo||""; extras=m.extras?[].concat(m.extras):["","",""];
+  var m=all.find(function(x){return x._docId===docId;}); if(!m)return;
+  var draft=loadDraft();
+  if(draft&&draft.eid!==docId)clearDraft();
+  eid=docId;photo=m.photo||'';extras=m.extras?[].concat(m.extras):['','',''];
   document.getElementById("editTitle").textContent="แก้ไข · "+(m.name||docId);
-  document.getElementById("btnDelM").style.display="inline-block";  document.getElementById("fid").value=m.id||"";
-  document.getElementById("fnm").value=m.name||"";
-  document.getElementById("fne").value=m.nameEn||"";
-  document.getElementById("fag").value=m.age||"";
-  document.getElementById("fpv").value=m.province||"";
-  document.getElementById("foc").value=m.occupation||"";
-  document.getElementById("fwa").value=m.whatsapp||"";
-  document.getElementById("fli").value=m.lineId||"";
-  document.getElementById("ffb").value=m.facebook||"";
-  document.getElementById("fbi").value=m.bio||"";
-  if(photo){document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="คลิกเพื่อเปลี่ยนรูป";}
-  else{document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";}
-  resetX(); setTier(m.tier||"Member");
-  var sameDraft = loadDraft();
-  if(sameDraft && sameDraft.eid===docId){
-    applyDraft(sameDraft);
-  } else {
-    var b=document.getElementById("draftBanner"); if(b) b.style.display="none";
-  }
+  document.getElementById("btnDelM").style.display="inline-block";
+  fillEditForm(m);
+  // Show password section for admin
+  if(isAdmin)refreshAdminPwSection(m);
+  var sameDraft=loadDraft();
+  if(sameDraft&&sameDraft.eid===docId){applyDraft(sameDraft);}
+  else{var b=document.getElementById("draftBanner");if(b)b.style.display="none";}
   document.getElementById("ovEdit").className="ov on";
   bindDraftInputs();
 };
 
 window.openAdd=function(){
-  var draft = loadDraft();
-  eid=null; photo=""; extras=["","",""];
+  var draft=loadDraft();
+  eid=null;photo='';extras=['','',''];
   document.getElementById("editTitle").textContent="เพิ่มสมาชิกใหม่";
   document.getElementById("btnDelM").style.display="none";
-  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(i){document.getElementById(i).value="";});
-  document.getElementById("puImg").style.display="none";
-  document.getElementById("puPh").style.display="flex";
-  document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
-  resetX(); setTier("Member");
-  var b=document.getElementById("draftBanner"); if(b) b.style.display="none";
-  if(draft && !draft.eid){ applyDraft(draft); }
+  document.getElementById("pwAdminSection").style.display="none";
+  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(i){document.getElementById(i).value='';});
+  document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
+  resetX();setTier("Member");
+  var b=document.getElementById("draftBanner");if(b)b.style.display="none";
+  if(draft&&!draft.eid)applyDraft(draft);
   document.getElementById("ovEdit").className="ov on";
   bindDraftInputs();
 };
 
 window.closeEdit=function(){
-  var hasData = ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].some(function(i){
-    return (document.getElementById(i).value||"").trim()!=="";
-  }) || photo || extras.some(function(e){return !!e;});
-  if(hasData) saveDraft(); else clearDraft();
+  var hasData=["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].some(function(i){return(document.getElementById(i).value||"").trim()!=="";});
+  if(hasData)saveDraft();else clearDraft();
   document.getElementById("ovEdit").className="ov";
 };
 window.editCurrent=function(){closeDetail();if(curId)openEdit(curId);};
 
-window.setTier=function(t){
-  window._tier=t;
-  document.querySelectorAll(".tr-o").forEach(function(el){el.className="tr-o"+(el.textContent.trim()===t?" tr-"+t:"");});
-};
+window.setTier=function(t){window._tier=t;document.querySelectorAll(".tr-o").forEach(function(el){el.className="tr-o"+(el.textContent.trim()===t?" tr-"+t:"");});};
 window._tier="Member";
 
-async function upCloud(f){var fd=new FormData();fd.append("file",f);fd.append("upload_preset",CP);var r=await fetch("https://api.cloudinary.com/v1_1/"+CL+"/image/upload",{method:"POST",body:fd});return (await r.json()).secure_url;}
-window.upMain=async function(input){var f=input.files[0];if(!f)return;document.getElementById("puHint").textContent="กำลังอัปโหลด...";try{photo=await upCloud(f);document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ (คลิกหรือ Ctrl+V เพื่อเปลี่ยน)";toast("อัปโหลดสำเร็จ","ok");saveDraft();}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
+// Image upload
+async function upCloud(f){var fd=new FormData();fd.append("file",f);fd.append("upload_preset",CP);var r=await fetch("https://api.cloudinary.com/v1_1/"+CL+"/image/upload",{method:"POST",body:fd});return(await r.json()).secure_url;}
+window.upMain=async function(input){var f=input.files[0];if(!f)return;document.getElementById("puHint").textContent="กำลังอัปโหลด...";try{photo=await upCloud(f);document.getElementById("puImg").src=photo;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ";toast("อัปโหลดสำเร็จ","ok");saveDraft();}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
 window.upExtra=async function(input,i){var f=input.files[0];if(!f)return;try{var url=await upCloud(f);extras[i]=url;var sl=document.getElementById("x"+i);sl.innerHTML='<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';sl.addEventListener("click",function(){_pasteTarget=i;});toast("รูปที่ "+(i+1)+" สำเร็จ","ok");saveDraft();}catch(e){toast("อัปโหลดไม่สำเร็จ","er");}};
-var _pasteTarget = -1;
+var _pasteTarget=-1;
 
-document.addEventListener("DOMContentLoaded", function(){
-  var pu = document.querySelector(".pu");
-  if(pu) pu.addEventListener("click", function(){ _pasteTarget = -1; });
-  [0,1,2].forEach(function(i){
-    var el = document.getElementById("x"+i);
-    if(el) el.addEventListener("click", function(){ _pasteTarget = i; });
-  });
+document.addEventListener("DOMContentLoaded",function(){
+  var pu=document.querySelector(".pu");if(pu)pu.addEventListener("click",function(){_pasteTarget=-1;});
+  [0,1,2].forEach(function(i){var el=document.getElementById("x"+i);if(el)el.addEventListener("click",function(){_pasteTarget=i;});});
 });
-
-document.addEventListener("paste", function(e){
-  if(document.getElementById("ovEdit").className.indexOf("on") < 0) return;
-  var items = (e.clipboardData || e.originalEvent.clipboardData).items;
-  for(var k = 0; k < items.length; k++){
-    if(items[k].type.indexOf("image") >= 0){
-      var file = items[k].getAsFile();
-      if(!file) continue;
-      if(_pasteTarget >= 0){
-        pasteExtra(file, _pasteTarget);
-      } else {
-        pasteMain(file);
-      }
-      return;
-    }
-  }
+document.addEventListener("paste",function(e){
+  if(document.getElementById("ovEdit").className.indexOf("on")<0)return;
+  var items=(e.clipboardData||e.originalEvent.clipboardData).items;
+  for(var k=0;k<items.length;k++){if(items[k].type.indexOf("image")>=0){var file=items[k].getAsFile();if(!file)continue;if(_pasteTarget>=0)pasteExtra(file,_pasteTarget);else pasteMain(file);return;}}
 });
-
-function pasteMain(file){
-  document.getElementById("puHint").textContent = "กำลังอัปโหลด...";
-  upCloud(file).then(function(url){
-    photo = url;
-    document.getElementById("puImg").src = url;
-    document.getElementById("puImg").style.display = "block";
-    document.getElementById("puPh").style.display = "none";
-    document.getElementById("puHint").textContent = "✓ สำเร็จ (คลิกหรือ Ctrl+V เพื่อเปลี่ยน)";
-    toast("วางรูปโปรไฟล์สำเร็จ", "ok");
-    saveDraft();
-  }).catch(function(){ toast("อัปโหลดไม่สำเร็จ", "er"); });
-}
-
-function pasteExtra(file, i){
-  toast("กำลังอัปโหลดรูปที่ "+(i+1)+"...", "");
-  upCloud(file).then(function(url){
-    extras[i] = url;
-    var sl = document.getElementById("x"+i);
-    sl.innerHTML = '<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';
-    sl.addEventListener("click", function(){ _pasteTarget = i; });
-    toast("วางรูปที่ "+(i+1)+" สำเร็จ", "ok");
-    saveDraft();
-  }).catch(function(){ toast("อัปโหลดไม่สำเร็จ", "er"); });
-}
-
-window.rmX=function(e,i){e.stopPropagation();extras[i]="";var sl=document.getElementById("x"+i);sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';sl.addEventListener("click",function(){_pasteTarget=i;});};
+function pasteMain(file){document.getElementById("puHint").textContent="กำลังอัปโหลด...";upCloud(file).then(function(url){photo=url;document.getElementById("puImg").src=url;document.getElementById("puImg").style.display="block";document.getElementById("puPh").style.display="none";document.getElementById("puHint").textContent="✓ สำเร็จ";toast("วางรูปสำเร็จ","ok");saveDraft();}).catch(function(){toast("อัปโหลดไม่สำเร็จ","er");});}
+function pasteExtra(file,i){upCloud(file).then(function(url){extras[i]=url;var sl=document.getElementById("x"+i);sl.innerHTML='<img src="'+url+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';sl.addEventListener("click",function(){_pasteTarget=i;});toast("วางรูปที่ "+(i+1)+" สำเร็จ","ok");saveDraft();}).catch(function(){toast("อัปโหลดไม่สำเร็จ","er");});}
+window.rmX=function(e,i){e.stopPropagation();extras[i]='';var sl=document.getElementById("x"+i);sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';sl.addEventListener("click",function(){_pasteTarget=i;});};
 function resetX(){for(var i=0;i<3;i++){(function(i){var sl=document.getElementById("x"+i);if(extras[i])sl.innerHTML='<img src="'+extras[i]+'"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button><input type="file" accept="image/*" onchange="upExtra(this,'+i+')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%">';else sl.innerHTML='<span style="font-size:18px;color:#7B2FF7">+</span><span style="font-size:10px;color:#7B2FF7">รูป '+(i+1)+'</span><input type="file" accept="image/*" onchange="upExtra(this,'+i+')"><button class="xs-rm" onclick="rmX(event,'+i+')">×</button>';sl.addEventListener("click",function(){_pasteTarget=i;});})(i);}}
 
-window.saveM=async function(){ if(window._selfEditMode){ saveSelfEdit(); return; }
+window.saveM=async function(){
+  if(window._selfEditMode){saveSelfEdit();return;}
   var dispId=document.getElementById("fid").value.trim();
   if(!dispId){toast("กรุณากรอก ID","er");return;}
-  var docKey = eid || (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2));
+  var docKey=eid||(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+  // Preserve existing pw data if editing
+  var existingM=eid?all.find(function(m){return m._docId===eid;}):null;
   var data={id:dispId,name:document.getElementById("fnm").value.trim(),nameEn:document.getElementById("fne").value.trim(),age:document.getElementById("fag").value.trim(),province:document.getElementById("fpv").value.trim(),occupation:document.getElementById("foc").value.trim(),whatsapp:document.getElementById("fwa").value.trim(),lineId:document.getElementById("fli").value.trim(),facebook:document.getElementById("ffb").value.trim(),bio:document.getElementById("fbi").value.trim(),tier:window._tier||"Member",photo:photo,extras:[].concat(extras),lineQr:"",waQr:"",order:eid?(all.find(function(m){return m._docId===eid;})||{order:all.length}).order:all.length};
+  // Preserve password fields
+  if(existingM){
+    if(existingM.pwHash)data.pwHash=existingM.pwHash;
+    if(existingM.editToken)data.editToken=existingM.editToken;
+  }
   try{
     await setDoc(doc(db,"members",docKey),data);
     data._docId=docKey;
@@ -913,129 +944,37 @@ window.saveM=async function(){ if(window._selfEditMode){ saveSelfEdit(); return;
     draw();closeEdit();clearDraft();showSaved();toast("บันทึกสำเร็จ","ok");
   }catch(e){toast("บันทึกไม่สำเร็จ: "+e.message,"er");}
 };
+
 window.deleteCurrent=async function(){
-  var docId=curId||eid; if(!docId)return;
+  var docId=curId||eid;if(!docId)return;
   var m=all.find(function(x){return x._docId===docId;});
   if(!confirm("ลบ "+(m?m.name:docId)+"?"))return;
   try{await deleteDoc(doc(db,"members",docId));all=all.filter(function(x){return x._docId!==docId;});draw();closeDetail();closeEdit();toast("ลบสำเร็จ","ok");}catch(e){toast("ลบไม่สำเร็จ","er");}
 };
 
+// CSV
 window.openCSV=function(){document.getElementById("ovCSV").className="ov on";};
 window.closeCSV=function(){document.getElementById("ovCSV").className="ov";};
-
 var COL_MAP={"nickname":"name","fb_name":"nameEn","fb_url":"facebook","fbname":"nameEn","ชื่อเล่น":"name","ชื่อfb":"nameEn","facebook url":"facebook","facebookurl":"facebook","facebook":"facebook","nameen":"nameEn","ชื่ออังกฤษ":"nameEn"};
-
 function parseCSVText(text){
-  text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").trim();
-  var lines=text.split("\n");
-  var i,j;
-  function splitLine(line){
-    var result=[],cur="",inQ=false;
-    for(var k=0;k<line.length;k++){
-      var ch=line[k];
-      if(ch==='"'){inQ=!inQ;}
-      else if(ch===','&&!inQ){result.push(cur.trim());cur="";}
-      else{cur+=ch;}
-    }
-    result.push(cur.trim());
-    return result;
-  }
-  var headers=splitLine(lines[0]);
-  for(i=0;i<headers.length;i++) headers[i]=headers[i].replace(/"/g,"").trim().toLowerCase();
-
+  text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n").trim();var lines=text.split("\n");var i,j;
+  function splitLine(line){var result=[],cur="",inQ=false;for(var k=0;k<line.length;k++){var ch=line[k];if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){result.push(cur.trim());cur="";}else{cur+=ch;}}result.push(cur.trim());return result;}
+  var headers=splitLine(lines[0]);for(i=0;i<headers.length;i++)headers[i]=headers[i].replace(/"/g,"").trim().toLowerCase();
   csvRows=[];
-  for(i=1;i<lines.length;i++){
-    if(!lines[i].trim())continue;
-    var vals=splitLine(lines[i]);
-    var raw={};
-    for(j=0;j<headers.length;j++) raw[headers[j]]=(vals[j]||"").replace(/"/g,"").trim();
-
-    var obj={};
-    for(var h in raw){
-      var mapped=COL_MAP.hasOwnProperty(h)?COL_MAP[h]:h;
-      if(mapped==="")continue;
-      if(mapped&&!obj[mapped]) obj[mapped]=raw[h];
-      else if(!mapped) obj[h]=raw[h];
-    }
-    if(raw["fb_url"]&&!obj["fb_url"]) obj["fb_url"]=raw["fb_url"];
-    if(raw["facebook url"]&&!obj["fb_url"]) obj["fb_url"]=raw["facebook url"];
-
-    if(!obj.tier)obj.tier="Member";
-    if(!obj.name)obj.name=raw["nickname"]||raw["fb_name"]||raw["ชื่อเล่น"]||raw["name"]||"";
-    var hasAnyValue=Object.keys(obj).some(function(k){return (obj[k]||"").trim()!=="";});
-    if(hasAnyValue)csvRows.push(obj);
-  }
+  for(i=1;i<lines.length;i++){if(!lines[i].trim())continue;var vals=splitLine(lines[i]);var raw={};for(j=0;j<headers.length;j++)raw[headers[j]]=(vals[j]||"").replace(/"/g,"").trim();var obj={};for(var h in raw){var mapped=COL_MAP.hasOwnProperty(h)?COL_MAP[h]:h;if(mapped==="")continue;if(mapped&&!obj[mapped])obj[mapped]=raw[h];else if(!mapped)obj[h]=raw[h];}if(raw["fb_url"]&&!obj["fb_url"])obj["fb_url"]=raw["fb_url"];if(raw["facebook url"]&&!obj["fb_url"])obj["fb_url"]=raw["facebook url"];if(!obj.tier)obj.tier="Member";if(!obj.name)obj.name=raw["nickname"]||raw["fb_name"]||raw["ชื่อเล่น"]||raw["name"]||"";var hasAnyValue=Object.keys(obj).some(function(k){return(obj[k]||"").trim()!=="";});if(hasAnyValue)csvRows.push(obj);}
   return headers;
 }
-
-window.readCSV=function(input){
-  var file=input.files[0];if(!file)return;
-  var r1=new FileReader();
-  r1.onload=function(e){
-    var text=e.target.result;
-    if(text.indexOf("\uFFFD")>=0){
-      var r2=new FileReader();
-      r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};
-      r2.readAsText(file,"TIS-620");
-    } else {
-      window.processCSVFile._parse(text,file.name);
-    }
-  };
-  r1.readAsText(file,"UTF-8");
-};
-
-window.processCSVFile=function(file){
-  var r=new FileReader();
-  r.onload=function(e){
-    var text=e.target.result;
-    if(text.indexOf("\uFFFD")>=0){
-      var r2=new FileReader();
-      r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};
-      r2.readAsText(file,"TIS-620");
-    } else {
-      window.processCSVFile._parse(text,file.name);
-    }
-  };
-  r.readAsText(file,"UTF-8");
-};
-
-window.processCSVFile._parse=function(text,filename){
-  if(!filename.match(/\.(csv|txt)$/i)){toast("กรุณาใช้ไฟล์ .csv ครับ","er");return;}
-  var headers=parseCSVText(text);
-  document.getElementById("csvN").textContent="พบ "+csvRows.length+" รายการ";
-  if(csvRows.length===0){
-    toast("พบ 0 รายการ — ลองตรวจสอบชื่อคอลัมน์ใน CSV ครับ","er");
-  }
-  var i,j;
-  var hh="<tr>";for(i=0;i<headers.length;i++)hh+="<th>"+headers[i]+"</th>";hh+="</tr>";
-  var bh="";
-  for(i=0;i<Math.min(csvRows.length,15);i++){bh+="<tr>";for(j=0;j<headers.length;j++)bh+="<td>"+(csvRows[i][headers[j]]||"")+"</td>";bh+="</tr>";}
-  if(csvRows.length>15)bh+='<tr><td colspan="'+headers.length+'" style="text-align:center;color:#aaa">...อีก '+(csvRows.length-15)+' รายการ</td></tr>';
-  document.getElementById("csvH").innerHTML=hh;
-  document.getElementById("csvB").innerHTML=bh;
-  document.getElementById("csvPv").style.display="block";
-};
-
-(function(){
-  var drop=document.querySelector(".csv-drop");
-  if(!drop)return;
-  drop.addEventListener("dragover",function(e){e.preventDefault();drop.style.borderColor="#7B2FF7";});
-  drop.addEventListener("dragleave",function(){drop.style.borderColor="";});
-  drop.addEventListener("drop",function(e){
-    e.preventDefault();drop.style.borderColor="";
-    var file=e.dataTransfer.files[0];
-    if(file)window.processCSVFile(file);
-  });
-})();
+window.readCSV=function(input){var file=input.files[0];if(!file)return;var r1=new FileReader();r1.onload=function(e){var text=e.target.result;if(text.indexOf("\uFFFD")>=0){var r2=new FileReader();r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};r2.readAsText(file,"TIS-620");}else{window.processCSVFile._parse(text,file.name);}};r1.readAsText(file,"UTF-8");};
+window.processCSVFile=function(file){var r=new FileReader();r.onload=function(e){var text=e.target.result;if(text.indexOf("\uFFFD")>=0){var r2=new FileReader();r2.onload=function(e2){window.processCSVFile._parse(e2.target.result,file.name);};r2.readAsText(file,"TIS-620");}else{window.processCSVFile._parse(text,file.name);}};r.readAsText(file,"UTF-8");};
+window.processCSVFile._parse=function(text,filename){if(!filename.match(/\.(csv|txt)$/i)){toast("กรุณาใช้ไฟล์ .csv ครับ","er");return;}var headers=parseCSVText(text);document.getElementById("csvN").textContent="พบ "+csvRows.length+" รายการ";if(csvRows.length===0){toast("พบ 0 รายการ — ลองตรวจสอบชื่อคอลัมน์","er");}var i,j;var hh="<tr>";for(i=0;i<headers.length;i++)hh+="<th>"+headers[i]+"</th>";hh+="</tr>";var bh="";for(i=0;i<Math.min(csvRows.length,15);i++){bh+="<tr>";for(j=0;j<headers.length;j++)bh+="<td>"+(csvRows[i][headers[j]]||"")+"</td>";bh+="</tr>";}if(csvRows.length>15)bh+='<tr><td colspan="'+headers.length+'" style="text-align:center;color:#aaa">...อีก '+(csvRows.length-15)+' รายการ</td></tr>';document.getElementById("csvH").innerHTML=hh;document.getElementById("csvB").innerHTML=bh;document.getElementById("csvPv").style.display="block";};
+(function(){var drop=document.querySelector(".csv-drop");if(!drop)return;drop.addEventListener("dragover",function(e){e.preventDefault();drop.style.borderColor="#7B2FF7";});drop.addEventListener("dragleave",function(){drop.style.borderColor="";});drop.addEventListener("drop",function(e){e.preventDefault();drop.style.borderColor="";var file=e.dataTransfer.files[0];if(file)window.processCSVFile(file);});})();
 window.clearCSV=function(){csvRows=[];document.getElementById("csvPv").style.display="none";document.getElementById("csvLog").style.display="none";};
 window.pushCSV=async function(){
   if(!csvRows.length)return;
   var logEl=document.getElementById("csvLog");logEl.style.display="block";logEl.textContent="";
   var ok=0,fl=0,base=all.length;
   for(var i=0;i<csvRows.length;i++){
-    var r=csvRows[i];
-    var dispId=r.id||String(base+i+1).padStart(3,"0");
-    var docKey=crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2)+i;
+    var r=csvRows[i];var dispId=r.id||String(base+i+1).padStart(3,"0");var docKey=crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2)+i;
     var data={id:dispId,name:r.name||"",nameEn:r.nameEn||"",age:r.age||"",province:r.province||"",occupation:r.occupation||"",whatsapp:r.whatsapp||"",lineId:r.lineId||"",facebook:r.facebook||r.fb_url||"",tier:r.tier||"Member",bio:r.bio||"",order:typeof r.order!=="undefined"?Number(r.order):base+i,photo:"",extras:["","",""],lineQr:"",waQr:""};
     try{await setDoc(doc(db,"members",docKey),data);ok++;var sp=document.createElement("span");sp.textContent="ok ["+dispId+"] "+r.name+"\n";logEl.appendChild(sp);}
     catch(e){fl++;var sp=document.createElement("span");sp.className="er";sp.textContent="fail: "+e.message+"\n";logEl.appendChild(sp);}
@@ -1046,60 +985,26 @@ window.pushCSV=async function(){
   await load();
 };
 
+// Drag & drop order
 function bindDrag(container){
-  var dragSrc = null;
-
+  var dragSrc=null;
   container.querySelectorAll('.drag-card').forEach(function(card){
-    card.addEventListener('dragstart', function(e){
-      dragSrc = card;
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/plain', card.dataset.docid);
-    });
-    card.addEventListener('dragend', function(){
-      card.classList.remove('dragging');
-      container.querySelectorAll('.drag-over').forEach(function(el){ el.classList.remove('drag-over'); });
-    });
-    card.addEventListener('dragover', function(e){
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      if(card !== dragSrc) card.classList.add('drag-over');
-    });
-    card.addEventListener('dragleave', function(){
-      card.classList.remove('drag-over');
-    });
-    card.addEventListener('drop', function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      card.classList.remove('drag-over');
-      if(!dragSrc || dragSrc === card) return;
-      if(dragSrc.dataset.tier !== card.dataset.tier) return;
-
-      var tier = dragSrc.dataset.tier;
-      var srcId = dragSrc.dataset.docid;
-      var dstId = card.dataset.docid;
-
-      var tierMembers = all.filter(function(m){ return (m.tier||"Member") === tier; });
-      var srcIdx = tierMembers.findIndex(function(m){ return m._docId === srcId; });
-      var dstIdx = tierMembers.findIndex(function(m){ return m._docId === dstId; });
-      if(srcIdx < 0 || dstIdx < 0) return;
-
-      var moved = tierMembers.splice(srcIdx, 1)[0];
-      tierMembers.splice(dstIdx, 0, moved);
-
-      var base = all.filter(function(m){ return (m.tier||"Member") !== tier; })
-                    .reduce(function(mn,m){ return Math.min(mn, typeof m.order==='number'?m.order:999); }, 0);
-
-      tierMembers.forEach(function(m, i){
-        var newOrder = base + i;
-        m.order = newOrder;
-        setDoc(doc(db,"members",m._docId), Object.assign({},m,{order:newOrder}))
-          .catch(function(e){ console.error('order save fail',e); });
-      });
-
-      all.sort(function(a,b){ return (a.order||0)-(b.order||0); });
-      draw();
-      showSaved();
+    card.addEventListener('dragstart',function(e){dragSrc=card;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',card.dataset.docid);});
+    card.addEventListener('dragend',function(){card.classList.remove('dragging');container.querySelectorAll('.drag-over').forEach(function(el){el.classList.remove('drag-over');});});
+    card.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='move';if(card!==dragSrc)card.classList.add('drag-over');});
+    card.addEventListener('dragleave',function(){card.classList.remove('drag-over');});
+    card.addEventListener('drop',function(e){
+      e.preventDefault();e.stopPropagation();card.classList.remove('drag-over');
+      if(!dragSrc||dragSrc===card)return;if(dragSrc.dataset.tier!==card.dataset.tier)return;
+      var tier=dragSrc.dataset.tier,srcId=dragSrc.dataset.docid,dstId=card.dataset.docid;
+      var tierMembers=all.filter(function(m){return(m.tier||"Member")===tier;});
+      var srcIdx=tierMembers.findIndex(function(m){return m._docId===srcId;});
+      var dstIdx=tierMembers.findIndex(function(m){return m._docId===dstId;});
+      if(srcIdx<0||dstIdx<0)return;
+      var moved=tierMembers.splice(srcIdx,1)[0];tierMembers.splice(dstIdx,0,moved);
+      var base=all.filter(function(m){return(m.tier||"Member")!==tier;}).reduce(function(mn,m){return Math.min(mn,typeof m.order==='number'?m.order:999);},0);
+      tierMembers.forEach(function(m,i){var newOrder=base+i;m.order=newOrder;setDoc(doc(db,"members",m._docId),Object.assign({},m,{order:newOrder})).catch(function(e){console.error('order save fail',e);});});
+      all.sort(function(a,b){return(a.order||0)-(b.order||0);});draw();showSaved();
     });
   });
 }
@@ -1108,10 +1013,7 @@ function showSaved(){var el=document.getElementById("savedBadge");el.style.displ
 window.toast=function(msg,type){var el=document.getElementById("toast");el.textContent=msg;el.className="toast on"+(type?" "+type:"");setTimeout(function(){el.className="toast";},3000);};
 
 var _resizeTimer;
-window.addEventListener('resize', function(){
-  clearTimeout(_resizeTimer);
-  _resizeTimer = setTimeout(function(){ if(all.length) draw(); }, 150);
-});
+window.addEventListener('resize',function(){clearTimeout(_resizeTimer);_resizeTimer=setTimeout(function(){if(all.length)draw();},150);});
 
 load().then(checkEditToken);
 </script>
