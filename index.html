@@ -176,23 +176,25 @@ textarea{resize:vertical;min-height:54px}
   <div class="empty">⏳ กำลังโหลด...</div>
 </div>
 
-<!-- Member Password Modal (for members accessing via URL) -->
-<div class="ov" id="ovMemberPw" style="background:rgba(0,0,0,0.7)">
-  <div class="pw-modal">
-    <div style="font-size:32px;text-align:center;margin-bottom:12px" id="pwMIcon">🔐</div>
-    <h2 id="pwMTitle" style="text-align:center">ตั้งรหัสผ่าน</h2>
-    <p id="pwMDesc" style="text-align:center">ตั้งรหัสผ่านสำหรับการเข้าใช้งานครั้งต่อๆ ไป</p>
-    <div style="position:relative">
-      <input class="pw-input" type="password" id="memberPwIn" placeholder="รหัสผ่าน (อย่างน้อย 4 ตัว)" onkeydown="if(event.key==='Enter')submitMemberPw()">
-      <button onclick="togglePwVis('memberPwIn',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:16px;padding:2px 4px">👁</button>
+<!-- Member Login Modal (phone-based) -->
+<div class="ov" id="ovMemberLogin">
+  <div class="md" style="max-width:320px">
+    <div class="md-h">
+      <h3 id="mlTitle">เข้าสู่ระบบสมาชิก</h3>
+      <button class="md-cl" onclick="closeMemberLogin()">×</button>
     </div>
-    <div id="pwMConfirmWrap" style="display:none;position:relative;margin-top:6px">
-      <input class="pw-input" type="password" id="memberPwConfirm" placeholder="ยืนยันรหัสผ่านอีกครั้ง" onkeydown="if(event.key==='Enter')submitMemberPw()" style="margin-bottom:0">
-      <button onclick="togglePwVis('memberPwConfirm',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:16px;padding:2px 4px">👁</button>
+    <div class="md-b">
+      <div style="font-size:13px;color:#aaa;margin-bottom:14px" id="mlDesc">ใส่เบอร์โทรที่ลงทะเบียนไว้</div>
+      <div class="fgr" style="margin-bottom:10px">
+        <label>เบอร์โทรศัพท์</label>
+        <input type="tel" id="mlPhone" placeholder="0812345678" onkeydown="if(event.key==='Enter')submitMemberLogin()" style="font-size:16px;letter-spacing:1px">
+      </div>
+      <div id="mlErr" style="color:#f87171;font-size:12px;margin-bottom:8px;display:none"></div>
+      <button class="btn btn-p" style="width:100%" onclick="submitMemberLogin()" id="mlBtn">เข้าสู่ระบบ</button>
+      <div style="text-align:center;margin-top:10px">
+        <button onclick="showMlHelp()" style="background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif">เบอร์ไม่ตรง? ติดต่อ Admin</button>
+      </div>
     </div>
-    <div id="pwMErr" class="pw-err" style="margin-top:8px"></div>
-    <button class="pw-btn" onclick="submitMemberPw()" id="pwMBtn">ยืนยัน</button>
-    <button id="pwMForgotBtn" onclick="showForgotPw()" style="display:none;width:100%;margin-top:8px;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif">ลืมรหัสผ่าน? ติดต่อ Admin</button>
   </div>
 </div>
 
@@ -293,30 +295,34 @@ textarea{resize:vertical;min-height:54px}
         <!-- ===== PASSWORD MANAGEMENT SECTION (Admin only) ===== -->
         <div class="fgr full" id="pwAdminSection" style="display:none">
           <div class="pw-section">
-            <div class="pw-section-title">🔑 จัดการรหัสผ่านสมาชิก</div>
-            
-            <!-- Status -->
-            <div id="adminPwStatusBadge" class="pw-status none">❌ ยังไม่มีรหัสผ่าน</div>
-            
-            <!-- Set password by admin -->
-            <div style="font-size:12px;color:#666;margin-bottom:6px">ตั้งรหัสผ่านให้สมาชิก:</div>
-            <div class="pw-admin-input">
-              <div style="position:relative;flex:1">
-                <input type="password" id="adminPwNew" placeholder="รหัสผ่านใหม่ (อย่างน้อย 4 ตัว)" style="width:100%;padding-right:36px">
-                <button onclick="togglePwVis('adminPwNew',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aaa;font-size:14px">👁</button>
+            <div class="pw-section-title">🔑 รหัสเข้าระบบ (เบอร์โทร)</div>
+
+            <!-- Status + show phone -->
+            <div id="adminPwStatusBadge" class="pw-status none">❌ ยังไม่มีเบอร์โทร</div>
+
+            <!-- Current phone (admin read) -->
+            <div id="adminPhoneDisplay" style="display:none;margin-bottom:10px">
+              <div style="font-size:11px;color:#888;margin-bottom:4px">เบอร์โทรที่ใช้ login:</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div id="adminPhoneVal" style="font-size:16px;font-weight:600;color:#7B2FF7;letter-spacing:1px;flex:1"></div>
+                <button onclick="adminCopyPhone()" style="background:none;border:1px solid rgba(123,47,247,0.3);border-radius:6px;padding:3px 10px;font-size:11px;color:#7B2FF7;cursor:pointer;font-family:'Sarabun',sans-serif">Copy</button>
               </div>
-              <button onclick="adminSetPw()">ตั้งรหัส</button>
+            </div>
+
+            <!-- Reset phone -->
+            <div style="font-size:12px;color:#666;margin-bottom:6px" id="adminPwSetLabel">เปลี่ยนเบอร์โทร / ตั้งใหม่:</div>
+            <div class="pw-admin-input">
+              <input type="tel" id="adminPhoneNew" placeholder="0812345678" style="font-size:14px;letter-spacing:1px">
+              <button onclick="adminSetPhone()">บันทึก</button>
             </div>
 
             <!-- Actions -->
-            <div class="pw-actions">
-              <button class="pw-action-btn copy" onclick="adminCopyUrl()">🔗 Copy URL ส่งสมาชิก</button>
-              <button class="pw-action-btn gen" onclick="adminGenUrl()">✨ สร้าง URL ใหม่</button>
-              <button class="pw-action-btn reset" id="adminPwResetBtn" onclick="adminResetPw()">🗑 ลบรหัสผ่าน</button>
+            <div class="pw-actions" style="margin-top:10px">
+              <button class="pw-action-btn reset" id="adminPwResetBtn" onclick="adminResetPw()" style="display:none">🗑 ลบเบอร์</button>
             </div>
 
             <div id="adminPwNote" style="font-size:11px;color:#aaa;margin-top:8px;line-height:1.5">
-              URL ส่วนตัวใช้สำหรับให้สมาชิกเข้าแก้ไขข้อมูลตัวเอง ส่งได้ 1 ครั้งและใช้ได้ตลอด
+              สมาชิกใช้เบอร์โทรนี้กด "เข้าสู่ระบบ" เพื่อแก้ไขข้อมูลตัวเอง
             </div>
           </div>
         </div>
@@ -415,121 +421,58 @@ async function sha256(str){
   var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
 }
-function genToken(){
-  var arr=new Uint8Array(18);crypto.getRandomValues(arr);
-  return Array.from(arr).map(function(b){return b.toString(36).padStart(2,'0');}).join('').slice(0,24);
-}
-window.togglePwVis=function(inputId,btn){
-  var inp=document.getElementById(inputId);
-  if(!inp)return;
-  inp.type = inp.type==='password' ? 'text' : 'password';
-  btn.textContent = inp.type==='password' ? '👁' : '🙈';
-};
 window.openTranslate=function(){window.open("https://translate.google.com/translate?sl=th&tl=en&u="+encodeURIComponent(location.href),"_blank");};
 
 // ===========================
-// MEMBER SELF-EDIT (via URL token)
+// MEMBER SELF-EDIT (phone-based login)
+// Phone number stored as SHA-256 hash (pwHash). Plain digits only, no dash.
 // ===========================
 var selfEditMember = null;
 
+function normalizePhone(p){
+  // strip spaces, dashes, +66 prefix → plain digits
+  p = p.replace(/[\s\-]/g,'');
+  if(p.startsWith('+66')) p = '0' + p.slice(3);
+  return p;
+}
+
 window.openMemberLogin=function(){
   if(selfEditMember){openSelfEdit();return;}
-  var url=prompt('วาง URL ส่วนตัวที่ได้รับจาก Admin:');
-  if(!url)return;
-  try{
-    var token=new URL(url.trim()).searchParams.get('edit');
-    if(!token){toast('ไม่พบ token ใน URL','er');return;}
-    location.href=location.origin+location.pathname+'?edit='+token;
-  }catch(e){toast('รูปแบบ URL ไม่ถูกต้อง','er');}
-};
-
-async function checkEditToken(){
-  var params=new URLSearchParams(location.search);
-  var token=params.get('edit');
-  if(!token)return;
-  var m=all.find(function(x){return x.editToken===token;});
-  if(!m){toast('ลิงก์ไม่ถูกต้องหรือหมดอายุ','er');return;}
-  document.getElementById('btnAdmin').style.display='none';
-  document.getElementById('btnMemberLogin').style.display='none';
-  if(!m.pwHash){
-    showMemberPwModal('set',m);
-  }else{
-    showMemberPwModal('verify',m);
-  }
-}
-
-function showMemberPwModal(mode,m){
-  var title=document.getElementById('pwMTitle');
-  var desc=document.getElementById('pwMDesc');
-  var btn=document.getElementById('pwMBtn');
-  var err=document.getElementById('pwMErr');
-  var confirmWrap=document.getElementById('pwMConfirmWrap');
-  var forgotBtn=document.getElementById('pwMForgotBtn');
-  err.style.display='none';err.textContent='';
-  document.getElementById('memberPwIn').value='';
-  document.getElementById('memberPwConfirm').value='';
-  if(mode==='set'){
-    document.getElementById('pwMIcon').textContent='🆕';
-    title.textContent='ตั้งรหัสผ่าน';
-    desc.textContent='ตั้งรหัสผ่านส่วนตัวของคุณ เพื่อใช้ครั้งต่อไป';
-    btn.textContent='ตั้งรหัสผ่าน';
-    confirmWrap.style.display='block';
-    forgotBtn.style.display='none';
-  }else{
-    document.getElementById('pwMIcon').textContent='🔐';
-    title.textContent='ยืนยันตัวตน';
-    desc.textContent='สวัสดี '+(m.name||'')+' 👋\nกรอกรหัสผ่านเพื่อเข้าแก้ไขข้อมูล';
-    btn.textContent='เข้าสู่ระบบ';
-    confirmWrap.style.display='none';
-    forgotBtn.style.display='block';
-  }
-  document.getElementById('ovMemberPw').className='ov on';
-  setTimeout(function(){document.getElementById('memberPwIn').focus();},100);
-  window._pwMode=mode;
-  window._pwMember=m;
-}
-
-window.submitMemberPw=async function(){
-  var pw=document.getElementById('memberPwIn').value;
-  var err=document.getElementById('pwMErr');
+  var err=document.getElementById('mlErr');
   err.style.display='none';
-  if(!pw||pw.length<4){
-    err.textContent='รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร';
-    err.style.display='block';return;
-  }
-  var m=window._pwMember;
-  if(window._pwMode==='set'){
-    var pw2=document.getElementById('memberPwConfirm').value;
-    if(pw!==pw2){err.textContent='รหัสผ่านไม่ตรงกัน กรุณาลองใหม่';err.style.display='block';return;}
-    var hash=await sha256(pw);
-    try{
-      var saveData=Object.assign({},m);delete saveData._docId;saveData.pwHash=hash;
-      await setDoc(doc(db,'members',m._docId),saveData);
-      var idx=all.findIndex(function(x){return x._docId===m._docId;});
-      if(idx>=0){all[idx].pwHash=hash;m.pwHash=hash;}
-      selfEditMember=all[idx]||m;
-      document.getElementById('ovMemberPw').className='ov';
-      showSelfEditBanner(m);
-      toast('ตั้งรหัสผ่านสำเร็จ! ยินดีต้อนรับ '+( m.name||''),'ok');
-    }catch(e){err.textContent='เกิดข้อผิดพลาด: '+e.message;err.style.display='block';}
-  }else{
-    var hash=await sha256(pw);
-    if(hash!==m.pwHash){
-      err.textContent='รหัสผ่านไม่ถูกต้อง';
-      err.style.display='block';
-      document.getElementById('memberPwIn').value='';
-      document.getElementById('memberPwIn').focus();
-      return;
-    }
-    selfEditMember=m;
-    document.getElementById('ovMemberPw').className='ov';
-    showSelfEditBanner(m);
-    toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
-  }
+  document.getElementById('mlPhone').value='';
+  document.getElementById('mlDesc').textContent='ใส่เบอร์โทรที่ลงทะเบียนไว้';
+  document.getElementById('mlTitle').textContent='เข้าสู่ระบบสมาชิก';
+  document.getElementById('ovMemberLogin').className='ov on';
+  setTimeout(function(){document.getElementById('mlPhone').focus();},100);
+};
+window.closeMemberLogin=function(){
+  document.getElementById('ovMemberLogin').className='ov';
 };
 
-window.showForgotPw=function(){
-  toast('กรุณาติดต่อ Admin เพื่อ Reset รหัสผ่าน','');
+window.submitMemberLogin=async function(){
+  var raw=document.getElementById('mlPhone').value.trim();
+  var err=document.getElementById('mlErr');
+  err.style.display='none';
+  if(!raw){err.textContent='กรุณากรอกเบอร์โทร';err.style.display='block';return;}
+  var phone=normalizePhone(raw);
+  if(phone.length<9){err.textContent='เบอร์โทรไม่ถูกต้อง';err.style.display='block';return;}
+  var hash=await sha256(phone);
+  var m=all.find(function(x){return x.pwHash===hash;});
+  if(!m){
+    err.textContent='ไม่พบเบอร์นี้ในระบบ กรุณาตรวจสอบอีกครั้ง';
+    err.style.display='block';
+    document.getElementById('mlPhone').focus();
+    return;
+  }
+  selfEditMember=m;
+  document.getElementById('ovMemberLogin').className='ov';
+  showSelfEditBanner(m);
+  toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
+};
+
+window.showMlHelp=function(){
+  toast('กรุณาติดต่อ Admin เพื่อตรวจสอบเบอร์โทรที่ลงทะเบียน','');
 };
 
 function showSelfEditBanner(m){
@@ -585,111 +528,92 @@ window.saveSelfEdit=async function(){
 // ===========================
 
 // Called when admin opens edit modal for a member
+// phoneMap: docId -> plain phone (kept in memory, NOT in Firestore for this session decode trick)
+// We store hash in pwHash. Admin views the whatsapp field as the likely phone source.
+// We store the plain phone separately in pwPhone field (admin-only, not shown to members).
 function refreshAdminPwSection(m){
   var section=document.getElementById('pwAdminSection');
   var badge=document.getElementById('adminPwStatusBadge');
   var resetBtn=document.getElementById('adminPwResetBtn');
   var note=document.getElementById('adminPwNote');
+  var phoneDisplay=document.getElementById('adminPhoneDisplay');
+  var phoneVal=document.getElementById('adminPhoneVal');
   section.style.display='block';
-  document.getElementById('adminPwNew').value='';
+  document.getElementById('adminPhoneNew').value='';
   if(m.pwHash){
     badge.className='pw-status has';
-    badge.textContent='✅ มีรหัสผ่านแล้ว';
+    badge.textContent='✅ มีเบอร์โทรแล้ว';
     resetBtn.style.display='inline-flex';
+    if(m.pwPhone){
+      phoneDisplay.style.display='block';
+      phoneVal.textContent=m.pwPhone;
+    }else{
+      phoneDisplay.style.display='none';
+    }
   }else{
     badge.className='pw-status none';
-    badge.textContent='❌ ยังไม่มีรหัสผ่าน';
+    badge.textContent='❌ ยังไม่มีเบอร์โทร';
     resetBtn.style.display='none';
+    phoneDisplay.style.display='none';
   }
-  if(m.editToken){
-    note.textContent='มี URL ส่วนตัวแล้ว (คลิก "Copy URL" เพื่อส่งให้สมาชิก)';
-  }else{
-    note.textContent='คลิก "สร้าง URL ใหม่" แล้วส่งให้สมาชิก เพื่อให้เข้าแก้ไขข้อมูลได้';
-  }
+  note.textContent='สมาชิกใช้เบอร์โทรนี้กด "เข้าสู่ระบบ" เพื่อแก้ไขข้อมูลตัวเอง';
 }
 
-// Admin sets password directly for member
-window.adminSetPw=async function(){
-  var pw=document.getElementById('adminPwNew').value;
-  if(!pw||pw.length<4){toast('รหัสผ่านต้องมีอย่างน้อย 4 ตัว','er');return;}
+// Admin sets phone number as password
+window.adminSetPhone=async function(){
+  var raw=document.getElementById('adminPhoneNew').value.trim();
+  if(!raw){toast('กรุณากรอกเบอร์โทร','er');return;}
+  var phone=normalizePhone(raw);
+  if(phone.length<9){toast('เบอร์โทรไม่ถูกต้อง','er');return;}
   if(!eid){toast('ยังไม่ได้เลือกสมาชิก','er');return;}
   var m=all.find(function(x){return x._docId===eid;});
   if(!m)return;
-  var hash=await sha256(pw);
-  var saveData=Object.assign({},m);delete saveData._docId;saveData.pwHash=hash;
-  // auto-generate token if not exists
-  if(!saveData.editToken)saveData.editToken=genToken();
+  // Check duplicate phone across all members
+  var hash=await sha256(phone);
+  var dup=all.find(function(x){return x.pwHash===hash&&x._docId!==eid;});
+  if(dup){toast('เบอร์นี้ถูกใช้โดย '+(dup.name||dup.id)+' แล้ว','er');return;}
+  var saveData=Object.assign({},m);delete saveData._docId;
+  saveData.pwHash=hash;
+  saveData.pwPhone=phone; // store plain for admin view
   try{
     await setDoc(doc(db,'members',eid),saveData);
     var idx=all.findIndex(function(x){return x._docId===eid;});
-    if(idx>=0){all[idx].pwHash=hash;all[idx].editToken=saveData.editToken;}
-    document.getElementById('adminPwNew').value='';
+    if(idx>=0){all[idx].pwHash=hash;all[idx].pwPhone=phone;}
+    document.getElementById('adminPhoneNew').value='';
     refreshAdminPwSection(all[idx]);
-    toast('ตั้งรหัสผ่านให้ '+(m.name||eid)+' สำเร็จ','ok');
+    draw();
+    toast('บันทึกเบอร์โทรของ '+(m.name||eid)+' สำเร็จ ✅','ok');
   }catch(e){toast('บันทึกไม่สำเร็จ: '+e.message,'er');}
 };
 
-// Admin resets (deletes) password
+// Admin can copy the plain phone
+window.adminCopyPhone=function(){
+  var val=document.getElementById('adminPhoneVal');
+  if(!val||!val.textContent)return;
+  navigator.clipboard.writeText(val.textContent).then(function(){
+    toast('Copy เบอร์ '+val.textContent+' แล้ว','ok');
+  }).catch(function(){prompt('เบอร์โทร:',val.textContent);});
+};
+
+// Admin resets (deletes) phone/password
 window.adminResetPw=async function(){
   if(!eid)return;
   var m=all.find(function(x){return x._docId===eid;});
   if(!m)return;
-  if(!confirm('ลบรหัสผ่านของ '+(m.name||eid)+'?\nสมาชิกจะต้องตั้งรหัสใหม่เมื่อเข้า URL อีกครั้ง'))return;
-  var saveData=Object.assign({},m);delete saveData._docId;delete saveData.pwHash;
+  if(!confirm('ลบเบอร์โทรของ '+(m.name||eid)+'?\nสมาชิกจะล็อกอินไม่ได้จนกว่าจะตั้งใหม่'))return;
+  var saveData=Object.assign({},m);delete saveData._docId;delete saveData.pwHash;delete saveData.pwPhone;
   try{
     await setDoc(doc(db,'members',eid),saveData);
     var idx=all.findIndex(function(x){return x._docId===eid;});
-    if(idx>=0)delete all[idx].pwHash;
+    if(idx>=0){delete all[idx].pwHash;delete all[idx].pwPhone;}
     refreshAdminPwSection(all[idx]||saveData);
-    toast('ลบรหัสผ่านสำเร็จ - '+(m.name||'')+'จะต้องตั้งใหม่','ok');
+    draw();
+    toast('ลบเบอร์สำเร็จ - '+(m.name||'')+' ต้องตั้งใหม่','ok');
   }catch(e){toast('เกิดข้อผิดพลาด','er');}
 };
 
-// Admin copies URL to clipboard
-window.adminCopyUrl=async function(){
-  if(!eid)return;
-  var m=all.find(function(x){return x._docId===eid;});
-  if(!m)return;
-  var token=m.editToken;
-  if(!token){
-    // Auto-generate if none
-    token=genToken();
-    var saveData=Object.assign({},m);delete saveData._docId;saveData.editToken=token;
-    try{
-      await setDoc(doc(db,'members',eid),saveData);
-      var idx=all.findIndex(function(x){return x._docId===eid;});
-      if(idx>=0)all[idx].editToken=token;
-      refreshAdminPwSection(all[idx]);
-    }catch(e){toast('สร้าง URL ไม่สำเร็จ','er');return;}
-  }
-  var url=location.origin+location.pathname+'?edit='+token;
-  navigator.clipboard.writeText(url).then(function(){
-    toast('Copy URL ของ '+(m.name||eid)+' แล้ว! 🔗','ok');
-  }).catch(function(){prompt('Copy URL:',url);});
-};
-
-// Admin generates a brand-new token (invalidates old URL)
-window.adminGenUrl=async function(){
-  if(!eid)return;
-  var m=all.find(function(x){return x._docId===eid;});
-  if(!m)return;
-  if(m.editToken&&!confirm('สร้าง URL ใหม่จะทำให้ URL เดิมใช้ไม่ได้\nยืนยัน?'))return;
-  var token=genToken();
-  var saveData=Object.assign({},m);delete saveData._docId;saveData.editToken=token;
-  try{
-    await setDoc(doc(db,'members',eid),saveData);
-    var idx=all.findIndex(function(x){return x._docId===eid;});
-    if(idx>=0)all[idx].editToken=token;
-    var url=location.origin+location.pathname+'?edit='+token;
-    refreshAdminPwSection(all[idx]);
-    navigator.clipboard.writeText(url).then(function(){
-      toast('สร้าง URL ใหม่และ Copy แล้ว! 🔗','ok');
-    }).catch(function(){prompt('URL ใหม่:',url);});
-  }catch(e){toast('เกิดข้อผิดพลาด','er');}
-};
-
-// Legacy - still usable from detail view
-window.copyEditUrl=window.adminCopyUrl;
+// Legacy compatibility
+window.copyEditUrl=function(){toast('ระบบใหม่ใช้เบอร์โทรแทน URL ครับ','');};
 window.resetMemberPw=async function(docId){
   var oldEid=eid;eid=docId;
   await adminResetPw();
@@ -715,11 +639,10 @@ function makeCard(m,tc,sz,idx,draggable){
   var br=sz.h>100?10:8;
   var wStyle='width:'+sz.w+'px;height:'+sz.h+'px';
   var dragAttrs=draggable?' draggable="true" data-docid="'+m._docId+'" data-tier="'+m.tier+'"':'';
-  var pwDot=isAdmin?(m.pwHash?'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:#4ade80;z-index:4;border:1px solid rgba(0,0,0,0.2)" title="มีรหัสผ่าน"></span>':'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);z-index:4;border:1px solid rgba(255,255,255,0.3)" title="ยังไม่มีรหัสผ่าน"></span>'):'';
+  var pwDot=isAdmin?(m.pwHash?'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:#4ade80;z-index:4;border:1px solid rgba(0,0,0,0.2)" title="มีเบอร์โทรแล้ว"></span>':'<span style="position:absolute;bottom:5px;left:5px;width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);z-index:4;border:1px solid rgba(255,255,255,0.3)" title="ยังไม่มีเบอร์โทร"></span>'):'';
   var html='<div class="card '+colorClass+(draggable?' drag-card':'') +'" '+dragAttrs+' onclick="openDetail(\''+m._docId+'\')" style="'+wStyle+';border-radius:'+br+'px">';
   if(isAdmin){
     html+='<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
-    html+='<button class="card-copy-url" style="display:block" onclick="event.stopPropagation();copyEditUrl(\''+m._docId+'\')">🔗 URL</button>';
   }
   var tagExtra=(m.tier==='Promoted')?' tier-tag-promoted':'';
   html+='<div class="tier-tag'+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
@@ -807,13 +730,19 @@ window.openDetail=function(docId){
   // Password status in detail
   var pwSt=document.getElementById("dPwStatus");
   if(isAdmin){
+    pwSt.style.display='flex';
     if(m.pwHash){
-      pwSt.innerHTML='<span style="color:#16a34a">✅ มีรหัสผ่านแล้ว</span><button onclick="resetMemberPw(\''+docId+'\')" style="background:none;border:none;color:#dc2626;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif">🗑 ลบรหัส</button>';
+      var phoneShow = m.pwPhone ? ' · <span style="font-weight:600;letter-spacing:1px">'+m.pwPhone+'</span>' : '';
+      pwSt.innerHTML='<span style="color:#16a34a">✅ มีเบอร์โทรแล้ว'+phoneShow+'</span>'
+        +'<button onclick="resetMemberPw(\''+docId+'\')" style="background:none;border:none;color:#dc2626;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif;margin-left:auto">🗑 ลบ</button>';
+      pwSt.style.background='rgba(74,222,128,0.08)';
+      pwSt.style.border='1px solid rgba(74,222,128,0.2)';
     }else{
-      pwSt.innerHTML='<span style="color:#dc2626">❌ ยังไม่มีรหัสผ่าน</span><button onclick="closeDetail();openEdit(\''+docId+'\')" style="background:none;border:none;color:#7B2FF7;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif">+ ตั้งรหัส</button>';
+      pwSt.innerHTML='<span style="color:#dc2626">❌ ยังไม่มีเบอร์โทร</span>'
+        +'<button onclick="closeDetail();openEdit(\''+docId+'\')" style="background:none;border:none;color:#7B2FF7;font-size:12px;cursor:pointer;font-family:\'Sarabun\',sans-serif;margin-left:auto">+ ใส่เบอร์</button>';
+      pwSt.style.background='rgba(239,68,68,0.06)';
+      pwSt.style.border='1px solid rgba(239,68,68,0.15)';
     }
-    pwSt.style.background=m.pwHash?'rgba(74,222,128,0.08)':'rgba(239,68,68,0.06)';
-    pwSt.style.border='1px solid '+(m.pwHash?'rgba(74,222,128,0.2)':'rgba(239,68,68,0.15)');
   }else{
     pwSt.innerHTML='';
     pwSt.style.display='none';
@@ -934,7 +863,7 @@ window.saveM=async function(){
   // Preserve password fields
   if(existingM){
     if(existingM.pwHash)data.pwHash=existingM.pwHash;
-    if(existingM.editToken)data.editToken=existingM.editToken;
+    if(existingM.pwPhone)data.pwPhone=existingM.pwPhone;
   }
   try{
     await setDoc(doc(db,"members",docKey),data);
@@ -1015,8 +944,7 @@ window.toast=function(msg,type){var el=document.getElementById("toast");el.textC
 var _resizeTimer;
 window.addEventListener('resize',function(){clearTimeout(_resizeTimer);_resizeTimer=setTimeout(function(){if(all.length)draw();},150);});
 
-load().then(checkEditToken);
+load();
 </script>
 </body>
 </html>
-
