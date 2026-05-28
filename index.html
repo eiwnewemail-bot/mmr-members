@@ -40,7 +40,8 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.62));z-index:2}
 .card-name{font-weight:500;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card-sub{color:rgba(255,255,255,0.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tier-tag{position:absolute;top:5px;left:5px;color:#fff;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:500;background:rgba(0,0,0,0.28);z-index:3}
+.tier-tag{position:absolute;top:5px;left:5px;color:#7a5800;font-size:8px;padding:1px 6px;border-radius:8px;font-weight:600;background:rgba(255,220,80,0.82);border:1px solid rgba(255,200,0,0.4);z-index:3}
+.tier-tag-own{background:rgba(34,197,94,0.9)!important;color:#fff!important;box-shadow:0 0 0 2px rgba(34,197,94,0.35)!important}
 .tier-tag-promoted{background:linear-gradient(135deg,#FFD700,#FFA500)!important;color:#fff!important;font-weight:700!important;box-shadow:0 1px 6px rgba(255,200,0,0.55);text-shadow:0 1px 2px rgba(0,0,0,0.35)}
 .card-edit{position:absolute;top:5px;right:5px;background:rgba(0,0,0,0.45);color:#fff;border:none;border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;display:none;z-index:4}
 .self-edit-banner{background:linear-gradient(135deg,#7B2FF7,#6A1FE0);color:#fff;padding:10px 18px;font-size:13px;display:flex;align-items:center;gap:10px}
@@ -118,7 +119,7 @@ textarea{resize:vertical;min-height:54px}
 .tr-Promoted{background:rgba(123,47,247,0.1);color:#7B2FF7;border-color:#7B2FF7}
 .tr-VIP{background:rgba(245,166,35,0.1);color:#b45309;border-color:#F5A623}
 .tr-Premium{background:rgba(233,30,140,0.1);color:#E91E8C;border-color:#E91E8C}
-.tr-Member{background:rgba(200,192,232,0.3);color:#6d5fad;border-color:#C8C0E8}
+.tr-Member{background:rgba(255,220,80,0.2);color:#7a5800;border-color:rgba(255,200,0,0.6)}
 .qr-box{flex:1;background:#f3f0fa;border-radius:10px;padding:8px;text-align:center}
 .qr-box img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;display:block}
 .csv-drop{border:2px dashed #d8b4fe;border-radius:10px;padding:20px;text-align:center;cursor:pointer;position:relative}
@@ -146,7 +147,7 @@ textarea{resize:vertical;min-height:54px}
 /* === Detail modal === */
 .detail-meta{color:#666;font-size:12px;margin-bottom:4px}
 .detail-name{font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px}
-.detail-badge{font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px}
+.detail-badge{font-size:11px;padding:2px 10px;border-radius:20px;background:rgba(255,220,80,0.25);color:#7a5800;border:1px solid rgba(255,200,0,0.5);display:inline-block;margin-bottom:8px;font-weight:600}
 .detail-bio{color:#333;font-size:13px;line-height:1.6;background:#f3f0fa;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none}
 /* === Admin notification bell === */
 .notif-bell{position:relative;display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 10px;cursor:pointer;color:#fff;font-size:16px;line-height:1;align-items:center}
@@ -229,6 +230,7 @@ textarea{resize:vertical;min-height:54px}
         </div>
       </div>
     </div>
+    <button id="btnMemberLogout" class="btn-hdr" style="display:none;background:rgba(255,255,255,0.1);font-size:12px" onclick="memberLogout()">ออก</button>
     <button id="notifBell" class="notif-bell" onclick="openNotifPanel()">
       🔔<span id="notifBadge" class="notif-badge"></span>
     </button>
@@ -241,6 +243,7 @@ textarea{resize:vertical;min-height:54px}
 <div id="selfEditBanner" class="self-edit-banner" style="display:none">
   <span>✏️ คุณกำลังดูข้อมูลของ <span id="selfEditName" class="self-edit-name"></span></span>
   <button class="btn btn-w btn-s" onclick="openSelfEdit()">แก้ไขข้อมูลของฉัน</button>
+  <button class="btn btn-s" style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.2);margin-left:auto" onclick="memberLogout()">🚪 ลงชื่อออก</button>
 </div>
 
 <div class="admin-bar" id="adminBar">
@@ -283,6 +286,8 @@ textarea{resize:vertical;min-height:54px}
       </div>
       <div id="mlErr" style="color:#f87171;font-size:12px;margin-bottom:8px;display:none"></div>
       <button class="btn btn-p" style="width:100%" onclick="submitMemberLogin()" id="mlBtn">เข้าสู่ระบบ</button>
+      <div style="display:flex;align-items:center;gap:8px;margin:10px 0 4px"><div style="flex:1;height:1px;background:#f0f0f0"></div><span style="color:#ccc;font-size:11px">หรือ</span><div style="flex:1;height:1px;background:#f0f0f0"></div></div>
+      <button class="btn" style="width:100%;background:rgba(123,47,247,0.06);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2);font-size:13px" onclick="toast('ติดต่อแอดมินเพื่อสมัครสมาชิกได้เลยค่ะ 💜','ok');window.open('https://eiwnewemail-bot.github.io/register1212/','_blank')">✨ สมัครสมาชิก / Sign up</button>
       <div style="text-align:center;margin-top:10px">
         <button onclick="requestContact()" style="background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif;line-height:1.5">นี่คือโปรไฟล์ของคุณใช่ไหม?<br><span style="color:#7B2FF7;text-decoration:underline">แจ้งแอดมินเพื่อรับรหัสที่นี่</span></button>
       </div>
@@ -306,7 +311,7 @@ textarea{resize:vertical;min-height:54px}
 <!-- Detail Modal -->
 <div class="ov" id="ovDetail" onclick="if(event.target===this)closeDetail()">
   <div class="md">
-    <div class="md-h"><h3 id="dTitle">รายละเอียด</h3><button class="md-cl" onclick="closeDetail()">×</button></div>
+    <div class="md-h"><h3 id="dTitle">รายละเอียด</h3><div style="display:flex;gap:6px;align-items:center"><button id="dEditBtn" onclick="editCurrent()" style="display:none;background:rgba(123,47,247,0.1);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2);border-radius:7px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif">✏️ แก้ไข</button><button class="md-cl" onclick="closeDetail()">×</button></div></div>
     <div class="md-b">
       <div style="display:flex;gap:14px;margin-bottom:16px">
         <div id="dPoster" style="flex-shrink:0;width:104px;height:139px;border-radius:10px;overflow:hidden"></div>
@@ -327,7 +332,7 @@ textarea{resize:vertical;min-height:54px}
         </button>
       </div>
       <div id="dPromoteBtn" style="display:none;margin-top:8px">
-        <button onclick="openPromoteInfo()" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:10px 12px;border-radius:10px;transition:background .15s" onmouseover="this.style.background='rgba(123,47,247,0.05)'" onmouseout="this.style.background='none'">
+        <button onclick="openPromoteInfo()" style="width:100%;background:rgba(255,248,210,0.6);border:1px solid rgba(255,200,0,0.45);cursor:pointer;text-align:left;padding:10px 12px;border-radius:10px;transition:background .15s" onmouseover="this.style.background='rgba(255,243,180,0.9)'" onmouseout="this.style.background='rgba(255,248,210,0.6)'">
           <span style="font-size:10px;color:#aaa;display:block;margin-bottom:2px">✨ พิเศษสำหรับคุณ</span>
           <span style="font-size:12px;color:#555;line-height:1.5">อยากให้ฝอเห็นคุณก่อนใครไหม? <span style="color:#7B2FF7;font-weight:600">โปรโมทโปรไฟล์</span>ของคุณเพื่อเพิ่มโอกาสที่หนุ่มๆ จะเลือกทักคุณก่อนใคร <span style="color:#7B2FF7">→</span></span>
         </button>
@@ -376,9 +381,9 @@ textarea{resize:vertical;min-height:54px}
         </div>
       </div>
       <div class="fg">
+        <input type="hidden" id="fne">
         <div class="fgr"><label>ID</label><input type="text" id="fid"></div>
         <div class="fgr"><label>ชื่อ</label><input type="text" id="fnm"></div>
-        <div class="fgr full"><label>ชื่อภาษาอังกฤษ</label><input type="text" id="fne" placeholder="เช่น Rutt Meepon"></div>
         <div class="fgr"><label>อายุ</label><input type="text" id="fag"></div>
         <div class="fgr"><label>จังหวัด</label><input type="text" id="fpv"></div>
         <div class="fgr full"><label>อาชีพ</label><input type="text" id="foc"></div>
@@ -433,6 +438,7 @@ textarea{resize:vertical;min-height:54px}
         <!-- ===== END PASSWORD SECTION ===== -->
       </div>
     </div>
+    <div id="editPromoteBar" style="display:none;padding:10px 20px 0"><button onclick="closeEdit();openPromoteInfo()" style="width:100%;background:rgba(255,248,210,0.6);border:1px solid rgba(255,200,0,0.45);cursor:pointer;text-align:left;padding:10px 12px;border-radius:10px;transition:background .15s" onmouseover="this.style.background='rgba(255,243,180,0.9)'" onmouseout="this.style.background='rgba(255,248,210,0.6)'"><span style="font-size:10px;color:#aaa;display:block;margin-bottom:1px">✨ พิเศษสำหรับคุณ</span><span style="font-size:12px;color:#555;line-height:1.5">อยากให้ฝอเห็นคุณก่อนใครไหม? <span style="color:#7B2FF7;font-weight:600">โปรโมทโปรไฟล์</span> เพิ่มโอกาสที่หนุ่มๆ จะทักคุณก่อนใคร <span style="color:#7B2FF7">→</span></span></button></div>
     <div class="md-f">
       <button class="btn btn-d btn-s" id="btnDelM" onclick="deleteCurrent()" style="margin-right:auto;display:none">🗑 ลบ</button>
       <button class="btn btn-g" onclick="closeEdit()">ยกเลิก</button>
@@ -621,7 +627,18 @@ window.submitMemberLogin=async function(){
   selfEditMember=m;
   document.getElementById('ovMemberLogin').className='ov';
   showSelfEditBanner(m);
+  draw();
   toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
+};
+
+window.memberLogout=function(){
+  selfEditMember=null;
+  document.getElementById('selfEditBanner').style.display='none';
+  document.getElementById('hdrProfileBox').style.display='none';
+  document.getElementById('btnMemberLogout').style.display='none';
+  document.getElementById('btnMemberLogin').style.display='inline-flex';
+  draw();
+  toast('ลงชื่อออกแล้ว','ok');
 };
 
 window.openPromoteInfo=function(){
@@ -831,6 +848,7 @@ function showSelfEditBanner(m){
   document.getElementById('hdrProfileBox').style.display='flex';
   // Hide login button
   document.getElementById('btnMemberLogin').style.display='none';
+  document.getElementById('btnMemberLogout').style.display='inline-flex';
 }
 
 window.openSelfEdit=function(){
@@ -842,6 +860,7 @@ window.openSelfEdit=function(){
   document.getElementById('pwAdminSection').style.display='none';
   fillEditForm(m);
   document.querySelectorAll('.tr-o').forEach(function(el){el.style.pointerEvents='none';el.style.opacity='0.5';});
+  document.getElementById('editPromoteBar').style.display='block';
   document.getElementById('ovEdit').className='ov on';
   bindDraftInputs();
   window._selfEditMode=true;
@@ -999,7 +1018,8 @@ function makeCard(m,tc,sz,idx,draggable){
     html+='<button class="card-edit" style="display:block" onclick="event.stopPropagation();openEdit(\''+m._docId+'\')">✏️</button>';
   }
   var tagExtra=(m.tier==='Promoted')?' tier-tag-promoted':'';
-  html+='<div class="tier-tag'+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
+  var ownGlow=(selfEditMember&&selfEditMember._docId===m._docId&&!isAdmin)?' tier-tag-own':'';
+  html+='<div class="tier-tag'+ownGlow+tagExtra+'" style="font-size:'+sz.fp+'px">'+tc.tag+'</div>';
   if(m.photo)html+='<img src="'+m.photo+'">';
   else html+='<div class="'+iniClass+'" style="font-size:'+sz.fi+'px;position:relative;z-index:1">'+ini(m.name)+'</div>';
   html+='<div class="overlay" style="padding:'+sz.fo+'px '+sz.fo+'px '+sz.fo+'px">';
@@ -1078,16 +1098,27 @@ window.openDetail=function(docId){
   if(m.photo)dp.innerHTML='<img src="'+m.photo+'" style="width:100%;height:100%;object-fit:cover">';
   else dp.innerHTML='<div style="width:100%;height:100%;background:'+(COLORS[((m.name||"").charCodeAt(0)||0)%COLORS.length])+';display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;color:#333">'+ini(m.name)+'</div>';
   document.getElementById("dName").textContent=m.name||"";
-  document.getElementById("dBadge").textContent=cf.tag;
+  var dbEl=document.getElementById("dBadge");
+  dbEl.textContent=cf.tag;
+  // Color badge by tier
+  var tierColors={
+    'Promoted':'background:rgba(255,180,0,0.15);color:#8a5c00;border-color:rgba(255,180,0,0.5)',
+    'VIP':'background:rgba(245,166,35,0.15);color:#b45309;border-color:rgba(245,166,35,0.5)',
+    'Premium':'background:rgba(233,30,140,0.1);color:#E91E8C;border-color:rgba(233,30,140,0.3)',
+    'Member':'background:rgba(255,220,80,0.2);color:#7a5800;border-color:rgba(255,200,0,0.5)'
+  };
+  dbEl.style.cssText=(tierColors[m.tier]||tierColors['Member'])+';font-size:11px;padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:8px;font-weight:600;border-width:1px;border-style:solid';
   var da=document.getElementById("dAge");da.textContent=m.age?"🎂 อายุ "+m.age+" ปี":"";da.style.display=m.age?"block":"none";
   var dpr=document.getElementById("dProv");dpr.textContent=m.province?"📍 "+m.province:"";dpr.style.display=m.province?"block":"none";
   var dc=document.getElementById("dOcc");dc.textContent=m.occupation?"💼 "+m.occupation:"";dc.style.display=m.occupation?"block":"none";
   var db2=document.getElementById("dBio");if(m.bio){db2.textContent=m.bio;db2.style.display="block";}else db2.style.display="none";
   var qr=document.getElementById("dQR");qr.innerHTML="";
-  if(m.lineQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
-  if(m.waQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
   var ex=document.getElementById("dExtras");ex.innerHTML="";
-  if(m.extras)m.extras.forEach(function(u){if(u)ex.innerHTML+='<img src="'+u+'" style="width:104px;height:139px;border-radius:8px;object-fit:cover">';});
+  if(isAdmin||selfEditMember){
+    if(m.lineQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">💬 LINE</div><img src="'+m.lineQr+'"></div>';
+    if(m.waQr)qr.innerHTML+='<div class="qr-box"><div style="font-size:13px;margin-bottom:4px">📱 WhatsApp</div><img src="'+m.waQr+'"></div>';
+    if(m.extras)m.extras.forEach(function(u){if(u)ex.innerHTML+='<img src="'+u+'" style="width:104px;height:139px;border-radius:8px;object-fit:cover">';});
+  }
   document.getElementById("dAdminBtns").style.display=isAdmin?"block":"none";
   var dFb=document.getElementById("dFbLink");
   if(dFb){if(isAdmin&&m.facebook){dFb.href=m.facebook;dFb.style.display="inline-flex";}else{dFb.style.display="none";}}
@@ -1140,6 +1171,9 @@ window.openDetail=function(docId){
   var pb=document.getElementById("dPromoteBtn");
   var isOwnCard=selfEditMember&&selfEditMember._docId===docId;
   pb.style.display=(isOwnCard&&!isAdmin)?'block':'none';
+  // Show edit button in header for own card or admin
+  var deb=document.getElementById("dEditBtn");
+  deb.style.display=(isOwnCard||isAdmin)?'block':'none';
   document.getElementById("ovDetail").className="ov on";
 };
 window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
@@ -1179,7 +1213,7 @@ function applyDraft(d){
   if(banner){var ago=Math.round((Date.now()-d.ts)/60000);document.getElementById("draftAgo").textContent=ago<1?"เมื่อกี้":ago+" นาทีที่แล้ว";banner.style.display="flex";}
 }
 function bindDraftInputs(){
-  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("input",saveDraft);});
+  ["fid","fnm","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener("input",saveDraft);});
   document.querySelectorAll(".tr-o").forEach(function(el){el.addEventListener("click",function(){setTimeout(saveDraft,50);});});
 }
 
@@ -1190,6 +1224,7 @@ window.openEdit=function(docId){
   eid=docId;photo=m.photo||'';extras=m.extras?[].concat(m.extras):['','',''];
   document.getElementById("editTitle").textContent="แก้ไข · "+(m.name||docId);
   document.getElementById("btnDelM").style.display="inline-block";
+  document.getElementById("editPromoteBar").style.display="none";
   fillEditForm(m);
   // Show password section for admin
   if(isAdmin)refreshAdminPwSection(m);
@@ -1206,17 +1241,18 @@ window.openAdd=function(){
   document.getElementById("editTitle").textContent="เพิ่มสมาชิกใหม่";
   document.getElementById("btnDelM").style.display="none";
   document.getElementById("pwAdminSection").style.display="none";
-  ["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(i){document.getElementById(i).value='';});
+  ["fid","fnm","fag","fpv","foc","fwa","fli","ffb","fbi"].forEach(function(i){document.getElementById(i).value='';});
   document.getElementById("puImg").style.display="none";document.getElementById("puPh").style.display="flex";document.getElementById("puHint").textContent="คลิกเพื่ออัปโหลด หรือวางรูป (Ctrl+V)";
   resetX();setTier("Member");
   var b=document.getElementById("draftBanner");if(b)b.style.display="none";
   if(draft&&!draft.eid)applyDraft(draft);
+  document.getElementById("editPromoteBar").style.display="none";
   document.getElementById("ovEdit").className="ov on";
   bindDraftInputs();
 };
 
 window.closeEdit=function(){
-  var hasData=["fid","fnm","fne","fag","fpv","foc","fwa","fli","ffb","fbi"].some(function(i){return(document.getElementById(i).value||"").trim()!=="";});
+  var hasData=["fid","fnm","fag","fpv","foc","fwa","fli","ffb","fbi"].some(function(i){return(document.getElementById(i).value||"").trim()!=="";});
   if(hasData)saveDraft();else clearDraft();
   document.getElementById("ovEdit").className="ov";
 };
