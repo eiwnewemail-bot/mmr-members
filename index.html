@@ -20,10 +20,12 @@ body{font-family:'Sarabun',sans-serif;min-height:100vh;background:#f3f0fa;paddin
 .btn-s{padding:5px 12px;font-size:12px}
 .admin-bar{background:rgba(123,47,247,0.08);border-bottom:1px solid rgba(123,47,247,0.15);padding:8px 18px;display:none;gap:8px;align-items:center;flex-wrap:wrap}
 .admin-bar.on{display:flex}
-.toolbar{padding:12px 18px 0;display:flex;gap:8px;flex-wrap:wrap}
 .si{position:relative;flex:1;min-width:180px}
-.si input{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(123,47,247,0.2);border-radius:10px;padding:9px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
+.si input{width:100%;background:rgba(255,255,255,0.85);border:1px solid rgba(123,47,247,0.2);border-radius:10px;padding:9px 36px 9px 14px;font-size:13px;font-family:'Sarabun',sans-serif;color:#333;outline:none}
 .si input:focus{border-color:#7B2FF7}
+.si-cl{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#bbb;cursor:pointer;font-size:14px;line-height:1;padding:0;display:none}
+.si-cl.on{display:block}
+.toolbar{padding:10px 18px 0;display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:56px;z-index:40;background:#f3f0fa}
 .filters{padding:8px 18px 0;display:flex;gap:6px;flex-wrap:wrap}
 .fb{padding:4px 14px;border-radius:20px;border:none;font-family:'Sarabun',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:.6;transition:all .15s}
 .fb.on{opacity:1;transform:scale(1.05)}
@@ -146,7 +148,47 @@ textarea{resize:vertical;min-height:54px}
 .detail-name{font-weight:700;font-size:16px;color:#1a1a1a;margin-bottom:4px}
 .detail-badge{font-size:11px;padding:2px 10px;border-radius:20px;background:#f3f0fa;color:#7B2FF7;display:inline-block;margin-bottom:8px}
 .detail-bio{color:#333;font-size:13px;line-height:1.6;background:#f3f0fa;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:none}
-/* === Contact request banner === */
+/* === Admin notification bell === */
+.notif-bell{position:relative;display:none;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 10px;cursor:pointer;color:#fff;font-size:16px;line-height:1;align-items:center}
+.notif-bell.on{display:inline-flex}
+.notif-badge{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #7B2FF7;display:none}
+.notif-badge.on{display:flex}
+/* === Notification panel === */
+.notif-panel{position:fixed;top:0;right:-360px;width:340px;max-width:95vw;height:100vh;background:#fff;z-index:300;box-shadow:-4px 0 24px rgba(0,0,0,0.15);transition:right .25s ease;display:flex;flex-direction:column}
+.notif-panel.open{right:0}
+.notif-panel-hdr{padding:16px 18px 12px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to right,#7B2FF7,#6A1FE0);color:#fff;flex-shrink:0}
+.notif-panel-hdr h3{font-size:15px;font-weight:700;color:#fff}
+.notif-panel-cl{background:none;border:none;font-size:20px;cursor:pointer;color:rgba(255,255,255,0.8)}
+.notif-panel-body{flex:1;overflow-y:auto;padding:12px}
+.notif-section-title{font-size:11px;font-weight:700;color:#aaa;letter-spacing:.5px;text-transform:uppercase;margin:10px 0 6px;padding:0 4px}
+.notif-item{border-radius:10px;padding:10px 12px;margin-bottom:6px;border:1px solid #f0f0f0;background:#fafafa;display:flex;flex-direction:column;gap:4px}
+.notif-item.unresolved{background:#fff;border-color:rgba(123,47,247,0.2);box-shadow:0 1px 4px rgba(123,47,247,0.06)}
+.notif-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.notif-item-name{font-size:13px;font-weight:600;color:#1a1a1a}
+.notif-item-time{font-size:11px;color:#bbb;white-space:nowrap}
+.notif-item-sub{font-size:12px;color:#666}
+.notif-item-actions{display:flex;gap:6px;margin-top:4px}
+.notif-resolve-btn{font-size:11px;padding:3px 10px;border-radius:6px;border:none;background:#7B2FF7;color:#fff;cursor:pointer;font-family:"Sarabun",sans-serif}
+.notif-fb-link{font-size:11px;padding:3px 10px;border-radius:6px;border:1px solid rgba(24,119,242,0.3);background:rgba(24,119,242,0.06);color:#1877F2;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.notif-empty{text-align:center;padding:32px 16px;color:#bbb;font-size:13px}
+.notif-overlay{position:fixed;inset:0;z-index:299;display:none}
+.notif-overlay.on{display:block}
+
+/* === Promote modal === */
+.promote-modal-body{text-align:center;padding:24px 20px}
+.promote-stars{font-size:28px;margin-bottom:8px;letter-spacing:4px}
+.promote-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:8px}
+.promote-desc{font-size:13px;color:#666;line-height:1.7;margin-bottom:18px}
+.promote-tier-list{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;text-align:left}
+.promote-tier-item{border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:13px}
+.promote-tier-item.promoted{background:rgba(123,47,247,0.08);border:1px solid rgba(123,47,247,0.2)}
+.promote-tier-item.vip{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.25)}
+.promote-tier-label{font-weight:700;min-width:72px}
+.promote-contact-btn{width:100%;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,#7B2FF7,#9B50FF);color:#fff;font-family:'Sarabun',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px}
+.promote-contact-btn:hover{opacity:0.9}
+.promote-note{font-size:11px;color:#bbb}
+
+/* === Contact request banner ===*/ */
 .req-banner{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:8px 12px;margin-bottom:10px}
 .req-banner-title{font-size:12px;font-weight:600;color:#dc2626;margin-bottom:6px}
 .req-item{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:4px 0;border-top:1px solid rgba(239,68,68,0.1)}
@@ -187,6 +229,9 @@ textarea{resize:vertical;min-height:54px}
         </div>
       </div>
     </div>
+    <button id="notifBell" class="notif-bell" onclick="openNotifPanel()">
+      🔔<span id="notifBadge" class="notif-badge"></span>
+    </button>
     <a id="btnTranslate" href="#" class="btn-hdr" style="text-decoration:none" onclick="openTranslate();return false;">EN</a>
   </div>
 </div>
@@ -206,7 +251,10 @@ textarea{resize:vertical;min-height:54px}
 </div>
 
 <div class="toolbar">
-  <div class="si"><input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw()"></div>
+  <div class="si">
+    <input type="text" id="sq" placeholder="ค้นหาชื่อ จังหวัด อาชีพ..." oninput="draw();updateSiClear()">
+    <button class="si-cl" id="siCl" onclick="clearSearch()" title="ล้าง">✕</button>
+  </div>
 </div>
 <div class="filters">
   <button class="fb fb-all on" onclick="setF('',this)">ทั้งหมด</button>
@@ -273,6 +321,17 @@ textarea{resize:vertical;min-height:54px}
       <div id="dBio" class="detail-bio"></div>
       <div style="display:flex;gap:10px;margin-bottom:10px" id="dQR"></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap" id="dExtras"></div>
+      <div id="dContactBtn" style="margin-top:10px;display:none">
+        <button onclick="requestContactFromDetail()" class="btn" style="width:100%;background:rgba(123,47,247,0.07);color:#7B2FF7;border:1px solid rgba(123,47,247,0.2);font-size:13px">
+          🙋 นี่คือโปรไฟล์ของฉัน — แจ้งแอดมินเพื่อรับรหัส
+        </button>
+      </div>
+      <div id="dPromoteBtn" style="display:none;margin-top:8px">
+        <button onclick="openPromoteInfo()" style="width:100%;background:none;border:none;cursor:pointer;text-align:left;padding:10px 12px;border-radius:10px;transition:background .15s" onmouseover="this.style.background='rgba(123,47,247,0.05)'" onmouseout="this.style.background='none'">
+          <span style="font-size:10px;color:#aaa;display:block;margin-bottom:2px">✨ พิเศษสำหรับคุณ</span>
+          <span style="font-size:12px;color:#555;line-height:1.5">อยากให้ฝอเห็นคุณก่อนใครไหม? <span style="color:#7B2FF7;font-weight:600">โปรโมทโปรไฟล์</span>ของคุณเพื่อเพิ่มโอกาสที่หนุ่มๆ จะเลือกทักคุณก่อนใคร <span style="color:#7B2FF7">→</span></span>
+        </button>
+      </div>
       <div id="dReqBanner" style="display:none"></div>
       <div id="dAdminBtns" style="display:none;margin-top:12px">
         <a id="dFbLink" href="#" target="_blank" rel="noopener" style="display:none;align-items:center;gap:6px;background:#1877F2;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:10px">
@@ -409,6 +468,54 @@ textarea{resize:vertical;min-height:54px}
   </div>
 </div>
 
+<!-- Promote Modal -->
+<div class="ov" id="ovPromote" onclick="if(event.target===this)closePromote()">
+  <div class="md" style="max-width:340px" onclick="event.stopPropagation()">
+    <div class="md-h">
+      <h3>โปรโมทโปรไฟล์</h3>
+      <button class="md-cl" onclick="closePromote()">×</button>
+    </div>
+    <div class="promote-modal-body">
+      <div class="promote-stars">✨👑✨</div>
+      <div class="promote-title">ให้ฝอเห็นคุณก่อนใคร!</div>
+      <div class="promote-desc">การ์ดของคุณจะขึ้นแถวหน้าสุด โดดเด่นกว่าใคร<br>เพิ่มโอกาสที่หนุ่มๆ จะทักคุณก่อนใคร 💌</div>
+      <div class="promote-tier-list">
+        <div class="promote-tier-item promoted" style="cursor:pointer" onclick="selectPlan(7)" id="plan7">
+          <span style="font-size:20px">⚡</span>
+          <div style="flex:1">
+            <div class="promote-tier-label" style="color:#7B2FF7">Promoted 7 วัน</div>
+            <div style="font-size:12px;color:#666">ลองดูก่อน เห็นผลชัดแน่นอน</div>
+          </div>
+          <div style="font-size:16px;font-weight:700;color:#7B2FF7">55฿</div>
+        </div>
+        <div class="promote-tier-item promoted" style="cursor:pointer;border-color:#7B2FF7;position:relative" onclick="selectPlan(30)" id="plan30">
+          <span style="position:absolute;top:-8px;right:10px;background:#7B2FF7;color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">ยอดนิยม</span>
+          <span style="font-size:20px">🔥</span>
+          <div style="flex:1">
+            <div class="promote-tier-label" style="color:#7B2FF7">Promoted 30 วัน</div>
+            <div style="font-size:12px;color:#666">คุ้มกว่า ได้ผลนานกว่า</div>
+          </div>
+          <div style="font-size:16px;font-weight:700;color:#7B2FF7">95฿</div>
+        </div>
+      </div>
+      <button class="promote-contact-btn" id="promoteSendBtn" onclick="sendPromoteRequest()">💬 ติดต่อแอดมินเพื่อสอบถาม</button>
+      <div class="promote-note">แอดมินจะติดต่อกลับผ่าน Facebook ของคุณ</div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Panel -->
+<div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-panel-hdr">
+    <h3>🔔 คำขอทั้งหมด</h3>
+    <button class="notif-panel-cl" onclick="closeNotifPanel()">×</button>
+  </div>
+  <div class="notif-panel-body" id="notifPanelBody">
+    <div class="notif-empty">ไม่มีคำขอใหม่</div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -517,6 +624,53 @@ window.submitMemberLogin=async function(){
   toast('ยินดีต้อนรับ! '+(m.name||''),'ok');
 };
 
+window.openPromoteInfo=function(){
+  document.getElementById('ovPromote').className='ov on';
+};
+window.closePromote=function(){
+  document.getElementById('ovPromote').className='ov';
+  window._selectedPlan=null;
+};
+
+var _selectedPlan=null;
+window.selectPlan=function(days){
+  _selectedPlan=days;
+  ['plan7','plan30'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.style.background=id==='plan'+days?'rgba(123,47,247,0.15)':'rgba(123,47,247,0.08)';
+    el.style.boxShadow=id==='plan'+days?'0 0 0 2px #7B2FF7':'none';
+  });
+  document.getElementById('promoteSendBtn').textContent='💬 สนใจ '+days+' วัน — ติดต่อแอดมิน';
+};
+
+window.sendPromoteRequest=async function(){
+  if(!selfEditMember){toast('กรุณาเข้าสู่ระบบก่อน','er');return;}
+  var plan=_selectedPlan?_selectedPlan+' วัน':'ยังไม่ได้เลือกแพ็กเกจ';
+  var m=selfEditMember;
+  try{
+    await addDoc(collection(db,'promote_requests'),{
+      memberDocId:m._docId,memberName:m.name||'',memberFb:m.facebook||'',
+      plan:plan,ts:Date.now(),resolved:false
+    });
+    closePromote();
+    toast('ส่งคำขอแล้ว! แอดมินจะติดต่อทาง Facebook เร็วๆนี้ 💜','ok');
+  }catch(e){toast('เกิดข้อผิดพลาด','er');}
+};
+
+window.requestContactFromDetail=async function(){
+  if(!curId){toast('ไม่พบข้อมูลสมาชิก','er');return;}
+  var m=all.find(function(x){return x._docId===curId;});
+  if(!m)return;
+  var reqData={memberDocId:curId,memberName:m.name||'',memberFb:m.facebook||'',ts:Date.now(),resolved:false,phone:''};
+  try{
+    await addDoc(collection(db,'contact_requests'),reqData);
+    document.getElementById('dContactBtn').style.display='none';
+    toast('ส่งคำขอแล้ว! แอดมินจะติดต่อกลับเร็วๆนี้ ✅','ok');
+    await loadContactRequests();
+    draw();
+  }catch(e){toast('เกิดข้อผิดพลาด กรุณาลองใหม่','er');}
+};
+
 window.requestContact=async function(){
   var raw=document.getElementById('mlPhone').value.trim();
   if(!raw){toast('กรอกเบอร์โทรของคุณก่อนนะคะ','er');return;}
@@ -534,13 +688,129 @@ window.requestContact=async function(){
   }catch(e){toast('เกิดข้อผิดพลาด กรุณาลองใหม่','er');}
 };
 
+var promoteRequests=[];
+
 async function loadContactRequests(){
   try{
     var s=await getDocs(query(collection(db,'contact_requests'),orderBy('ts')));
     contactRequests=[];
     s.forEach(function(d){var dat=d.data();dat._reqId=d.id;contactRequests.push(dat);});
   }catch(e){contactRequests=[];}
+  try{
+    var s2=await getDocs(query(collection(db,'promote_requests'),orderBy('ts')));
+    promoteRequests=[];
+    s2.forEach(function(d){var dat=d.data();dat._reqId=d.id;promoteRequests.push(dat);});
+  }catch(e){promoteRequests=[];}
+  updateNotifBell();
 }
+
+function updateNotifBell(){
+  if(!isAdmin)return;
+  var bell=document.getElementById('notifBell');
+  var badge=document.getElementById('notifBadge');
+  bell.classList.add('on');
+  var unread=contactRequests.filter(function(r){return !r.resolved;}).length
+           + promoteRequests.filter(function(r){return !r.resolved;}).length;
+  if(unread>0){
+    badge.textContent=unread>99?'99+':unread;
+    badge.classList.add('on');
+  }else{
+    badge.classList.remove('on');
+  }
+}
+
+window.openNotifPanel=function(){
+  if(!isAdmin)return;
+  renderNotifPanel();
+  document.getElementById('notifPanel').classList.add('open');
+  document.getElementById('notifOverlay').classList.add('on');
+};
+window.closeNotifPanel=function(){
+  document.getElementById('notifPanel').classList.remove('open');
+  document.getElementById('notifOverlay').classList.remove('on');
+};
+
+function renderNotifPanel(){
+  var body=document.getElementById('notifPanelBody');
+  var contactPending=contactRequests.filter(function(r){return !r.resolved;});
+  var contactDone=contactRequests.filter(function(r){return r.resolved;});
+  var promotePending=promoteRequests.filter(function(r){return !r.resolved;});
+  var promoteDone=promoteRequests.filter(function(r){return r.resolved;});
+
+  function fmtTime(ts){
+    return new Date(ts).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'});
+  }
+  function fbBtn(fb){
+    if(!fb)return '';
+    return '<a href="'+fb+'" target="_blank" class="notif-fb-link">🔗 Facebook</a>';
+  }
+  function resolveBtn(type,id){
+    return '<button class="notif-resolve-btn" data-type="'+type+'" data-id="'+id+'" onclick="resolveNotif(this.dataset.type,this.dataset.id)">✓ ดำเนินการแล้ว</button>';
+  }
+
+  var html='';
+  var totalPending=contactPending.length+promotePending.length;
+
+  if(totalPending){
+    html+='<div class="notif-section-title">รอดำเนินการ ('+totalPending+')</div>';
+    contactPending.forEach(function(r){
+      html+='<div class="notif-item unresolved">'
+        +'<div class="notif-item-top">'
+        +'<span class="notif-item-name">🙋 '+(r.memberName||'ไม่ระบุชื่อ')+'</span>'
+        +'<span class="notif-item-time">'+fmtTime(r.ts)+'</span>'
+        +'</div>'
+        +'<div class="notif-item-sub">ขอรับรหัสเข้าระบบ'+(r.phone?' · 📞 '+r.phone:'')+'</div>'
+        +'<div class="notif-item-actions">'+fbBtn(r.memberFb)+resolveBtn('contact',r._reqId)+'</div>'
+        +'</div>';
+    });
+    promotePending.forEach(function(r){
+      html+='<div class="notif-item unresolved">'
+        +'<div class="notif-item-top">'
+        +'<span class="notif-item-name">✨ '+(r.memberName||'ไม่ระบุชื่อ')+'</span>'
+        +'<span class="notif-item-time">'+fmtTime(r.ts)+'</span>'
+        +'</div>'
+        +'<div class="notif-item-sub">สนใจโปรโมท · '+(r.plan||'-')+'</div>'
+        +'<div class="notif-item-actions">'+fbBtn(r.memberFb)+resolveBtn('promote',r._reqId)+'</div>'
+        +'</div>';
+    });
+  }
+
+  var doneAll=contactDone.concat(promoteDone).sort(function(a,b){return b.ts-a.ts;});
+  if(doneAll.length){
+    html+='<div class="notif-section-title" style="margin-top:16px">ดำเนินการแล้ว ('+doneAll.length+')</div>';
+    doneAll.slice(0,10).forEach(function(r){
+      var isPromote=!!r.plan;
+      html+='<div class="notif-item" style="opacity:.5">'
+        +'<div class="notif-item-top">'
+        +'<span class="notif-item-name">'+(isPromote?'✨':'🙋')+' '+(r.memberName||'ไม่ระบุชื่อ')+'</span>'
+        +'<span class="notif-item-time">'+fmtTime(r.ts)+'</span>'
+        +'</div>'
+        +'<div class="notif-item-sub">'+(isPromote?'โปรโมท · '+(r.plan||'-'):'ขอรับรหัส'+(r.phone?' · 📞 '+r.phone:''))+'</div>'
+        +'</div>';
+    });
+  }
+
+  if(!totalPending&&!doneAll.length){
+    html='<div class="notif-empty">ยังไม่มีคำขอ 🎉</div>';
+  }
+
+  body.innerHTML=html;
+}
+
+
+window.resolveNotif=async function(type,reqId){
+  var col=type==='promote'?'promote_requests':'contact_requests';
+  var arr=type==='promote'?promoteRequests:contactRequests;
+  try{
+    await updateDoc(doc(db,col,reqId),{resolved:true});
+    var r=arr.find(function(x){return x._reqId===reqId;});
+    if(r)r.resolved=true;
+    updateNotifBell();
+    renderNotifPanel();
+    draw();
+    toast('ดำเนินการแล้ว ✓','ok');
+  }catch(e){toast('เกิดข้อผิดพลาด','er');}
+};
 
 window.resolveRequest=async function(reqId){
   try{
@@ -780,6 +1050,7 @@ window.doLogin=function(){
     document.getElementById("adminBar").className="admin-bar on";
     var fab=document.getElementById("btnAdmin");
     fab.style.background="rgba(74,222,128,0.15)";fab.style.color="rgba(74,222,128,0.9)";fab.textContent="✅";
+    updateNotifBell();
     document.getElementById("pwIn").value="";
     document.getElementById("pwErr").style.display="none";
     draw();
@@ -790,6 +1061,10 @@ window.logoutAdmin=function(){
   document.getElementById('adminBar').className='admin-bar';
   var fab=document.getElementById('btnAdmin');
   fab.textContent='🌸';fab.style.background='';fab.style.color='';
+  var bell=document.getElementById('notifBell');
+  bell.classList.remove('on');
+  document.getElementById('notifBadge').classList.remove('on');
+  closeNotifPanel();
   draw();
 };
 window.closeLogin=function(){document.getElementById("ovLogin").className="ov";document.getElementById("pwIn").value="";document.getElementById("pwErr").style.display="none";};
@@ -846,8 +1121,9 @@ window.openDetail=function(docId){
       pending.forEach(function(r){
         var dt=new Date(r.ts).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'});
         rhtml+='<div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:4px 0;border-top:1px solid rgba(239,68,68,0.1)">';
-        rhtml+='<span style="color:#333">📞 '+r.phone+'<span style="color:#999;margin-left:6px">'+dt+'</span></span>';
-        rhtml+='<button onclick="resolveRequest(''+r._reqId+'')" style="background:#ef4444;color:#fff;border:none;border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer;font-family:'Sarabun',sans-serif">✓ ดำเนินการแล้ว</button>';
+        var info=r.phone?'📞 '+r.phone:(r.memberFb?'<a href="'+r.memberFb+'" target="_blank" style="color:#1877F2;text-decoration:none">🔗 ดู Facebook</a>':'ไม่มีข้อมูล');
+        rhtml+='<span style="color:#333">'+info+'<span style="color:#999;margin-left:6px">'+dt+'</span></span>';
+        rhtml+='<button onclick="resolveRequest(\''+r._reqId+'\')" class="req-resolve-btn">✓ ดำเนินการแล้ว</button>';
         rhtml+='</div>';
       });
       rhtml+='</div>';
@@ -857,6 +1133,13 @@ window.openDetail=function(docId){
       reqBanner.innerHTML='';reqBanner.style.display='none';
     }
   }else{reqBanner.innerHTML='';reqBanner.style.display='none';}
+  // Show contact button for guests (not admin, not logged in)
+  var cb=document.getElementById("dContactBtn");
+  cb.style.display=(!isAdmin && !selfEditMember)?'block':'none';
+  // Show promote button only for the logged-in member viewing their own card
+  var pb=document.getElementById("dPromoteBtn");
+  var isOwnCard=selfEditMember&&selfEditMember._docId===docId;
+  pb.style.display=(isOwnCard&&!isAdmin)?'block':'none';
   document.getElementById("ovDetail").className="ov on";
 };
 window.closeDetail=function(){document.getElementById("ovDetail").className="ov";};
